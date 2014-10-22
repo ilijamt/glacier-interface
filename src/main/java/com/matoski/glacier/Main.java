@@ -19,159 +19,159 @@ import com.matoski.glacier.pojo.Config;
 
 public class Main {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		System.out.println("Glacier Interface, Copyright 2014, Ilija Matoski");
-		System.out.println();
+	System.out.println("Glacier Interface, Copyright 2014, Ilija Matoski");
+	System.out.println();
 
-		JCommander commander = null;
-		Arguments arguments = new Arguments();
-		CommandHelp commandHelp = new CommandHelp();
-		CommandListVaults commandListVaults = new CommandListVaults();
-		CommandCreateVault commandCreateVault = new CommandCreateVault();
-		CommandDeleteVault commandDeleteVault = new CommandDeleteVault();
-		CommandListVaultJobs commandListVaultJobs = new CommandListVaultJobs();
+	JCommander commander = null;
+	Arguments arguments = new Arguments();
+	CommandHelp commandHelp = new CommandHelp();
+	CommandListVaults commandListVaults = new CommandListVaults();
+	CommandCreateVault commandCreateVault = new CommandCreateVault();
+	CommandDeleteVault commandDeleteVault = new CommandDeleteVault();
+	CommandListVaultJobs commandListVaultJobs = new CommandListVaultJobs();
 
-		try {
-			commander = new JCommander(arguments);
-			commander.addCommand(commandHelp);
-			commander.addCommand(commandListVaults);
-			commander.addCommand(commandCreateVault);
-			commander.addCommand(commandDeleteVault);
-			commander.addCommand(commandListVaultJobs);
-			commander.parse(args);
-		} catch (Exception e) {
-			commander.usage();
-			System.out.print("ERROR: ");
-			System.out.println(e.getMessage());
-			System.exit(1);
-		}
-
-		Config config = null;
-		Boolean hasConfig = !(null == arguments.config);
-		String command = commander.getParsedCommand();
-
-		if (hasConfig) {
-			try {
-				config = Config.fromFile(arguments.config);
-				config.merge(arguments);
-			} catch (JsonSyntaxException e) {
-				System.out
-						.println("ERROR: Invalid format in the configuration file");
-				System.exit(1);
-			} catch (FileNotFoundException e) {
-				System.out.println("ERROR: Config file cannot be found");
-				System.exit(1);
-			} catch (IOException e) {
-				System.out.println("ERROR: Config file cannot be found");
-				System.exit(1);
-			}
-		} else {
-			config = Config.fromArguments(arguments);
-		}
-
-		Boolean validCommand = (null != command);
-		Boolean validConfig = false;
-		Boolean isVaultRequired = false;
-		CliCommands cliCommand = null;
-
-		if (null != arguments.createConfig) {
-			try {
-				config.createConfigurationFile(arguments.createConfig);
-			} catch (IOException e) {
-				System.out.println("ERROR: Failed to write the configuration");
-				e.printStackTrace();
-				System.exit(1);
-			}
-		}
-
-		if (validCommand) {
-			cliCommand = CliCommands.from(command);
-			validConfig = config.valid(Main.isVaultRequired(cliCommand));
-		}
-
-		if (!validCommand && !validConfig) {
-
-			commander.usage();
-
-			if (!validConfig) {
-
-				System.out
-						.println("ERROR: Missing one or more required parameters");
-				if (null == config.getKey()) {
-					System.out.println("\t--aws-key");
-				}
-
-				if (null == config.getSecretKey()) {
-					System.out.println("\t--aws-secret-key");
-				}
-
-				if (null == config.getRegion()) {
-					System.out.println("\t--aws-region");
-				}
-
-				if (isVaultRequired && (null == config.getVault())) {
-					System.out.println("\t--aws-vault");
-				}
-			}
-
-		} else {
-
-			try {
-
-				switch (cliCommand) {
-				case Help:
-					commander.usage();
-					break;
-
-				case ListVaults:
-					new ListVaultsCommand(config, commandListVaults).run();
-					break;
-
-				case CreateVault:
-					new CreateVaultCommand(config, commandCreateVault).run();
-					break;
-
-				case DeleteVault:
-					new DeleteVaultCommand(config, commandDeleteVault).run();
-					break;
-
-				case ListVaultJobs:
-					new ListVaultJobsCommand(config, commandListVaultJobs)
-							.run();
-					break;
-				}
-
-			} catch (Exception e) {
-				System.out.println(e);
-				System.exit(1);
-			}
-		}
-
-		System.out.println();
-		System.out.println("Finished");
-
+	try {
+	    commander = new JCommander(arguments);
+	    commander.addCommand(commandHelp);
+	    commander.addCommand(commandListVaults);
+	    commander.addCommand(commandCreateVault);
+	    commander.addCommand(commandDeleteVault);
+	    commander.addCommand(commandListVaultJobs);
+	    commander.parse(args);
+	} catch (Exception e) {
+	    commander.usage();
+	    System.out.print("ERROR: ");
+	    System.out.println(e.getMessage());
+	    System.exit(1);
 	}
 
-	/**
-	 * Is a vault parameter required ?
-	 * 
-	 * @param command
-	 * @return
-	 */
-	public static boolean isVaultRequired(CliCommands command) {
+	Config config = null;
+	Boolean hasConfig = !(null == arguments.config);
+	String command = commander.getParsedCommand();
 
-		switch (command) {
-		case ListVaultJobs:
+	if (hasConfig) {
+	    try {
+		config = Config.fromFile(arguments.config);
+		config.merge(arguments);
+	    } catch (JsonSyntaxException e) {
+		System.out
+			.println("ERROR: Invalid format in the configuration file");
+		System.exit(1);
+	    } catch (FileNotFoundException e) {
+		System.out.println("ERROR: Config file cannot be found");
+		System.exit(1);
+	    } catch (IOException e) {
+		System.out.println("ERROR: Config file cannot be found");
+		System.exit(1);
+	    }
+	} else {
+	    config = Config.fromArguments(arguments);
+	}
+
+	Boolean validCommand = (null != command);
+	Boolean validConfig = false;
+	Boolean isVaultRequired = false;
+	CliCommands cliCommand = null;
+
+	if (null != arguments.createConfig) {
+	    try {
+		config.createConfigurationFile(arguments.createConfig);
+	    } catch (IOException e) {
+		System.out.println("ERROR: Failed to write the configuration");
+		e.printStackTrace();
+		System.exit(1);
+	    }
+	}
+
+	if (validCommand) {
+	    cliCommand = CliCommands.from(command);
+	    validConfig = config.valid(Main.isVaultRequired(cliCommand));
+	}
+
+	if (!validCommand && !validConfig) {
+
+	    commander.usage();
+
+	    if (!validConfig) {
+
+		System.out
+			.println("ERROR: Missing one or more required parameters");
+		if (null == config.getKey()) {
+		    System.out.println("\t--aws-key");
+		}
+
+		if (null == config.getSecretKey()) {
+		    System.out.println("\t--aws-secret-key");
+		}
+
+		if (null == config.getRegion()) {
+		    System.out.println("\t--aws-region");
+		}
+
+		if (isVaultRequired && (null == config.getVault())) {
+		    System.out.println("\t--aws-vault");
+		}
+	    }
+
+	} else {
+
+	    try {
+
+		switch (cliCommand) {
+		case Help:
+		    commander.usage();
+		    break;
+
+		case ListVaults:
+		    new ListVaultsCommand(config, commandListVaults).run();
+		    break;
+
 		case CreateVault:
+		    new CreateVaultCommand(config, commandCreateVault).run();
+		    break;
+
 		case DeleteVault:
-			return true;
-		default:
-			break;
+		    new DeleteVaultCommand(config, commandDeleteVault).run();
+		    break;
+
+		case ListVaultJobs:
+		    new ListVaultJobsCommand(config, commandListVaultJobs)
+			    .run();
+		    break;
 		}
 
-		return false;
-
+	    } catch (Exception e) {
+		System.out.println(e);
+		System.exit(1);
+	    }
 	}
+
+	System.out.println();
+	System.out.println("Finished");
+
+    }
+
+    /**
+     * Is a vault parameter required ?
+     * 
+     * @param command
+     * @return
+     */
+    public static boolean isVaultRequired(CliCommands command) {
+
+	switch (command) {
+	case ListVaultJobs:
+	case CreateVault:
+	case DeleteVault:
+	    return true;
+	default:
+	    break;
+	}
+
+	return false;
+
+    }
 
 }

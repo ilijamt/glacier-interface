@@ -9,24 +9,24 @@ import com.matoski.glacier.pojo.Config;
 
 public abstract class AbstractCommand implements ICommand, Runnable {
 
-	protected BasicAWSCredentials credentials = null;
-	protected AmazonGlacierAsyncClient client = null;
-	protected Config config = null;
-	protected Region region = null;
+    protected BasicAWSCredentials credentials = null;
+    protected AmazonGlacierAsyncClient client = null;
+    protected Config config = null;
+    protected Region region = null;
 
-	public AbstractCommand(Config config) {
+    public AbstractCommand(Config config) {
 
-		this.config = config;
-		this.region = Region.getRegion(Regions.fromName(config.getRegion()));
-		this.credentials = new BasicAWSCredentials(config.getKey(),
-				config.getSecretKey());
-		this.client = new AmazonGlacierAsyncClient(this.credentials);
-		this.client.setEndpoint(this.region.getServiceEndpoint("glacier"));
+	this.config = config;
+	this.region = Region.getRegion(Regions.fromName(config.getRegion()));
+	this.credentials = new BasicAWSCredentials(config.getKey(),
+		config.getSecretKey());
+	this.client = new AmazonGlacierAsyncClient(this.credentials);
+	this.client.setEndpoint(this.region.getServiceEndpoint("glacier"));
 
-	}
+    }
 
-	@Override
-	public boolean valid() {
-		return true;
-	}
+    @Override
+    public boolean valid() {
+	return true;
+    }
 }

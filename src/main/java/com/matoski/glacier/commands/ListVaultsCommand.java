@@ -12,50 +12,50 @@ import com.matoski.glacier.pojo.Config;
 
 public class ListVaultsCommand extends AbstractCommand {
 
-	protected CommandListVaults command;
+    protected CommandListVaults command;
 
-	public ListVaultsCommand(Config config, CommandListVaults command) {
-		super(config);
-		this.command = command;
-	}
+    public ListVaultsCommand(Config config, CommandListVaults command) {
+	super(config);
+	this.command = command;
+    }
 
-	public void run() {
+    public void run() {
 
-		System.out.println("START: list-vaults\n");
+	System.out.println("START: list-vaults\n");
 
-		String marker = null;
+	String marker = null;
 
-		do {
+	do {
 
-			ListVaultsRequest request = new ListVaultsRequest()
-					.withMarker(marker);
+	    ListVaultsRequest request = new ListVaultsRequest()
+		    .withMarker(marker);
 
-			ListVaultsResult listVaultsResult = client.listVaults(request);
+	    ListVaultsResult listVaultsResult = client.listVaults(request);
 
-			List<DescribeVaultOutput> vaultList = listVaultsResult
-					.getVaultList();
-			marker = listVaultsResult.getMarker();
+	    List<DescribeVaultOutput> vaultList = listVaultsResult
+		    .getVaultList();
+	    marker = listVaultsResult.getMarker();
 
-			System.out.println(String.format("Total available vaults: %s\n",
-					vaultList.size()));
+	    System.out.println(String.format("Total available vaults: %s\n",
+		    vaultList.size()));
 
-			for (DescribeVaultOutput vault : vaultList) {
+	    for (DescribeVaultOutput vault : vaultList) {
 
-				System.out
-						.println(String
-								.format("ARN: %s\nName: %s\nCreated: %s\nInventory Size: %s (%s bytes)\nLast Inventory Date: %s\n",
-										vault.getVaultARN(), vault
-												.getVaultName(), vault
-												.getCreationDate(), FileUtils
-												.byteCountToDisplaySize(vault
-														.getSizeInBytes()),
-										vault.getSizeInBytes(), vault
-												.getLastInventoryDate()));
+		System.out
+			.println(String
+				.format("ARN: %s\nName: %s\nCreated: %s\nInventory Size: %s (%s bytes)\nLast Inventory Date: %s\n",
+					vault.getVaultARN(), vault
+						.getVaultName(), vault
+						.getCreationDate(), FileUtils
+						.byteCountToDisplaySize(vault
+							.getSizeInBytes()),
+					vault.getSizeInBytes(), vault
+						.getLastInventoryDate()));
 
-			}
+	    }
 
-		} while (marker != null);
+	} while (marker != null);
 
-		System.out.println("END: list-vaults");
-	}
+	System.out.println("END: list-vaults");
+    }
 }

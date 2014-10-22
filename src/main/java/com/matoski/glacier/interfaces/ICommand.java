@@ -1,7 +1,7 @@
 package com.matoski.glacier.interfaces;
 
 public interface ICommand {
-	void run();
+    void run();
 
-	boolean valid();
+    boolean valid();
 }

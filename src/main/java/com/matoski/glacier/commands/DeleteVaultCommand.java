@@ -8,54 +8,54 @@ import com.matoski.glacier.pojo.Config;
 
 public class DeleteVaultCommand extends AbstractCommand {
 
-	protected CommandDeleteVault command;
+    protected CommandDeleteVault command;
 
-	public DeleteVaultCommand(Config config, CommandDeleteVault command) {
+    public DeleteVaultCommand(Config config, CommandDeleteVault command) {
 
-		super(config);
-		this.command = command;
-		if ((null == command.vaultName) || command.vaultName.isEmpty()) {
-			command.vaultName = config.getVault();
-		}
-
+	super(config);
+	this.command = command;
+	if ((null == command.vaultName) || command.vaultName.isEmpty()) {
+	    command.vaultName = config.getVault();
 	}
 
-	public void run() {
+    }
 
-		System.out.println("START: delete-vault\n");
+    public void run() {
 
-		try {
+	System.out.println("START: delete-vault\n");
 
-			DeleteVaultRequest request = new DeleteVaultRequest()
-					.withVaultName(command.vaultName);
-			client.deleteVault(request);
+	try {
 
-			System.out
-					.println(String
-							.format("%s deleted. (Currently Amazon Glacier does not return error if vault does not exists)",
-									command.vaultName));
+	    DeleteVaultRequest request = new DeleteVaultRequest()
+		    .withVaultName(command.vaultName);
+	    client.deleteVault(request);
 
-		} catch (AmazonServiceException e) {
-			switch (e.getErrorCode()) {
-			case "InvalidSignatureException":
-				System.out
-						.println(String
-								.format("ERROR: Invalid credentials, check you key and secret key."));
-				break;
-			default:
-				System.out.println(String.format(
-						"ERROR: Failed to delete a vault: %s\n\t%s",
-						command.vaultName, e.getMessage()));
-				break;
-			}
-		} catch (AmazonClientException e) {
-			System.out.println(String.format(
-					"ERROR: Cannot connect to the amazon web services.\n\t%s",
-					e.getMessage()));
-		}
+	    System.out
+		    .println(String
+			    .format("%s deleted. (Currently Amazon Glacier does not return error if vault does not exists)",
+				    command.vaultName));
 
-		System.out.println("\nEND: delete-vault");
-
+	} catch (AmazonServiceException e) {
+	    switch (e.getErrorCode()) {
+	    case "InvalidSignatureException":
+		System.out
+			.println(String
+				.format("ERROR: Invalid credentials, check you key and secret key."));
+		break;
+	    default:
+		System.out.println(String.format(
+			"ERROR: Failed to delete a vault: %s\n\t%s",
+			command.vaultName, e.getMessage()));
+		break;
+	    }
+	} catch (AmazonClientException e) {
+	    System.out.println(String.format(
+		    "ERROR: Cannot connect to the amazon web services.\n\t%s",
+		    e.getMessage()));
 	}
+
+	System.out.println("\nEND: delete-vault");
+
+    }
 
 }
