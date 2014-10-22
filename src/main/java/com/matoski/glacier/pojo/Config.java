@@ -1,7 +1,9 @@
 package com.matoski.glacier.pojo;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -236,7 +238,49 @@ public class Config {
 	 * @return
 	 */
 	public boolean valid() {
+		return valid(true);
+	}
+
+	/**
+	 * 
+	 * Is the config valid, has minimum required parameters
+	 * 
+	 * Amazon Secret Key Amazon Key Amazon Vault Amazon Region
+	 *
+	 * @param vault
+	 *            Is the vault required
+	 * 
+	 * @return
+	 */
+	public boolean valid(boolean vault) {
 		return (null != this.getKey()) && (null != this.getSecretKey())
-				&& (null != this.getVault()) && (null != this.getRegion());
+				&& (vault ? (null != this.getVault()) : true)
+				&& (null != this.getRegion());
+
+	}
+
+	/**
+	 * Creates a configuration file based on the data in the configuration 
+	 * 
+	 * @param filename
+	 * @throws IOException
+	 */
+	public void createConfigurationFile(String filename) throws IOException {
+		File file = new File(filename);
+		FileWriter fileWriter = null;
+		BufferedWriter bufferedWriter = null;
+
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+
+		fileWriter = new FileWriter(file.getAbsoluteFile());
+		bufferedWriter = new BufferedWriter(fileWriter);
+		bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create()
+				.toJson(this));
+		
+		bufferedWriter.close();
+		fileWriter.close();
+
 	}
 }

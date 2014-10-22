@@ -19,4 +19,7 @@ public class Arguments {
 	@Parameter(names = "--config", description = "Location to the configuration file to load")
 	public String config;
 
+	@Parameter(names = "--create-config", description = "Create a config file based on the parameters you have supplied into the application")
+	public String createConfig;
+
 }

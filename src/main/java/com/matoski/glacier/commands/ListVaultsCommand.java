@@ -26,6 +26,7 @@ public class ListVaultsCommand extends AbstractCommand {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 		do {
+			
 			ListVaultsRequest request = new ListVaultsRequest()
 					.withMarker(marker);
 
@@ -34,7 +35,9 @@ public class ListVaultsCommand extends AbstractCommand {
 			List<DescribeVaultOutput> vaultList = listVaultsResult
 					.getVaultList();
 			marker = listVaultsResult.getMarker();
+			
 			System.out.println(gson.toJson(vaultList));
+			
 		} while (marker != null);
 
 	}

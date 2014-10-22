@@ -15,13 +15,14 @@ public enum CliCommands {
 		return propertyName;
 	}
 
-	static CliCommands from(String x) throws Exception {
+	static CliCommands from(String x) {
 		for (CliCommands currentType : CliCommands.values()) {
 			if (x.equals(currentType.getPropertyName())) {
 				return currentType;
 			}
 		}
-		throw new Exception("Unmatched Type: " + x);
+		// default command
+		return CliCommands.Help;
 	}
 
 }

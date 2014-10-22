@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.beust.jcommander.JCommander;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.matoski.glacier.cli.Arguments;
@@ -38,6 +37,8 @@ public class Main {
 			commander.parse(args);
 		} catch (Exception e) {
 			commander.usage();
+			System.out.print("ERROR: ");
+			System.out.println(e.getMessage());
 			System.exit(1);
 		}
 
@@ -64,23 +65,47 @@ public class Main {
 			config = Config.fromArguments(arguments);
 		}
 
-		Boolean validConfig = config.valid();
-		if (null == command || !validConfig) {
+		Boolean validCommand = (null != command);
+		Boolean validConfig = false;
+		Boolean isVaultRequired = false;
+		CliCommands cliCommand = null;
+
+		if (null != arguments.createConfig) {
+			try {
+				config.createConfigurationFile(arguments.createConfig);
+			} catch (IOException e) {
+				System.out.println("ERROR: Failed to write the configuration");
+				e.printStackTrace();
+				System.exit(1);
+			}
+		}
+
+		if (validCommand) {
+			cliCommand = CliCommands.from(command);
+			validConfig = config.valid(Main.isVaultRequired(cliCommand));
+		}
+
+		if (!validCommand && !validConfig) {
 
 			commander.usage();
+
 			if (!validConfig) {
+
 				System.out
 						.println("ERROR: Missing one or more required parameters");
 				if (null == config.getKey()) {
 					System.out.println("\t--aws-key");
 				}
+
 				if (null == config.getSecretKey()) {
 					System.out.println("\t--aws-secret-key");
 				}
+
 				if (null == config.getRegion()) {
 					System.out.println("\t--aws-region");
 				}
-				if (null == config.getVault()) {
+
+				if (isVaultRequired && (null == config.getVault())) {
 					System.out.println("\t--aws-vault");
 				}
 			}
@@ -89,7 +114,9 @@ public class Main {
 
 			try {
 
-				switch (CliCommands.from(command)) {
+				System.out.println("Starting to process command");
+
+				switch (cliCommand) {
 				case Help:
 					commander.usage();
 					break;
@@ -103,16 +130,40 @@ public class Main {
 
 				case DeleteVault:
 					break;
-
-				default:
-					commander.usage();
-					break;
 				}
+
 			} catch (Exception e) {
 				System.out.println(e);
 				System.exit(1);
 			}
 		}
+
+		System.out.println();
+		System.out.println(new GsonBuilder().setPrettyPrinting().create()
+				.toJson(config));
+
+		System.out.println();
+		System.out.println("Finished");
+
+	}
+
+	/**
+	 * Is a vault parameter required ?
+	 * 
+	 * @param command
+	 * @return
+	 */
+	public static boolean isVaultRequired(CliCommands command) {
+
+		switch (command) {
+		case CreateVault:
+		case DeleteVault:
+			return true;
+		default:
+			break;
+		}
+
+		return false;
 
 	}
 
