@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.glacier.model.DescribeJobRequest;
 import com.amazonaws.services.glacier.model.GlacierJobDescription;
 import com.amazonaws.services.glacier.model.ListJobsRequest;
 import com.amazonaws.services.glacier.model.ListJobsResult;

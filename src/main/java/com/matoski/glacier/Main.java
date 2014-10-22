@@ -11,10 +11,12 @@ import com.matoski.glacier.cli.CommandDeleteVault;
 import com.matoski.glacier.cli.CommandHelp;
 import com.matoski.glacier.cli.CommandListVaultJobs;
 import com.matoski.glacier.cli.CommandListVaults;
+import com.matoski.glacier.cli.CommandVaultJobInfo;
 import com.matoski.glacier.commands.CreateVaultCommand;
 import com.matoski.glacier.commands.DeleteVaultCommand;
 import com.matoski.glacier.commands.ListVaultJobsCommand;
 import com.matoski.glacier.commands.ListVaultsCommand;
+import com.matoski.glacier.commands.VaultJobInfoCommand;
 import com.matoski.glacier.pojo.Config;
 
 public class Main {
@@ -31,15 +33,20 @@ public class Main {
 	CommandCreateVault commandCreateVault = new CommandCreateVault();
 	CommandDeleteVault commandDeleteVault = new CommandDeleteVault();
 	CommandListVaultJobs commandListVaultJobs = new CommandListVaultJobs();
+	CommandVaultJobInfo commandVaultJobInfo = new CommandVaultJobInfo();
 
 	try {
+
 	    commander = new JCommander(arguments);
 	    commander.addCommand(commandHelp);
 	    commander.addCommand(commandListVaults);
 	    commander.addCommand(commandCreateVault);
 	    commander.addCommand(commandDeleteVault);
 	    commander.addCommand(commandListVaultJobs);
+	    commander.addCommand(commandVaultJobInfo);
+
 	    commander.parse(args);
+
 	} catch (Exception e) {
 	    commander.usage();
 	    System.out.print("ERROR: ");
@@ -140,6 +147,10 @@ public class Main {
 		    new ListVaultJobsCommand(config, commandListVaultJobs)
 			    .run();
 		    break;
+
+		case VaultJobInfo:
+		    new VaultJobInfoCommand(config, commandVaultJobInfo).run();
+		    break;
 		}
 
 	    } catch (Exception e) {
@@ -165,6 +176,7 @@ public class Main {
 	case ListVaultJobs:
 	case CreateVault:
 	case DeleteVault:
+	case VaultJobInfo:
 	    return true;
 	default:
 	    break;
