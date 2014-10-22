@@ -6,7 +6,6 @@ import com.amazonaws.services.glacier.model.CreateVaultRequest;
 import com.amazonaws.services.glacier.model.CreateVaultResult;
 import com.amazonaws.services.glacier.model.DescribeVaultRequest;
 import com.amazonaws.services.glacier.model.DescribeVaultResult;
-import com.matoski.glacier.Output;
 import com.matoski.glacier.cli.CommandCreateVault;
 import com.matoski.glacier.pojo.Config;
 
@@ -22,7 +21,7 @@ public class CreateVaultCommand extends AbstractCommand {
 
 	public void run() {
 
-		System.out.println("COMMAND: create-vault");
+		System.out.println("START: create-vault\n");
 
 		try {
 
@@ -36,26 +35,36 @@ public class CreateVaultCommand extends AbstractCommand {
 			DescribeVaultResult describeVaultResult = client
 					.describeVault(describeVaultRequest);
 
-			Output.process(createVaultResult,
-					this.region.getServiceEndpoint("glacier"));
-			Output.process(describeVaultResult);
+			System.out.println(String.format(
+					"Vault created succesfully location: %s%s",
+					this.region.getServiceEndpoint("glacier"),
+					createVaultResult.getLocation()));
+
+			System.out.println(String.format("ARN: %s\nName: %s\nCreated: %s",
+					describeVaultResult.getVaultARN(),
+					describeVaultResult.getVaultName(),
+					describeVaultResult.getCreationDate()));
 
 		} catch (AmazonServiceException e) {
 			switch (e.getErrorCode()) {
 			case "InvalidSignatureException":
-				Output.process(String.format("ERROR: Invalid credentials, check you key and secret key."));
+				System.out
+						.println(String
+								.format("ERROR: Invalid credentials, check you key and secret key."));
 				break;
 			default:
-				Output.process(String.format(
+				System.out.println(String.format(
 						"ERROR: Failed to create a vault: %s\n\t%s",
-						command.vaultName, e.getMessage()));				
+						command.vaultName, e.getMessage()));
 				break;
 			}
 		} catch (AmazonClientException e) {
-			Output.process(String.format(
+			System.out.println(String.format(
 					"ERROR: Cannot connect to the amazon web services.\n\t%s",
 					e.getMessage()));
 		}
+
+		System.out.println("\nEND: create-vault");
 
 	}
 

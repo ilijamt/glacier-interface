@@ -114,8 +114,6 @@ public class Main {
 
 			try {
 
-				System.out.println("Starting to process command");
-
 				switch (cliCommand) {
 				case Help:
 					commander.usage();
