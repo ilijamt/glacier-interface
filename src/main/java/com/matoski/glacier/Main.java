@@ -4,13 +4,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.beust.jcommander.JCommander;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.matoski.glacier.cli.Arguments;
 import com.matoski.glacier.cli.CommandCreateVault;
 import com.matoski.glacier.cli.CommandDeleteVault;
 import com.matoski.glacier.cli.CommandHelp;
 import com.matoski.glacier.cli.CommandListVaults;
+import com.matoski.glacier.commands.CreateVaultCommand;
 import com.matoski.glacier.commands.ListVaultsCommand;
 import com.matoski.glacier.pojo.Config;
 
@@ -126,6 +126,7 @@ public class Main {
 					break;
 
 				case CreateVault:
+					new CreateVaultCommand(config, commandCreateVault).run();
 					break;
 
 				case DeleteVault:
@@ -137,10 +138,6 @@ public class Main {
 				System.exit(1);
 			}
 		}
-
-		System.out.println();
-		System.out.println(new GsonBuilder().setPrettyPrinting().create()
-				.toJson(config));
 
 		System.out.println();
 		System.out.println("Finished");
@@ -156,9 +153,6 @@ public class Main {
 	public static boolean isVaultRequired(CliCommands command) {
 
 		switch (command) {
-		case CreateVault:
-		case DeleteVault:
-			return true;
 		default:
 			break;
 		}
