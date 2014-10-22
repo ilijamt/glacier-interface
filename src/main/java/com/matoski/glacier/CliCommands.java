@@ -3,7 +3,7 @@ package com.matoski.glacier;
 public enum CliCommands {
 
 	Help("help"), ListVaults("list-vaults"), CreateVault("create-vault"), DeleteVault(
-			"delete-vault");
+			"delete-vault"), ListVaultJobs("list-vault-jobs");
 
 	private String propertyName;
 

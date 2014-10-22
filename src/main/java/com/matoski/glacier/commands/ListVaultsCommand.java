@@ -43,17 +43,14 @@ public class ListVaultsCommand extends AbstractCommand {
 
 				System.out
 						.println(String
-								.format("Location: %s/%s/vault/%s\nARN: %s\nName: %s\nCreated: %s\nInventory Size: %s\nLast Inventory Date: %s\n",
-										this.region
-												.getServiceEndpoint("glacier"),
-										request.getAccountId(), vault
-												.getVaultName(), vault
-												.getVaultARN(), vault
+								.format("ARN: %s\nName: %s\nCreated: %s\nInventory Size: %s (%s bytes)\nLast Inventory Date: %s\n",
+										vault.getVaultARN(), vault
 												.getVaultName(), vault
 												.getCreationDate(), FileUtils
 												.byteCountToDisplaySize(vault
 														.getSizeInBytes()),
-										vault.getLastInventoryDate()));
+										vault.getSizeInBytes(), vault
+												.getLastInventoryDate()));
 
 			}
 
@@ -61,5 +58,4 @@ public class ListVaultsCommand extends AbstractCommand {
 
 		System.out.println("END: list-vaults");
 	}
-
 }

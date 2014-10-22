@@ -17,6 +17,9 @@ public class CreateVaultCommand extends AbstractCommand {
 
 		super(config);
 		this.command = command;
+		if ((null == command.vaultName) || command.vaultName.isEmpty()) {
+			command.vaultName = config.getVault();
+		}
 	}
 
 	public void run() {

@@ -260,7 +260,7 @@ public class Config {
 	}
 
 	/**
-	 * Creates a configuration file based on the data in the configuration 
+	 * Creates a configuration file based on the data in the configuration
 	 * 
 	 * @param filename
 	 * @throws IOException
@@ -278,7 +278,7 @@ public class Config {
 		bufferedWriter = new BufferedWriter(fileWriter);
 		bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create()
 				.toJson(this));
-		
+
 		bufferedWriter.close();
 		fileWriter.close();
 

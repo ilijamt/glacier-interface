@@ -14,6 +14,10 @@ public class DeleteVaultCommand extends AbstractCommand {
 
 		super(config);
 		this.command = command;
+		if ((null == command.vaultName) || command.vaultName.isEmpty()) {
+			command.vaultName = config.getVault();
+		}
+
 	}
 
 	public void run() {
@@ -26,8 +30,10 @@ public class DeleteVaultCommand extends AbstractCommand {
 					.withVaultName(command.vaultName);
 			client.deleteVault(request);
 
-			System.out.println(String.format("%s succesfully deleted.",
-					command.vaultName));
+			System.out
+					.println(String
+							.format("%s deleted. (Currently Amazon Glacier does not return error if vault does not exists)",
+									command.vaultName));
 
 		} catch (AmazonServiceException e) {
 			switch (e.getErrorCode()) {
@@ -38,7 +44,7 @@ public class DeleteVaultCommand extends AbstractCommand {
 				break;
 			default:
 				System.out.println(String.format(
-						"ERROR: Failed to create a vault: %s\n\t%s",
+						"ERROR: Failed to delete a vault: %s\n\t%s",
 						command.vaultName, e.getMessage()));
 				break;
 			}
