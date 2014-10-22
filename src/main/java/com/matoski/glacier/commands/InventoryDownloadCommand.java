@@ -46,7 +46,12 @@ public class InventoryDownloadCommand extends AbstractCommand {
 
 	String jobId = null;
 
-	if (command.last) {
+	if (null == command.id || command.id.isEmpty()) {
+
+	    jobId = command.id;
+	    
+	} else {
+
 	    // get a list of jobs and get the last successful one
 	    ListJobsRequest request = new ListJobsRequest()
 		    .withVaultName(command.vaultName);
@@ -65,10 +70,6 @@ public class InventoryDownloadCommand extends AbstractCommand {
 	    }
 
 	    jobId = job.getJobId();
-
-	} else {
-
-	    jobId = command.id;
 
 	}
 
@@ -96,7 +97,6 @@ public class InventoryDownloadCommand extends AbstractCommand {
 	    try {
 		String json = IOUtils.toString(jobOutputResult.getBody());
 		inventory = new Gson().fromJson(json, GlacierInventory.class);
-
 		IOUtils.write(new MessagePack().write(inventory),
 			new FileOutputStream(new File("inventory.msgpack")));
 
