@@ -9,12 +9,14 @@ import com.matoski.glacier.cli.Arguments;
 import com.matoski.glacier.cli.CommandCreateVault;
 import com.matoski.glacier.cli.CommandDeleteVault;
 import com.matoski.glacier.cli.CommandHelp;
+import com.matoski.glacier.cli.CommandInventoryDownload;
 import com.matoski.glacier.cli.CommandInventoryRetrieval;
 import com.matoski.glacier.cli.CommandListVaultJobs;
 import com.matoski.glacier.cli.CommandListVaults;
 import com.matoski.glacier.cli.CommandVaultJobInfo;
 import com.matoski.glacier.commands.CreateVaultCommand;
 import com.matoski.glacier.commands.DeleteVaultCommand;
+import com.matoski.glacier.commands.InventoryDownloadCommand;
 import com.matoski.glacier.commands.InventoryRetrievalCommand;
 import com.matoski.glacier.commands.ListVaultJobsCommand;
 import com.matoski.glacier.commands.ListVaultsCommand;
@@ -38,6 +40,7 @@ public class Main {
 	CommandListVaultJobs commandListVaultJobs = new CommandListVaultJobs();
 	CommandVaultJobInfo commandVaultJobInfo = new CommandVaultJobInfo();
 	CommandInventoryRetrieval commandInventoryRetrieval = new CommandInventoryRetrieval();
+	CommandInventoryDownload commandInventoryDownload = new CommandInventoryDownload();
 
 	try {
 
@@ -49,6 +52,7 @@ public class Main {
 	    commander.addCommand(commandListVaultJobs);
 	    commander.addCommand(commandVaultJobInfo);
 	    commander.addCommand(commandInventoryRetrieval);
+	    commander.addCommand(commandInventoryDownload);
 
 	    commander.parse(args);
 
@@ -160,6 +164,12 @@ public class Main {
 		case InventoryRetrieve:
 		    new InventoryRetrievalCommand(config,
 			    commandInventoryRetrieval).run();
+		    break;
+
+		case InventoryDownload:
+		    new InventoryDownloadCommand(config,
+			    commandInventoryDownload).run();
+		    break;
 		}
 
 	    } catch (VaultNameNotPresentException e) {
