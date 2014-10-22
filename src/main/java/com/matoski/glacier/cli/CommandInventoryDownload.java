@@ -15,4 +15,7 @@ public class CommandInventoryDownload {
     @Parameter(required = true, names = "--journal", description = "Where to save the data retrieved from the inventory")
     public String journal;
 
+    @Parameter(names = "--metadata", description = "Available: mt2")
+    public String metadata = "mt2";
+    
 }

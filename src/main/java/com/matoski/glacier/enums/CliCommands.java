@@ -1,4 +1,4 @@
-package com.matoski.glacier;
+package com.matoski.glacier.enums;
 
 public enum CliCommands {
 
@@ -17,7 +17,7 @@ public enum CliCommands {
 	return propertyName;
     }
 
-    static CliCommands from(String x) {
+    public static CliCommands from(String x) {
 	for (CliCommands currentType : CliCommands.values()) {
 	    if (x.equals(currentType.getPropertyName())) {
 		return currentType;

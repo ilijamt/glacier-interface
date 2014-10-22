@@ -21,6 +21,7 @@ import com.matoski.glacier.commands.InventoryRetrievalCommand;
 import com.matoski.glacier.commands.ListVaultJobsCommand;
 import com.matoski.glacier.commands.ListVaultsCommand;
 import com.matoski.glacier.commands.VaultJobInfoCommand;
+import com.matoski.glacier.enums.CliCommands;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 

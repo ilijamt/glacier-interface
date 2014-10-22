@@ -1,12 +1,9 @@
 package com.matoski.glacier.commands;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.msgpack.MessagePack;
 
 import com.amazonaws.services.glacier.model.GetJobOutputRequest;
 import com.amazonaws.services.glacier.model.GetJobOutputResult;
@@ -15,6 +12,7 @@ import com.amazonaws.services.glacier.model.ListJobsRequest;
 import com.amazonaws.services.glacier.model.ListJobsResult;
 import com.google.gson.Gson;
 import com.matoski.glacier.cli.CommandInventoryDownload;
+import com.matoski.glacier.enums.MetadataParsers;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.pojo.GlacierInventory;
@@ -49,7 +47,7 @@ public class InventoryDownloadCommand extends AbstractCommand {
 	if (null == command.id || command.id.isEmpty()) {
 
 	    jobId = command.id;
-	    
+
 	} else {
 
 	    // get a list of jobs and get the last successful one
@@ -97,8 +95,11 @@ public class InventoryDownloadCommand extends AbstractCommand {
 	    try {
 		String json = IOUtils.toString(jobOutputResult.getBody());
 		inventory = new Gson().fromJson(json, GlacierInventory.class);
-		IOUtils.write(new MessagePack().write(inventory),
-			new FileOutputStream(new File("inventory.msgpack")));
+
+		switch (MetadataParsers.from(command.metadata)) {
+		case MT_AWS_GLACIER_B:
+		    break;
+		}
 
 	    } catch (IOException e) {
 		System.out.println("ERROR: Failed to read the input stream");
