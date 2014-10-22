@@ -9,14 +9,17 @@ import com.matoski.glacier.cli.Arguments;
 import com.matoski.glacier.cli.CommandCreateVault;
 import com.matoski.glacier.cli.CommandDeleteVault;
 import com.matoski.glacier.cli.CommandHelp;
+import com.matoski.glacier.cli.CommandInventoryRetrieval;
 import com.matoski.glacier.cli.CommandListVaultJobs;
 import com.matoski.glacier.cli.CommandListVaults;
 import com.matoski.glacier.cli.CommandVaultJobInfo;
 import com.matoski.glacier.commands.CreateVaultCommand;
 import com.matoski.glacier.commands.DeleteVaultCommand;
+import com.matoski.glacier.commands.InventoryRetrievalCommand;
 import com.matoski.glacier.commands.ListVaultJobsCommand;
 import com.matoski.glacier.commands.ListVaultsCommand;
 import com.matoski.glacier.commands.VaultJobInfoCommand;
+import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 
 public class Main {
@@ -34,6 +37,7 @@ public class Main {
 	CommandDeleteVault commandDeleteVault = new CommandDeleteVault();
 	CommandListVaultJobs commandListVaultJobs = new CommandListVaultJobs();
 	CommandVaultJobInfo commandVaultJobInfo = new CommandVaultJobInfo();
+	CommandInventoryRetrieval commandInventoryRetrieval = new CommandInventoryRetrieval();
 
 	try {
 
@@ -44,6 +48,7 @@ public class Main {
 	    commander.addCommand(commandDeleteVault);
 	    commander.addCommand(commandListVaultJobs);
 	    commander.addCommand(commandVaultJobInfo);
+	    commander.addCommand(commandInventoryRetrieval);
 
 	    commander.parse(args);
 
@@ -94,7 +99,7 @@ public class Main {
 
 	if (validCommand) {
 	    cliCommand = CliCommands.from(command);
-	    validConfig = config.valid(Main.isVaultRequired(cliCommand));
+	    validConfig = config.valid(false);
 	}
 
 	if (!validCommand && !validConfig) {
@@ -151,8 +156,16 @@ public class Main {
 		case VaultJobInfo:
 		    new VaultJobInfoCommand(config, commandVaultJobInfo).run();
 		    break;
+
+		case InventoryRetrieve:
+		    new InventoryRetrievalCommand(config,
+			    commandInventoryRetrieval).run();
 		}
 
+	    } catch (VaultNameNotPresentException e) {
+		System.out
+			.println("ERROR: Missing one or more required parameters");
+		System.out.println("\t--aws-vault");
 	    } catch (Exception e) {
 		System.out.println(e);
 		System.exit(1);
@@ -177,6 +190,7 @@ public class Main {
 	case CreateVault:
 	case DeleteVault:
 	case VaultJobInfo:
+	case InventoryRetrieve:
 	    return true;
 	default:
 	    break;

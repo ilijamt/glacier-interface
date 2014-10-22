@@ -4,7 +4,7 @@ public enum CliCommands {
 
     Help("help"), ListVaults("list-vaults"), CreateVault("create-vault"), DeleteVault(
 	    "delete-vault"), ListVaultJobs("list-vault-jobs"), VaultJobInfo(
-	    "vault-job-info");
+	    "vault-job-info"), InventoryRetrieve("inventory-retrieve");
 
     private String propertyName;
 

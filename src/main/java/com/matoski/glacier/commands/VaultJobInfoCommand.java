@@ -5,15 +5,23 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.glacier.model.DescribeJobRequest;
 import com.amazonaws.services.glacier.model.DescribeJobResult;
 import com.matoski.glacier.cli.CommandVaultJobInfo;
+import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 
 public class VaultJobInfoCommand extends AbstractCommand {
 
     protected CommandVaultJobInfo command;
 
-    public VaultJobInfoCommand(Config config, CommandVaultJobInfo command) {
+    public VaultJobInfoCommand(Config config, CommandVaultJobInfo command)
+	    throws VaultNameNotPresentException {
 	super(config);
 	this.command = command;
+
+	if ((null == command.vaultName || command.vaultName.isEmpty())
+		&& (null == config.getVault() || config.getVault().isEmpty())) {
+	    throw new VaultNameNotPresentException();
+	}
+
 	if ((null == command.vaultName) || command.vaultName.isEmpty()) {
 	    command.vaultName = config.getVault();
 	}

@@ -7,16 +7,24 @@ import com.amazonaws.services.glacier.model.CreateVaultResult;
 import com.amazonaws.services.glacier.model.DescribeVaultRequest;
 import com.amazonaws.services.glacier.model.DescribeVaultResult;
 import com.matoski.glacier.cli.CommandCreateVault;
+import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 
 public class CreateVaultCommand extends AbstractCommand {
 
     protected CommandCreateVault command;
 
-    public CreateVaultCommand(Config config, CommandCreateVault command) {
+    public CreateVaultCommand(Config config, CommandCreateVault command)
+	    throws VaultNameNotPresentException {
 
 	super(config);
 	this.command = command;
+
+	if ((null == command.vaultName || command.vaultName.isEmpty())
+		&& (null == config.getVault() || config.getVault().isEmpty())) {
+	    throw new VaultNameNotPresentException();
+	}
+
 	if ((null == command.vaultName) || command.vaultName.isEmpty()) {
 	    command.vaultName = config.getVault();
 	}
