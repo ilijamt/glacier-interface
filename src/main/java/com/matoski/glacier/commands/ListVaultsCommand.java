@@ -41,16 +41,21 @@ public class ListVaultsCommand extends AbstractCommand {
 
 	    for (DescribeVaultOutput vault : vaultList) {
 
+		System.out.println(String.format("%1$20s: %2$s", "ARN",
+			vault.getVaultARN()));
+		System.out.println(String.format("%1$20s: %2$s", "Vault Name",
+			vault.getVaultName()));
+		System.out.println(String.format("%1$20s: %2$s", "Created",
+			vault.getCreationDate()));
 		System.out
-			.println(String
-				.format("ARN: %s\nName: %s\nCreated: %s\nInventory Size: %s (%s bytes)\nLast Inventory Date: %s\n",
-					vault.getVaultARN(), vault
-						.getVaultName(), vault
-						.getCreationDate(), FileUtils
-						.byteCountToDisplaySize(vault
-							.getSizeInBytes()),
-					vault.getSizeInBytes(), vault
-						.getLastInventoryDate()));
+			.println(String.format("%1$20s: %2$s (%3$s bytes)",
+				"Inventory Size", FileUtils
+					.byteCountToDisplaySize(vault
+						.getSizeInBytes()), vault
+					.getSizeInBytes()));
+		System.out.println(String.format("%1$20s: %2$s",
+			"Last Inventory Date", vault.getLastInventoryDate()));
+		System.out.println();
 
 	    }
 

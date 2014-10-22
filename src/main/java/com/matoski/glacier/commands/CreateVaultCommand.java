@@ -38,14 +38,14 @@ public class CreateVaultCommand extends AbstractCommand {
 	    DescribeVaultResult describeVaultResult = client
 		    .describeVault(describeVaultRequest);
 
-	    System.out.println(String.format(
-		    "Vault created succesfully location: %s%s",
+	    System.out.println(String.format("%1$10s: %2$s%3$s", "Location",
 		    this.region.getServiceEndpoint("glacier"),
 		    createVaultResult.getLocation()));
-
-	    System.out.println(String.format("ARN: %s\nName: %s\nCreated: %s",
-		    describeVaultResult.getVaultARN(),
-		    describeVaultResult.getVaultName(),
+	    System.out.println(String.format("%1$10s: %2$s", "ARN",
+		    describeVaultResult.getVaultARN()));
+	    System.out.println(String.format("%1$10s: %2$s", "Vault Name",
+		    describeVaultResult.getVaultName()));
+	    System.out.println(String.format("%1$10s: %2$s", "Created",
 		    describeVaultResult.getCreationDate()));
 
 	} catch (AmazonServiceException e) {

@@ -1,5 +1,7 @@
 package com.matoski.glacier.commands;
 
+import java.util.List;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.glacier.model.GlacierJobDescription;
@@ -31,34 +33,39 @@ public class ListVaultJobsCommand extends AbstractCommand {
 		    .withVaultName(command.vaultName);
 	    ListJobsResult result = this.client.listJobs(request);
 
-	    for (GlacierJobDescription job : result.getJobList()) {
-		System.out.println();
-		System.out.println("Action               : " + job.getAction());
-		System.out.println("ArchiveId            : "
-			+ job.getArchiveId());
-		System.out.println("ArchiveSizeInBytes   : "
-			+ job.getArchiveSizeInBytes());
-		System.out.println("Completed            : "
-			+ job.getCompleted());
-		System.out.println("CompletionDate       : "
-			+ job.getCompletionDate());
-		System.out.println("CreationDate         : "
-			+ job.getCreationDate());
-		System.out.println("InventorySizeInBytes : "
-			+ job.getInventorySizeInBytes());
-		System.out.println("JobDescription       : "
-			+ job.getJobDescription());
-		System.out.println("JobId                : " + job.getJobId());
-		System.out.println("SHA256TreeHash       : "
-			+ job.getSHA256TreeHash());
-		System.out.println("SNSTopic             : "
-			+ job.getSNSTopic());
-		System.out.println("StatusCode           : "
-			+ job.getStatusCode());
-		System.out.println("StatusMessage        : "
-			+ job.getStatusMessage());
-		System.out.println("VaultARN             : "
-			+ job.getVaultARN());
+	    List<GlacierJobDescription> jobs = result.getJobList();
+
+	    if (jobs.isEmpty()) {
+		System.out.println(String.format(
+			"No available jobs for vault: %s", command.vaultName));
+	    } else {
+		for (GlacierJobDescription job : jobs) {
+
+		    if (command.fullDetails) {
+			
+		        System.out.println(String.format("%1$25s : %2$s","Action", job.getAction()));
+		        System.out.println(String.format("%1$25s : %2$s","Archive Id", job.getArchiveId()));
+		        System.out.println(String.format("%1$25s : %2$s","Archive Size In Bytes", job.getArchiveSizeInBytes()));
+		        System.out.println(String.format("%1$25s : %2$s","Completed",job.getCompleted()));
+		        System.out.println(String.format("%1$25s : %2$s","CompletionDate",job.getCompletionDate()));
+		        System.out.println(String.format("%1$25s : %2$s","CreationDate",job.getCreationDate()));
+		        System.out.println(String.format("%1$25s : %2$s","Inventory Size In Bytes", job.getInventorySizeInBytes()));
+		        System.out.println(String.format("%1$25s : %2$s","Job Description",job.getJobDescription()));
+		        System.out.println(String.format("%1$25s : %2$s","Job Id", job.getJobId()));
+		        System.out.println(String.format("%1$25s : %2$s","SHA256 Tree Hash", job.getSHA256TreeHash()));
+		        System.out.println(String.format("%1$25s : %2$s","SNS Topic",job.getSNSTopic()));
+		        System.out.println(String.format("%1$25s : %2$s","Status Code",job.getStatusCode()));
+		        System.out.println(String.format("%1$25s : %2$s","Status Message",job.getStatusMessage()));
+		        System.out.println(String.format("%1$25s : %2$s","Vault ARN",job.getVaultARN()));
+		        System.out.println();
+		        
+		    } else {
+			System.out.println(String.format(
+				"[%s] %s (Completed: %s) ID: %s",
+				job.getAction(), job.getStatusCode(),
+				job.getCompleted(), job.getJobId()));
+		    }
+		}
 	    }
 
 	} catch (AmazonServiceException e) {
@@ -83,5 +90,4 @@ public class ListVaultJobsCommand extends AbstractCommand {
 
 	System.out.println("\nEND: list-jobs");
     }
-
 }
