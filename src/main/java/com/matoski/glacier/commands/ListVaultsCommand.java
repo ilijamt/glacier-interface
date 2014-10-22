@@ -2,6 +2,8 @@ package com.matoski.glacier.commands;
 
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+
 import com.amazonaws.services.glacier.model.DescribeVaultOutput;
 import com.amazonaws.services.glacier.model.ListVaultsRequest;
 import com.amazonaws.services.glacier.model.ListVaultsResult;
@@ -22,7 +24,6 @@ public class ListVaultsCommand extends AbstractCommand {
 		System.out.println("START: list-vaults\n");
 
 		String marker = null;
-		String[] parts = null;
 
 		do {
 
@@ -35,35 +36,30 @@ public class ListVaultsCommand extends AbstractCommand {
 					.getVaultList();
 			marker = listVaultsResult.getMarker();
 
-			System.out.println(String.format("Total vaults: %s\n",
+			System.out.println(String.format("Total available vaults: %s\n",
 					vaultList.size()));
 
 			for (DescribeVaultOutput vault : vaultList) {
 
-				parts = vault.getVaultARN().split(":");
-
 				System.out
 						.println(String
-								.format("Location: %s/%s/%s\nARN: %s\nName: %s\nCreated: %s\nInventory Size: %s\nLast Inventory Date: %s\n",
+								.format("Location: %s/%s/vault/%s\nARN: %s\nName: %s\nCreated: %s\nInventory Size: %s\nLast Inventory Date: %s\n",
 										this.region
 												.getServiceEndpoint("glacier"),
-										parts[parts.length - 2],
-										parts[parts.length - 1], vault
+										request.getAccountId(), vault
+												.getVaultName(), vault
 												.getVaultARN(), vault
 												.getVaultName(), vault
-												.getCreationDate(), vault
-												.getSizeInBytes(), vault
-												.getLastInventoryDate()));
+												.getCreationDate(), FileUtils
+												.byteCountToDisplaySize(vault
+														.getSizeInBytes()),
+										vault.getLastInventoryDate()));
 
 			}
 
 		} while (marker != null);
 
 		System.out.println("END: list-vaults");
-	}
-
-	public boolean valid() {
-		return false;
 	}
 
 }

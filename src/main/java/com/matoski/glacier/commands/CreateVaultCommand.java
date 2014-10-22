@@ -68,8 +68,4 @@ public class CreateVaultCommand extends AbstractCommand {
 
 	}
 
-	public boolean valid() {
-		return false;
-	}
-
 }

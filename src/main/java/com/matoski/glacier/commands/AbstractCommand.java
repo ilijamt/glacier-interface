@@ -25,4 +25,8 @@ public abstract class AbstractCommand implements ICommand, Runnable {
 
 	}
 
+	@Override
+	public boolean valid() {
+		return true;
+	}
 }

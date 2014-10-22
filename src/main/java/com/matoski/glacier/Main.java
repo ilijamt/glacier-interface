@@ -11,6 +11,7 @@ import com.matoski.glacier.cli.CommandDeleteVault;
 import com.matoski.glacier.cli.CommandHelp;
 import com.matoski.glacier.cli.CommandListVaults;
 import com.matoski.glacier.commands.CreateVaultCommand;
+import com.matoski.glacier.commands.DeleteVaultCommand;
 import com.matoski.glacier.commands.ListVaultsCommand;
 import com.matoski.glacier.pojo.Config;
 
@@ -128,6 +129,7 @@ public class Main {
 					break;
 
 				case DeleteVault:
+					new DeleteVaultCommand(config, commandDeleteVault).run();
 					break;
 				}
 
