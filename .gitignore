@@ -35,3 +35,6 @@ proguard/
 build/
 bin/
 
+
+#
+config.json
