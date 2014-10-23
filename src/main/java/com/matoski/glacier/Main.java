@@ -99,16 +99,6 @@ public class Main {
 	Boolean validConfig = false;
 	CliCommands cliCommand = CliCommands.Help;
 
-	if (null != arguments.createConfig) {
-	    try {
-		config.createConfigurationFile(arguments.createConfig);
-	    } catch (IOException e) {
-		System.err.println("ERROR: Failed to write the configuration");
-		e.printStackTrace();
-		System.exit(1);
-	    }
-	}
-
 	if (validCommand) {
 	    cliCommand = CliCommands.from(command);
 	    validConfig = config.valid(false);
@@ -141,7 +131,7 @@ public class Main {
 	    try {
 
 		switch (cliCommand) {
-		
+
 		case Help:
 		    commander.usage();
 		    break;
@@ -196,6 +186,19 @@ public class Main {
 		System.err.println("\t--aws-vault or --vault");
 	    } catch (Exception e) {
 		System.err.println(e);
+		System.exit(1);
+	    }
+	}
+
+	if (null != arguments.createConfig) {
+	    try {
+		config.createConfigurationFile(arguments.createConfig);
+		System.out.println(String.format(
+			"Created a configuration file: %s",
+			arguments.createConfig));
+	    } catch (IOException e) {
+		System.err.println("ERROR: Failed to write the configuration");
+		e.printStackTrace();
 		System.exit(1);
 	    }
 	}
