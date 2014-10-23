@@ -107,9 +107,14 @@ public class Main {
 	    validConfig = config.valid(false);
 	}
 
-	if (!validCommand && !validConfig) {
+	if (!validCommand || !validConfig) {
 
 	    commander.usage();
+
+	    if (!validCommand) {
+		System.out.println(String.format("ERROR: Invalid command: %s",
+			command));
+	    }
 
 	    if (!validConfig) {
 
@@ -127,9 +132,6 @@ public class Main {
 		    System.out.println("\t--aws-region");
 		}
 
-		if (isVaultRequired && (null == config.getVault())) {
-		    System.out.println("\t--aws-vault");
-		}
 	    }
 
 	} else {
@@ -176,7 +178,7 @@ public class Main {
 	    } catch (VaultNameNotPresentException e) {
 		System.out
 			.println("ERROR: Missing one or more required parameters");
-		System.out.println("\t--aws-vault");
+		System.out.println("\t--aws-vault or --vault");
 	    } catch (Exception e) {
 		System.out.println(e);
 		System.exit(1);

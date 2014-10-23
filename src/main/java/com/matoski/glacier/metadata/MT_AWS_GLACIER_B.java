@@ -12,4 +12,10 @@ public class MT_AWS_GLACIER_B extends MetadataParser {
 	super(inventory);
     }
 
+    @Override
+    public void process(String metadata) {
+	// TODO Auto-generated method stub
+	
+    }
+
 }

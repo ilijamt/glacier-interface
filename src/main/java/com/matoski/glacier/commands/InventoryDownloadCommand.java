@@ -46,10 +46,6 @@ public class InventoryDownloadCommand extends AbstractCommand {
 
 	if (null == command.id || command.id.isEmpty()) {
 
-	    jobId = command.id;
-
-	} else {
-
 	    // get a list of jobs and get the last successful one
 	    ListJobsRequest request = new ListJobsRequest()
 		    .withVaultName(command.vaultName);
@@ -68,6 +64,10 @@ public class InventoryDownloadCommand extends AbstractCommand {
 	    }
 
 	    jobId = job.getJobId();
+
+	} else {
+
+	    jobId = command.id;
 
 	}
 

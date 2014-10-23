@@ -84,10 +84,15 @@ public class ListVaultJobsCommand extends AbstractCommand {
 			System.out.println();
 
 		    } else {
-			System.out.println(String.format(
-				"[%s] %s (Completed: %s) ID: %s",
-				job.getAction(), job.getStatusCode(),
-				job.getCompleted(), job.getJobId()));
+			System.out
+				.println(String
+					.format("%s [Action: %s] %s (Completed: %s, On: %s) ID: %s",
+						job.getCreationDate(),
+						job.getAction(),
+						job.getStatusCode(),
+						job.getCompleted(),
+						job.getCompletionDate(),
+						job.getJobId()));
 		    }
 		}
 	    }
