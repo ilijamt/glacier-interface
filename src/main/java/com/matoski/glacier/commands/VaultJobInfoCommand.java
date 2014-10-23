@@ -79,7 +79,7 @@ public class VaultJobInfoCommand extends AbstractCommand {
 	    default:
 		System.out
 			.println(String
-				.format("ERROR: Failed to retrieve the jobs for vault: %s\n\t%s",
+				.format("ERROR: Failed to retrieve the jobs for vault: %s\n\n%s",
 					command.vaultName, e.getMessage()));
 		break;
 	    }
