@@ -102,7 +102,7 @@ public class InventoryDownloadCommand extends AbstractCommand {
 		}
 
 	    } catch (IOException e) {
-		System.out.println("ERROR: Failed to read the input stream");
+		System.err.println("ERROR: Failed to read the input stream");
 	    }
 
 	}

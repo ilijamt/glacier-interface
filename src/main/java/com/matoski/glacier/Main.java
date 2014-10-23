@@ -7,19 +7,23 @@ import com.beust.jcommander.JCommander;
 import com.google.gson.JsonSyntaxException;
 import com.matoski.glacier.cli.Arguments;
 import com.matoski.glacier.cli.CommandCreateVault;
+import com.matoski.glacier.cli.CommandDeleteArchive;
 import com.matoski.glacier.cli.CommandDeleteVault;
 import com.matoski.glacier.cli.CommandHelp;
 import com.matoski.glacier.cli.CommandInventoryDownload;
 import com.matoski.glacier.cli.CommandInventoryRetrieval;
 import com.matoski.glacier.cli.CommandListVaultJobs;
 import com.matoski.glacier.cli.CommandListVaults;
+import com.matoski.glacier.cli.CommandUploadArchive;
 import com.matoski.glacier.cli.CommandVaultJobInfo;
 import com.matoski.glacier.commands.CreateVaultCommand;
+import com.matoski.glacier.commands.DeleteArchiveCommand;
 import com.matoski.glacier.commands.DeleteVaultCommand;
 import com.matoski.glacier.commands.InventoryDownloadCommand;
 import com.matoski.glacier.commands.InventoryRetrievalCommand;
 import com.matoski.glacier.commands.ListVaultJobsCommand;
 import com.matoski.glacier.commands.ListVaultsCommand;
+import com.matoski.glacier.commands.UploadArchiveCommand;
 import com.matoski.glacier.commands.VaultJobInfoCommand;
 import com.matoski.glacier.enums.CliCommands;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
@@ -42,6 +46,8 @@ public class Main {
 	CommandVaultJobInfo commandVaultJobInfo = new CommandVaultJobInfo();
 	CommandInventoryRetrieval commandInventoryRetrieval = new CommandInventoryRetrieval();
 	CommandInventoryDownload commandInventoryDownload = new CommandInventoryDownload();
+	CommandDeleteArchive commandDeleteArchive = new CommandDeleteArchive();
+	CommandUploadArchive commandUploadArchive = new CommandUploadArchive();
 
 	try {
 
@@ -54,13 +60,15 @@ public class Main {
 	    commander.addCommand(commandVaultJobInfo);
 	    commander.addCommand(commandInventoryRetrieval);
 	    commander.addCommand(commandInventoryDownload);
+	    commander.addCommand(commandDeleteArchive);
+	    commander.addCommand(commandUploadArchive);
 
 	    commander.parse(args);
 
 	} catch (Exception e) {
 	    commander.usage();
-	    System.out.print("ERROR: ");
-	    System.out.println(e.getMessage());
+	    System.err.print("ERROR: ");
+	    System.err.println(e.getMessage());
 	    System.exit(1);
 	}
 
@@ -73,14 +81,14 @@ public class Main {
 		config = Config.fromFile(arguments.config);
 		config.merge(arguments);
 	    } catch (JsonSyntaxException e) {
-		System.out
+		System.err
 			.println("ERROR: Invalid format in the configuration file");
 		System.exit(1);
 	    } catch (FileNotFoundException e) {
-		System.out.println("ERROR: Config file cannot be found");
+		System.err.println("ERROR: Config file cannot be found");
 		System.exit(1);
 	    } catch (IOException e) {
-		System.out.println("ERROR: Config file cannot be found");
+		System.err.println("ERROR: Config file cannot be found");
 		System.exit(1);
 	    }
 	} else {
@@ -89,14 +97,13 @@ public class Main {
 
 	Boolean validCommand = (null != command);
 	Boolean validConfig = false;
-	Boolean isVaultRequired = false;
-	CliCommands cliCommand = null;
+	CliCommands cliCommand = CliCommands.Help;
 
 	if (null != arguments.createConfig) {
 	    try {
 		config.createConfigurationFile(arguments.createConfig);
 	    } catch (IOException e) {
-		System.out.println("ERROR: Failed to write the configuration");
+		System.err.println("ERROR: Failed to write the configuration");
 		e.printStackTrace();
 		System.exit(1);
 	    }
@@ -111,12 +118,7 @@ public class Main {
 
 	    commander.usage();
 
-	    if (!validCommand) {
-		System.out.println(String.format("ERROR: Invalid command: %s",
-			command));
-	    }
-
-	    if (!validConfig) {
+	    if (cliCommand != CliCommands.Help && !validConfig) {
 
 		System.out
 			.println("ERROR: Missing one or more required parameters");
@@ -139,6 +141,7 @@ public class Main {
 	    try {
 
 		switch (cliCommand) {
+		
 		case Help:
 		    commander.usage();
 		    break;
@@ -173,14 +176,26 @@ public class Main {
 		    new InventoryDownloadCommand(config,
 			    commandInventoryDownload).run();
 		    break;
+
+		case DeleteArchive:
+		    new DeleteArchiveCommand(config, commandDeleteArchive)
+			    .run();
+		    break;
+
+		case UploadArchive:
+		    new UploadArchiveCommand(config, commandUploadArchive);
+		    break;
+
+		default:
+		    break;
 		}
 
 	    } catch (VaultNameNotPresentException e) {
-		System.out
+		System.err
 			.println("ERROR: Missing one or more required parameters");
-		System.out.println("\t--aws-vault or --vault");
+		System.err.println("\t--aws-vault or --vault");
 	    } catch (Exception e) {
-		System.out.println(e);
+		System.err.println(e);
 		System.exit(1);
 	    }
 	}
@@ -193,6 +208,8 @@ public class Main {
     /**
      * Is a vault parameter required ?
      * 
+     * @deprecated Handling is used in each job separately for vault name
+     * 
      * @param command
      * @return
      */
@@ -204,6 +221,8 @@ public class Main {
 	case DeleteVault:
 	case VaultJobInfo:
 	case InventoryRetrieve:
+	case DeleteArchive:
+	case UploadArchive:
 	    return true;
 	default:
 	    break;

@@ -100,19 +100,19 @@ public class ListVaultJobsCommand extends AbstractCommand {
 	} catch (AmazonServiceException e) {
 	    switch (e.getErrorCode()) {
 	    case "InvalidSignatureException":
-		System.out
+		System.err
 			.println(String
 				.format("ERROR: Invalid credentials, check you key and secret key."));
 		break;
 	    default:
-		System.out
+		System.err
 			.println(String
 				.format("ERROR: Failed to retrieve the jobs for vault: %s\n\t%s",
 					command.vaultName, e.getMessage()));
 		break;
 	    }
 	} catch (AmazonClientException e) {
-	    System.out.println(String.format(
+	    System.err.println(String.format(
 		    "ERROR: Cannot connect to the amazon web services.\n\t%s",
 		    e.getMessage()));
 	}
