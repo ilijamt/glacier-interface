@@ -12,10 +12,10 @@ import com.amazonaws.services.glacier.model.ListJobsRequest;
 import com.amazonaws.services.glacier.model.ListJobsResult;
 import com.google.gson.Gson;
 import com.matoski.glacier.cli.CommandInventoryDownload;
-import com.matoski.glacier.enums.MetadataParsers;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.pojo.GlacierInventory;
+import com.matoski.glacier.pojo.Journal;
 
 public class InventoryDownloadCommand extends AbstractCommand {
 
@@ -96,13 +96,12 @@ public class InventoryDownloadCommand extends AbstractCommand {
 		String json = IOUtils.toString(jobOutputResult.getBody());
 		inventory = new Gson().fromJson(json, GlacierInventory.class);
 
-		switch (MetadataParsers.from(command.metadata)) {
-		case MT_AWS_GLACIER_B:
-		    break;
-		}
+		Journal journal = Journal.parse(inventory, command.vaultName,
+			command.metadata);
+		journal.save(command.journal);
 
 	    } catch (IOException e) {
-		System.err.println("ERROR: Failed to read the input stream");
+		System.err.println("ERROR: " + e.getMessage());
 	    }
 
 	}

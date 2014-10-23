@@ -1,21 +1,116 @@
 package com.matoski.glacier.metadata;
 
-import com.matoski.glacier.pojo.GlacierInventory;
+import java.util.Date;
 
-public class MT_AWS_GLACIER_B extends MetadataParser {
+import org.apache.commons.codec.binary.Base64;
 
+import com.fasterxml.jackson.databind.util.ISO8601Utils;
+import com.google.gson.Gson;
+import com.matoski.glacier.enums.Metadata;
+import com.matoski.glacier.errors.InvalidMetadataException;
+import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
+
+/**
+ * mt-aws-glacier type B metadata
+ * 
+ * @author ilijamt
+ */
+public class MT_AWS_GLACIER_B extends GenericParser implements
+	IGlacierInterfaceMetadata {
+
+    /**
+     * Identifier
+     */
+    public static final String IDENTIFIER = "mt2 ";
+
+    /**
+     * The original filename
+     */
+    private String filename;
+
+    /**
+     * The last modified time
+     */
+    private String mtime;
+
+    /**
+     * Constructor
+     */
     public MT_AWS_GLACIER_B() {
-	super();
-    };
-
-    public MT_AWS_GLACIER_B(GlacierInventory inventory) {
-	super(inventory);
+	super(Metadata.MT_AWS_GLACIER_B);
     }
 
+    /**
+     * @return the filename
+     */
+    public String getFilename() {
+	return filename;
+    }
+
+    /**
+     * @return the mtime
+     */
+    public Date getMtime() {
+	return ISO8601Utils.parse(this.mtime);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void process(String metadata) {
-	// TODO Auto-generated method stub
-	
+    public Date giGetModifiedDate() {
+	return this.getMtime();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String giGetName() {
+	return this.getFilename();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public IGlacierInterfaceMetadata process(String data)
+	    throws InvalidMetadataException {
+	if (!verify(data)) {
+	    throw new InvalidMetadataException();
+	}
+
+	String base64data = data.substring(IDENTIFIER.length(), data.length());
+
+	String json = new String(Base64.decodeBase64(base64data)).trim();
+	MT_AWS_GLACIER_B obj = new Gson()
+		.fromJson(json, MT_AWS_GLACIER_B.class);
+
+	return (IGlacierInterfaceMetadata) obj;
+
+    }
+
+    /**
+     * @param filename
+     *            the filename to set
+     */
+    public void setFilename(String filename) {
+	this.filename = filename;
+    }
+
+    /**
+     * @param mtime
+     *            the mtime to set
+     */
+    public void setMtime(String mtime) {
+	this.mtime = mtime;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean verify(String data) {
+	return data.startsWith(IDENTIFIER);
+    }
 }

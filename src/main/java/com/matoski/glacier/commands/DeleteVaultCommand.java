@@ -11,16 +11,17 @@ public class DeleteVaultCommand extends AbstractCommand {
 
     protected CommandDeleteVault command;
 
-    public DeleteVaultCommand(Config config, CommandDeleteVault command) throws VaultNameNotPresentException {
+    public DeleteVaultCommand(Config config, CommandDeleteVault command)
+	    throws VaultNameNotPresentException {
 
 	super(config);
 	this.command = command;
-	
+
 	if ((null == command.vaultName || command.vaultName.isEmpty())
 		&& (null == config.getVault() || config.getVault().isEmpty())) {
 	    throw new VaultNameNotPresentException();
 	}
-	
+
 	if ((null == command.vaultName) || command.vaultName.isEmpty()) {
 	    command.vaultName = config.getVault();
 	}

@@ -17,5 +17,5 @@ public class CommandInventoryDownload {
 
     @Parameter(names = "--metadata", description = "Available: mt2")
     public String metadata = "mt2";
-    
+
 }

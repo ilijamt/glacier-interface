@@ -1,12 +1,12 @@
 package com.matoski.glacier.enums;
 
-public enum MetadataParsers {
+public enum Metadata {
 
     MT_AWS_GLACIER_B("mt2");
 
     private String propertyName;
 
-    MetadataParsers(String propName) {
+    Metadata(String propName) {
 	this.propertyName = propName;
     }
 
@@ -14,14 +14,14 @@ public enum MetadataParsers {
 	return propertyName;
     }
 
-    public static MetadataParsers from(String x) {
-	for (MetadataParsers currentType : MetadataParsers.values()) {
+    public static Metadata from(String x) {
+	for (Metadata currentType : Metadata.values()) {
 	    if (x.equals(currentType.getPropertyName())) {
 		return currentType;
 	    }
 	}
 	// default command
-	return MetadataParsers.MT_AWS_GLACIER_B;
+	return Metadata.MT_AWS_GLACIER_B;
     }
 
 }
