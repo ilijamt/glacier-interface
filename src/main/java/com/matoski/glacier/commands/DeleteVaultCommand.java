@@ -4,18 +4,15 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.glacier.model.DeleteVaultRequest;
 import com.matoski.glacier.cli.CommandDeleteVault;
+import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 
-public class DeleteVaultCommand extends AbstractCommand {
-
-    protected CommandDeleteVault command;
+public class DeleteVaultCommand extends AbstractCommand<CommandDeleteVault> {
 
     public DeleteVaultCommand(Config config, CommandDeleteVault command)
-	    throws VaultNameNotPresentException {
-
-	super(config);
-	this.command = command;
+	    throws VaultNameNotPresentException, RegionNotSupportedException {
+	super(config, command);
 
 	if ((null == command.vaultName || command.vaultName.isEmpty())
 		&& (null == config.getVault() || config.getVault().isEmpty())) {
@@ -28,6 +25,7 @@ public class DeleteVaultCommand extends AbstractCommand {
 
     }
 
+    @Override
     public void run() {
 
 	System.out.println("START: delete-vault\n");

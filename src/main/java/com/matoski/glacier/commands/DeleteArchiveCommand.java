@@ -2,17 +2,15 @@ package com.matoski.glacier.commands;
 
 import com.amazonaws.services.glacier.model.DeleteArchiveRequest;
 import com.matoski.glacier.cli.CommandDeleteArchive;
+import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 
-public class DeleteArchiveCommand extends AbstractCommand {
-
-    protected CommandDeleteArchive command;
+public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> {
 
     public DeleteArchiveCommand(Config config, CommandDeleteArchive command)
-	    throws VaultNameNotPresentException {
-	super(config);
-	this.command = command;
+	    throws VaultNameNotPresentException, RegionNotSupportedException {
+	super(config, command);
 
 	if ((null == command.vaultName || command.vaultName.isEmpty())
 		&& (null == config.getVault() || config.getVault().isEmpty())) {
@@ -25,6 +23,7 @@ public class DeleteArchiveCommand extends AbstractCommand {
 
     }
 
+    @Override
     public void run() {
 
 	System.out.println("START: delete-archive\n");

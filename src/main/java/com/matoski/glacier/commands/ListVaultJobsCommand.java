@@ -8,17 +8,15 @@ import com.amazonaws.services.glacier.model.GlacierJobDescription;
 import com.amazonaws.services.glacier.model.ListJobsRequest;
 import com.amazonaws.services.glacier.model.ListJobsResult;
 import com.matoski.glacier.cli.CommandListVaultJobs;
+import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 
-public class ListVaultJobsCommand extends AbstractCommand {
-
-    protected CommandListVaultJobs command;
+public class ListVaultJobsCommand extends AbstractCommand<CommandListVaultJobs> {
 
     public ListVaultJobsCommand(Config config, CommandListVaultJobs command)
-	    throws VaultNameNotPresentException {
-	super(config);
-	this.command = command;
+	    throws VaultNameNotPresentException, RegionNotSupportedException {
+	super(config, command);
 
 	if ((null == command.vaultName || command.vaultName.isEmpty())
 		&& (null == config.getVault() || config.getVault().isEmpty())) {

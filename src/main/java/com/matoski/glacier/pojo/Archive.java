@@ -24,9 +24,9 @@ public class Archive {
     private String name;
 
     /**
-     * The date when the archive was last modified
+     * The date when the archive was last modified, as a timestamp
      */
-    private Date modifiedDate;
+    private long modifiedDate;
 
     /**
      * When was the archive created
@@ -76,24 +76,15 @@ public class Archive {
     /**
      * @return the mtime
      */
-    public Date getModifiedDate() {
+    public long getModifiedDate() {
 	return modifiedDate;
-    }
-
-    /**
-     * Set the modified date
-     * 
-     * @param date
-     */
-    public void setModifiedDate(String date) {
-	this.modifiedDate = ISO8601Utils.parse(date);
     }
 
     /**
      * @param mtime
      *            the mtime to set
      */
-    public void setModifiedDate(Date date) {
+    public void setModifiedDate(long date) {
 	this.modifiedDate = date;
     }
 
@@ -158,12 +149,13 @@ public class Archive {
 
 	Archive archive = (Archive) obj;
 
-	return ((null != this.id) ? this.id.equals(archive.id) : true) 
+	return ((null != this.id) ? this.id.equals(archive.id) : true)
 		&& ((null != this.name) ? this.name.equals(archive.name) : true)
-		&& this.size == archive.size 
+		&& (this.size == archive.size)
 		&& ((null != this.hash) ? this.hash.equals(archive.hash) : true)
-		&& ((null != this.createdDate) ? (this.createdDate.compareTo(archive.createdDate) == 0) : true)
-		&& ((null != this.modifiedDate) ? (this.modifiedDate.compareTo(archive.modifiedDate) == 0) : true);
+		&& ((null != this.createdDate) ? (this.createdDate
+			.compareTo(archive.createdDate) == 0) : true)
+		&& (this.modifiedDate == archive.modifiedDate);
 
     }
 

@@ -12,20 +12,22 @@ import com.amazonaws.services.glacier.model.ListJobsRequest;
 import com.amazonaws.services.glacier.model.ListJobsResult;
 import com.google.gson.Gson;
 import com.matoski.glacier.cli.CommandInventoryDownload;
+import com.matoski.glacier.enums.Metadata;
+import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.pojo.GlacierInventory;
 import com.matoski.glacier.pojo.Journal;
 
-public class InventoryDownloadCommand extends AbstractCommand {
+public class InventoryDownloadCommand extends
+	AbstractCommand<CommandInventoryDownload> {
 
-    protected CommandInventoryDownload command;
+    protected Metadata metadata;
 
     public InventoryDownloadCommand(Config config,
 	    CommandInventoryDownload command)
-	    throws VaultNameNotPresentException {
-	super(config);
-	this.command = command;
+	    throws VaultNameNotPresentException, RegionNotSupportedException {
+	super(config, command);
 
 	if ((null == command.vaultName || command.vaultName.isEmpty())
 		&& (null == config.getVault() || config.getVault().isEmpty())) {
@@ -36,8 +38,11 @@ public class InventoryDownloadCommand extends AbstractCommand {
 	    command.vaultName = config.getVault();
 	}
 
+	this.metadata = Metadata.from(command.metadata);
+
     }
 
+    @Override
     public void run() {
 
 	System.out.println("START: inventory-retrieve\n");
@@ -97,7 +102,7 @@ public class InventoryDownloadCommand extends AbstractCommand {
 		inventory = new Gson().fromJson(json, GlacierInventory.class);
 
 		Journal journal = Journal.parse(inventory, command.vaultName,
-			command.metadata);
+			metadata);
 		journal.save(command.journal);
 
 	    } catch (IOException e) {

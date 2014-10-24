@@ -8,17 +8,18 @@ import com.amazonaws.services.glacier.model.DescribeVaultOutput;
 import com.amazonaws.services.glacier.model.ListVaultsRequest;
 import com.amazonaws.services.glacier.model.ListVaultsResult;
 import com.matoski.glacier.cli.CommandListVaults;
+import com.matoski.glacier.errors.RegionNotSupportedException;
+import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 
-public class ListVaultsCommand extends AbstractCommand {
+public class ListVaultsCommand extends AbstractCommand<CommandListVaults> {
 
-    protected CommandListVaults command;
-
-    public ListVaultsCommand(Config config, CommandListVaults command) {
-	super(config);
-	this.command = command;
+    public ListVaultsCommand(Config config, CommandListVaults command)
+	    throws VaultNameNotPresentException, RegionNotSupportedException {
+	super(config, command);
     }
 
+    @Override
     public void run() {
 
 	System.out.println("START: list-vaults\n");

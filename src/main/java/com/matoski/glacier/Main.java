@@ -26,6 +26,7 @@ import com.matoski.glacier.commands.ListVaultsCommand;
 import com.matoski.glacier.commands.UploadArchiveCommand;
 import com.matoski.glacier.commands.VaultJobInfoCommand;
 import com.matoski.glacier.enums.CliCommands;
+import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 
@@ -173,13 +174,18 @@ public class Main {
 		    break;
 
 		case UploadArchive:
-		    new UploadArchiveCommand(config, commandUploadArchive);
+		    new UploadArchiveCommand(config, commandUploadArchive)
+			    .run();
 		    break;
 
 		default:
 		    break;
 		}
 
+	    } catch (RegionNotSupportedException e) {
+		System.err.println(String.format(
+			"Service glacier not support in region: %s",
+			config.getRegion()));
 	    } catch (VaultNameNotPresentException e) {
 		System.err
 			.println("ERROR: Missing one or more required parameters");

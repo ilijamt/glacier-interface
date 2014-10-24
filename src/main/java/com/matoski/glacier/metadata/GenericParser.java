@@ -8,7 +8,7 @@ public abstract class GenericParser implements IMetadata {
     /**
      * Metadata data to which the parser belongs to,
      */
-    private Metadata metadata;
+    private transient Metadata metadata;
 
     /**
      * Constructor

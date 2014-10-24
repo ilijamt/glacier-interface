@@ -211,11 +211,10 @@ public class Journal {
 			archiveItem.getArchiveDescription());
 
 		archive.setName(interfaceMetadata.giGetName());
-		
-		Date d = interfaceMetadata.giGetModifiedDate();
-		
-		archive.setModifiedDate(d);
+		archive.setModifiedDate(interfaceMetadata.giGetModifiedDate());
 
+	    } catch (NullPointerException e) {
+		System.err.println("ERROR: Invalid metadata parser");
 	    } catch (InvalidMetadataException e) {
 		System.err.println(String.format("ERROR: %s", e.getMessage()));
 	    }

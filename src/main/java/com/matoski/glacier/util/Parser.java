@@ -5,6 +5,7 @@ import com.matoski.glacier.errors.InvalidMetadataException;
 import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
 import com.matoski.glacier.metadata.GenericParser;
 import com.matoski.glacier.metadata.MT_AWS_GLACIER_B;
+import com.matoski.glacier.pojo.Archive;
 
 /**
  * Generic parser
@@ -23,10 +24,23 @@ public class Parser {
      * @return
      * 
      * @throws InvalidMetadataException
+     * @throws NullPointerException
      */
     public static IGlacierInterfaceMetadata parse(Metadata metadata, String data)
-	    throws InvalidMetadataException {
-	return getParser(metadata).process(data);
+	    throws InvalidMetadataException, NullPointerException {
+	return getParser(metadata).parse(data);
+    }
+
+    /**
+     * Encode
+     * 
+     * @param metadata
+     * @param archive
+     * 
+     * @return
+     */
+    public static String encode(Metadata metadata, Archive archive) {
+	return getParser(metadata).encode(archive);
     }
 
     /**

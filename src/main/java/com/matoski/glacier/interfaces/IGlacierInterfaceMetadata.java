@@ -28,6 +28,6 @@ public interface IGlacierInterfaceMetadata {
      * 
      * @return
      */
-    public Date giGetModifiedDate();
+    public long giGetModifiedDate();
 
 }

@@ -7,8 +7,11 @@ version = '1.0'
 jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest {
-        attributes 'Implementation-Title': 'Glacier', 'Implementation-Version': version
-        attributes 'Main-Class': 'com.matoski.glacier.Main'
+        attributes(
+        	'Implementation-Title': 'Glacier', 
+        	'Implementation-Version': version,
+        	'Main-Class': 'com.matoski.glacier.Main'
+        )
     }
 }
 

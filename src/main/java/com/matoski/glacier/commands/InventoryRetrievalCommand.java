@@ -4,18 +4,17 @@ import com.amazonaws.services.glacier.model.InitiateJobRequest;
 import com.amazonaws.services.glacier.model.InitiateJobResult;
 import com.amazonaws.services.glacier.model.JobParameters;
 import com.matoski.glacier.cli.CommandInventoryRetrieval;
+import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 
-public class InventoryRetrievalCommand extends AbstractCommand {
-
-    protected CommandInventoryRetrieval command;
+public class InventoryRetrievalCommand extends
+	AbstractCommand<CommandInventoryRetrieval> {
 
     public InventoryRetrievalCommand(Config config,
 	    CommandInventoryRetrieval command)
-	    throws VaultNameNotPresentException {
-	super(config);
-	this.command = command;
+	    throws VaultNameNotPresentException, RegionNotSupportedException {
+	super(config, command);
 
 	if ((null == command.vaultName || command.vaultName.isEmpty())
 		&& (null == config.getVault() || config.getVault().isEmpty())) {
@@ -28,6 +27,7 @@ public class InventoryRetrievalCommand extends AbstractCommand {
 
     }
 
+    @Override
     public void run() {
 
 	System.out.println("START: inventory-retrieve\n");

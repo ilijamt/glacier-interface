@@ -1,6 +1,7 @@
 package com.matoski.glacier.interfaces;
 
 import com.matoski.glacier.errors.InvalidMetadataException;
+import com.matoski.glacier.pojo.Archive;
 
 /**
  * Metadata definition
@@ -26,7 +27,16 @@ public interface IMetadata {
      * 
      * @throws InvalidMetadataException
      */
-    public IGlacierInterfaceMetadata process(String data)
+    public IGlacierInterfaceMetadata parse(String data)
 	    throws InvalidMetadataException;
+
+    /**
+     * Encode the data into the correct format for the metadata in question
+     * 
+     * @param archive
+     * 
+     * @return
+     */
+    public String encode(Archive archive);
 
 }

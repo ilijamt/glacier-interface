@@ -7,18 +7,15 @@ import com.amazonaws.services.glacier.model.CreateVaultResult;
 import com.amazonaws.services.glacier.model.DescribeVaultRequest;
 import com.amazonaws.services.glacier.model.DescribeVaultResult;
 import com.matoski.glacier.cli.CommandCreateVault;
+import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 
-public class CreateVaultCommand extends AbstractCommand {
-
-    protected CommandCreateVault command;
+public class CreateVaultCommand extends AbstractCommand<CommandCreateVault> {
 
     public CreateVaultCommand(Config config, CommandCreateVault command)
-	    throws VaultNameNotPresentException {
-
-	super(config);
-	this.command = command;
+	    throws VaultNameNotPresentException, RegionNotSupportedException {
+	super(config, command);
 
 	if ((null == command.vaultName || command.vaultName.isEmpty())
 		&& (null == config.getVault() || config.getVault().isEmpty())) {
@@ -30,6 +27,7 @@ public class CreateVaultCommand extends AbstractCommand {
 	}
     }
 
+    @Override
     public void run() {
 
 	System.out.println("START: create-vault\n");

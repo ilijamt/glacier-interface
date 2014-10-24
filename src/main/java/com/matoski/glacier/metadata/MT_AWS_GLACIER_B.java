@@ -1,14 +1,12 @@
 package com.matoski.glacier.metadata;
 
-import java.util.Date;
-
 import org.apache.commons.codec.binary.Base64;
 
-import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.google.gson.Gson;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.InvalidMetadataException;
 import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
+import com.matoski.glacier.pojo.Archive;
 
 /**
  * mt-aws-glacier type B metadata
@@ -50,15 +48,15 @@ public class MT_AWS_GLACIER_B extends GenericParser implements
     /**
      * @return the mtime
      */
-    public Date getMtime() {
-	return ISO8601Utils.parse(this.mtime);
+    public long getMtime() {
+	return Long.parseLong(this.mtime);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Date giGetModifiedDate() {
+    public long giGetModifiedDate() {
 	return this.getMtime();
     }
 
@@ -74,7 +72,7 @@ public class MT_AWS_GLACIER_B extends GenericParser implements
      * {@inheritDoc}
      */
     @Override
-    public IGlacierInterfaceMetadata process(String data)
+    public IGlacierInterfaceMetadata parse(String data)
 	    throws InvalidMetadataException {
 	if (!verify(data)) {
 	    throw new InvalidMetadataException();
@@ -113,4 +111,17 @@ public class MT_AWS_GLACIER_B extends GenericParser implements
     public boolean verify(String data) {
 	return data.startsWith(IDENTIFIER);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String encode(Archive archive) {
+	this.mtime = Long.toString(archive.getModifiedDate());
+	this.filename = archive.getName();
+	return IDENTIFIER
+		+ Base64.encodeBase64String(new Gson().toJson(this).getBytes());
+
+    }
+
 }
