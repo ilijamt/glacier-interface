@@ -210,7 +210,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     }
 
-    public Archive UploadMultipartFile(File file, int partSize,
+    public Archive UploadMultipartFile(File file, int retry, int partSize,
 	    String vaultName, Metadata metadata, boolean doNotComplete)
 	    throws UploadTooManyPartsException {
 
@@ -219,7 +219,6 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	long fileSize = file.length();
 	UploadPiece piece = null;
 	int pieces = (int) Math.ceil(fileSize / (double) partSize);
-	int retry = 0;
 	List<byte[]> checksums = new LinkedList<byte[]>();
 
 	if (!isValidMaxParts(file, partSize)) {

@@ -94,8 +94,9 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 
 		try {
 		    archive = this.upload.UploadMultipartFile(
-			    new File(fileName), command.partSize,
-			    command.vaultName, metadata, command.testing);
+			    new File(fileName), command.retryFailedUpload,
+			    command.partSize, command.vaultName, metadata,
+			    command.testing);
 
 		    this.journal.addArchive(archive);
 

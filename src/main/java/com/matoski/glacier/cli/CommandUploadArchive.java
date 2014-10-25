@@ -24,6 +24,9 @@ public class CommandUploadArchive {
     @Parameter(names = "--part-size", description = "")
     public Integer partSize = 1;
 
+    @Parameter(names = "--retry-failed-upload", description = "How many times shuold it retry to upload a failed piece before giving up.")
+    public Integer retryFailedUpload = 2;
+
     @Parameter(hidden = true, names = "--testing", description = "Testing command")
     public Boolean testing;
 
