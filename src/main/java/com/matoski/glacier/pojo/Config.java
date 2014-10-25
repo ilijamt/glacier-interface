@@ -113,7 +113,7 @@ public class Config {
 	if (null != arguments.amazonVault) {
 	    this.setVault(arguments.amazonVault);
 	}
-
+	
     }
 
     /**
@@ -282,5 +282,23 @@ public class Config {
 	bufferedWriter.close();
 	fileWriter.close();
 
+    }
+
+    /**
+     * Get journal 
+     * 
+     * @return
+     */
+    public String getJournal() {
+        return journal;
+    }
+
+    /**
+     * Set journal
+     * 
+     * @param journal
+     */
+    public void setJournal(String journal) {
+        this.journal = journal;
     }
 }

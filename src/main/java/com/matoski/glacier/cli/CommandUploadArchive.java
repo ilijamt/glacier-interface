@@ -17,7 +17,10 @@ public class CommandUploadArchive {
 
     @Parameter(names = "--metadata", description = "Available: mt2")
     public String metadata = "mt2";
-    
+
+    @Parameter(required = true, names = "--journal", description = "Journal")
+    public String journal;
+
     @Parameter(names = "--part-size", description = "")
     public Integer partSize = 8;
 
