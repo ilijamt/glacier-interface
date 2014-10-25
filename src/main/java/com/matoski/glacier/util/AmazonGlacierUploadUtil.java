@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,6 +34,7 @@ import com.matoski.glacier.enums.UploadMultipartStatus;
 import com.matoski.glacier.errors.InvalidUploadedChecksumException;
 import com.matoski.glacier.errors.UploadTooManyPartsException;
 import com.matoski.glacier.pojo.Archive;
+import com.matoski.glacier.pojo.MultipartUploadStatus;
 import com.matoski.glacier.pojo.UploadPiece;
 
 /**
@@ -210,13 +211,15 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     }
 
     public Archive UploadMultipartFile(File file, int partSize,
-	    String vaultName, Metadata metadata)
+	    String vaultName, Metadata metadata, boolean doNotComplete)
 	    throws UploadTooManyPartsException {
 
+	MultipartUploadStatus uploadStatus = null;
 	Archive archive = new Archive();
 	long fileSize = file.length();
 	UploadPiece piece = null;
 	int pieces = (int) Math.ceil(fileSize / (double) partSize);
+	int retry = 0;
 	List<byte[]> checksums = new LinkedList<byte[]>();
 
 	if (!isValidMaxParts(file, partSize)) {
@@ -225,17 +228,75 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
 	final AmazonGlacierProgressBar bar = new AmazonGlacierProgressBar();
 	bar.setTotal(fileSize);
+	archive.setCreatedDate(new Date());
+
+	// 0. Get the upload state file
+	uploadStatus = new MultipartUploadStatus(pieces);
+	uploadStatus.setPartSize(partSize);
+	uploadStatus.setParts(pieces);
 
 	// 1. Initiate MultiPart Upload
+	InitiateMultipartUploadResult initiate = this
+		.InitiateMultipartUpload(vaultName, Parser.getParser(metadata)
+			.encode(archive), partSize);
 
-	this.InitiateMultipartUpload(vaultName, Parser.getParser(metadata)
-		.encode(archive), partSize);
+	uploadStatus.setId(initiate.getUploadId());
+	try {
+	    uploadStatus.write(file);
+	} catch (IOException e) {
+	    System.err.println(String.format("ERROR: %s", e.getMessage()));
+	}
 
 	// 2. Upload Pieces
+	for (int i = 0; i < pieces; i++) {
+	    try {
+		piece = this.UploadMultipartPiece(file, pieces, i, partSize,
+			vaultName, initiate.getUploadId());
 
-	// 3. Finish MultiPart Upload
+		if (retry <= 3
+			&& (piece.getStatus() == UploadMultipartStatus.PIECE_CHECKSUM_MISMATCH)) {
+		    System.err
+			    .println(String
+				    .format("ERROR: Piece: %s/%s failed to upload, retrying again",
+					    i, pieces));
+		    i--;
+		    retry++;
+		} else {
+		    retry = 0;
+		}
 
-	// UploadMultipartStatus.COMPLETE;
+		checksums
+			.add(BinaryUtils.fromHex(piece.getCalculatedChecksum()));
+
+		// add the piece to the state file
+		uploadStatus.addPiece(piece);
+		uploadStatus.write(file);
+
+	    } catch (NoSuchAlgorithmException | AmazonClientException
+		    | IOException | InvalidUploadedChecksumException e) {
+		System.err.println(String.format("ERROR: %s", e.getMessage()));
+	    }
+
+	}
+
+	if (doNotComplete) {
+	    this.CancelMultipartUpload(initiate.getUploadId(), vaultName);
+	} else {
+	    // 3. Finish MultiPart Upload
+	    CompleteMultipartUploadResult complete = this
+		    .CompleteMultipartUpload(fileSize, initiate.getUploadId(),
+			    vaultName,
+			    TreeHashGenerator.calculateTreeHash(checksums));
+
+	    archive.setHash(complete.getChecksum());
+	    archive.setId(complete.getArchiveId());
+	    archive.setUri(complete.getLocation());
+
+	}
+
+	archive.setSize(fileSize);
+	archive.setName(file.toString());
+	archive.setModifiedDate(file.lastModified());
 
 	return archive;
     }
@@ -244,6 +305,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
      * Upload a piece of the file to amazon glacier
      * 
      * @param file
+     * @param pieces
      * @param part
      * @param partSize
      * @param vaultName
@@ -257,19 +319,20 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public UploadPiece UploadMultipartPiece(File file, int part, int partSize,
-	    String vaultName, String uploadId) throws AmazonServiceException,
-	    NoSuchAlgorithmException, AmazonClientException,
-	    FileNotFoundException, IOException,
+    public UploadPiece UploadMultipartPiece(File file, int pieces, int part,
+	    int partSize, String vaultName, String uploadId)
+	    throws AmazonServiceException, NoSuchAlgorithmException,
+	    AmazonClientException, FileNotFoundException, IOException,
 	    InvalidUploadedChecksumException {
-	return UploadMultipartPiece(file, part, partSize, vaultName, uploadId,
-		null, null);
+	return UploadMultipartPiece(file, pieces, part, partSize, vaultName,
+		uploadId, null, null);
     }
 
     /**
      * Upload a piece of the file to amazon glacier
      * 
      * @param file
+     * @param pieces
      * @param part
      * @param partSize
      * @param vaultName
@@ -285,22 +348,34 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public UploadPiece UploadMultipartPiece(File file, int part, int partSize,
-	    String vaultName, String uploadId, ProgressListener listener,
-	    RequestMetricCollector collector) throws AmazonServiceException,
-	    NoSuchAlgorithmException, AmazonClientException,
-	    FileNotFoundException, IOException {
+    public UploadPiece UploadMultipartPiece(File file, int pieces, int part,
+	    int partSize, String vaultName, String uploadId,
+	    ProgressListener listener, RequestMetricCollector collector)
+	    throws AmazonServiceException, NoSuchAlgorithmException,
+	    AmazonClientException, FileNotFoundException, IOException {
 
 	UploadPiece ret = new UploadPiece();
 
 	ret.setPart(part);
+	ret.setId(uploadId);
 	ret.setStatus(UploadMultipartStatus.PIECE_START);
 
-	byte[] buffer = new byte[partSize];
+	int bufferSize = partSize;
+
 	FileInputStream stream = new FileInputStream(file);
 
 	int position = part * (int) partSize;
 	stream.skip(position);
+
+	if (part > pieces) {
+	    ret.setStatus(UploadMultipartStatus.PIECE_INVALID_PART);
+	    stream.close();
+	    return ret;
+	} else if (part == (pieces - 1)) {
+	    bufferSize = (int) (file.length() - position);
+	}
+
+	byte[] buffer = new byte[bufferSize];
 	int read = stream.read(buffer);
 	stream.close();
 

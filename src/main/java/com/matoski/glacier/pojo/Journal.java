@@ -1,14 +1,22 @@
 package com.matoski.glacier.pojo;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.InvalidMetadataException;
@@ -227,24 +235,67 @@ public class Journal {
     }
 
     /**
-     * Save the journal to a file as a JSON
+     * Load the journal into memory
      * 
-     * @param filename
+     * @param file
+     * 
+     * @return
      * 
      * @throws IOException
      */
-    public void save(String filename) throws IOException {
+    public static Journal load(String file) throws IOException {
+	return load(new File(file));
+    }
 
-	File file = new File(filename);
-	FileWriter fileWriter = null;
-	BufferedWriter bufferedWriter = null;
+    /**
+     * Load the journal into memory
+     * 
+     * @param file
+     * 
+     * @return
+     * 
+     * @throws IOException
+     */
+    public static Journal load(File file) throws IOException {
+
+	if (!file.exists()) {
+	    // no journal, it's an empty one so we just return an empty Journal
+	    return new Journal();
+	}
+
+	String json = new String(Files.readAllBytes(file.toPath()),
+		StandardCharsets.UTF_8);
+
+	return new Gson().fromJson(json, Journal.class);
+
+    }
+
+    /**
+     * Save the journal to a file as a JSON
+     * 
+     * @param file
+     * 
+     * @throws IOException
+     */
+    public void save(String file) throws IOException {
+	save(new File(file));
+    }
+
+    /**
+     * Save the journal to a file as a JSON
+     * 
+     * @param file
+     * 
+     * @throws IOException
+     */
+    public void save(File file) throws IOException {
 
 	if (!file.exists()) {
 	    file.createNewFile();
 	}
 
-	fileWriter = new FileWriter(file.getAbsoluteFile());
-	bufferedWriter = new BufferedWriter(fileWriter);
+	FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+	BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create()
 		.toJson(this));
 

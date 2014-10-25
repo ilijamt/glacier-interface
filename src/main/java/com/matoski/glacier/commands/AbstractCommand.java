@@ -56,6 +56,7 @@ public abstract class AbstractCommand<T> implements ICommand, Runnable {
      * @throws VaultNameNotPresentException
      * @throws RegionNotSupportedException
      */
+    @SuppressWarnings("unused")
     public AbstractCommand(Config config, T command) throws VaultNameNotPresentException,
 	    RegionNotSupportedException {
 
@@ -73,9 +74,6 @@ public abstract class AbstractCommand<T> implements ICommand, Runnable {
 	Boolean hasHttpEndpoint = this.region.hasHttpEndpoint(SERVICE_NAME);
 	Boolean hasHttpsEndpoint = this.region.hasHttpsEndpoint(SERVICE_NAME);
 	String endpoint = this.region.getServiceEndpoint(SERVICE_NAME);
-
-	System.out.println(String.format("(http: %s, https: %s) %s",
-		hasHttpEndpoint, hasHttpsEndpoint, endpoint));
 
 	this.client.setEndpoint(endpoint);
 

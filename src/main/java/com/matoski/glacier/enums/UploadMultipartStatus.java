@@ -1,5 +1,8 @@
 package com.matoski.glacier.enums;
 
+import org.msgpack.annotation.Message;
+
+@Message
 public enum UploadMultipartStatus {
     
     PIECE_START,

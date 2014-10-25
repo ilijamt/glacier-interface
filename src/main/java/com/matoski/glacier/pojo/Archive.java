@@ -44,6 +44,29 @@ public class Archive {
     private String hash;
 
     /**
+     * Uri of the uploaded file
+     */
+    private String uri;
+
+    /**
+     * get the uploaded uri
+     * 
+     * @return
+     */
+    public String getUri() {
+	return uri;
+    }
+
+    /**
+     * Set the uploaded uri
+     * 
+     * @param uri
+     */
+    public void setUri(String uri) {
+	this.uri = uri;
+    }
+
+    /**
      * @return the id
      */
     public String getId() {
@@ -153,6 +176,7 @@ public class Archive {
 		&& ((null != this.name) ? this.name.equals(archive.name) : true)
 		&& (this.size == archive.size)
 		&& ((null != this.hash) ? this.hash.equals(archive.hash) : true)
+		&& ((null != this.uri) ? this.uri.equals(archive.uri) : true)
 		&& ((null != this.createdDate) ? (this.createdDate
 			.compareTo(archive.createdDate) == 0) : true)
 		&& (this.modifiedDate == archive.modifiedDate);

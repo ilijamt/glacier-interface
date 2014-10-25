@@ -38,3 +38,5 @@ bin/
 
 #
 config.json
+demo.log
+demo.log.state

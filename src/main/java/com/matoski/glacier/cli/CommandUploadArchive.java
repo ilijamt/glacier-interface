@@ -22,6 +22,9 @@ public class CommandUploadArchive {
     public String journal;
 
     @Parameter(names = "--part-size", description = "")
-    public Integer partSize = 8;
+    public Integer partSize = 1;
+
+    @Parameter(hidden = true, names = "--testing", description = "Testing command")
+    public Boolean testing;
 
 }

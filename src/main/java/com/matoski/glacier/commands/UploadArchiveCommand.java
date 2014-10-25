@@ -1,6 +1,7 @@
 package com.matoski.glacier.commands;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.matoski.glacier.cli.CommandUploadArchive;
 import com.matoski.glacier.enums.Metadata;
@@ -47,7 +48,7 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
     public UploadArchiveCommand(Config config, CommandUploadArchive command)
 	    throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
-	
+
 	if ((null == command.vaultName || command.vaultName.isEmpty())
 		&& (null == config.getVault() || config.getVault().isEmpty())) {
 	    throw new VaultNameNotPresentException();
@@ -59,6 +60,12 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 
 	command.partSize = command.partSize
 		* (int) AmazonGlacierBaseUtil.MINIMUM_PART_SIZE;
+
+	try {
+	    this.journal = Journal.load(command.journal);
+	} catch (IOException e) {
+	    this.journal = new Journal();
+	}
 
 	this.metadata = Metadata.from(command.metadata);
 	this.upload = new AmazonGlacierUploadUtil(credentials, client, region);
@@ -79,6 +86,8 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 
 	    Archive archive = null;
 
+	    // fix the Journal if the data doesn't exist
+
 	    for (String fileName : command.files) {
 		System.out.println(String.format("Processing: %s (size: %s)",
 			fileName, new File(fileName).length()));
@@ -86,8 +95,10 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 		try {
 		    archive = this.upload.UploadMultipartFile(
 			    new File(fileName), command.partSize,
-			    command.vaultName, metadata);
+			    command.vaultName, metadata, command.testing);
+
 		    this.journal.addArchive(archive);
+
 		} catch (UploadTooManyPartsException e) {
 		    e.printStackTrace();
 		}
