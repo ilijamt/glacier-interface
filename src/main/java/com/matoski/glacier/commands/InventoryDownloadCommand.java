@@ -45,7 +45,7 @@ public class InventoryDownloadCommand extends
     @Override
     public void run() {
 
-	System.out.println("START: inventory-retrieve\n");
+	System.out.println("START: inventory-download\n");
 
 	String jobId = null;
 
@@ -111,6 +111,6 @@ public class InventoryDownloadCommand extends
 
 	}
 
-	System.out.println("\nEND: inventory-retrieve");
+	System.out.println("\nEND: inventory-download");
     }
 }

@@ -3,6 +3,43 @@ Glacier Interface
 
 A command line tool to interface with glacier.
 
+Tasks
+-----
+
+- [ ] Help
+- [ ] Main
+  - [ ] Config
+    - [ ] Save
+    - [ ] Load
+- [ ] Pojo
+  - [ ] Archive
+  - [ ] Config
+  - [ ] Journal
+  - [ ] Upload Piece
+  - [ ] Upload Status
+- [ ] Vaults
+  - [ ] List
+  - [ ] Create
+  - [ ] Delete
+- [ ] Journal
+  - [ ] Create
+  - [ ] Load
+  - [ ] Parse from GlacierInventory
+  - [ ] Metadata
+    - [ ] mt-aws-glacier B  
+- [ ] Inventory
+  - [ ] Retrieve
+  - [ ] Download
+- [ ] Archive
+  - [ ] Delete
+  - [ ] Upload
+    - [ ] Save Journal
+    - [ ] Resume
+      - [ ] Save state
+      - [ ] Load state
+      - [ ] 
+  - [ ] Download
+
 Usage
 -----
 glacier-interface &lt;options&gt; &lt;commands&gt; &lt;command-options&gt;
