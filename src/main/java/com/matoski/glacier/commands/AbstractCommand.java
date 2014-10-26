@@ -46,7 +46,7 @@ public abstract class AbstractCommand<T> implements ICommand, Runnable {
     /**
      * Service name
      */
-    protected static String SERVICE_NAME = "glacier";
+    public static String SERVICE_NAME = "glacier";
 
     /**
      * Constructor
@@ -57,8 +57,8 @@ public abstract class AbstractCommand<T> implements ICommand, Runnable {
      * @throws RegionNotSupportedException
      */
     @SuppressWarnings("unused")
-    public AbstractCommand(Config config, T command) throws VaultNameNotPresentException,
-	    RegionNotSupportedException {
+    public AbstractCommand(Config config, T command)
+	    throws VaultNameNotPresentException, RegionNotSupportedException {
 
 	this.command = command;
 	this.config = config;
@@ -67,7 +67,7 @@ public abstract class AbstractCommand<T> implements ICommand, Runnable {
 		config.getSecretKey());
 	this.client = new AmazonGlacierClient(this.credentials);
 
-	if (!this.region.isServiceSupported("glacier")) {
+	if (!this.region.isServiceSupported(AbstractCommand.SERVICE_NAME)) {
 	    throw new RegionNotSupportedException();
 	}
 
@@ -75,6 +75,7 @@ public abstract class AbstractCommand<T> implements ICommand, Runnable {
 	Boolean hasHttpsEndpoint = this.region.hasHttpsEndpoint(SERVICE_NAME);
 	String endpoint = this.region.getServiceEndpoint(SERVICE_NAME);
 
+	this.client.setRegion(region);
 	this.client.setEndpoint(endpoint);
 
     }

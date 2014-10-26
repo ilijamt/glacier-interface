@@ -2,8 +2,6 @@ package com.matoski.glacier.pojo;
 
 import java.util.List;
 
-import org.msgpack.annotation.Message;
-
 /**
  * Amazon Glacier Inventory Metadata
  * 
@@ -13,7 +11,6 @@ import org.msgpack.annotation.Message;
  * @author ilijamt
  *
  */
-@Message
 public class GlacierInventory {
 
     /**
@@ -22,7 +19,6 @@ public class GlacierInventory {
      * @author ilijamt
      *
      */
-    @Message
     public static class ArchiveItem {
 
 	/**

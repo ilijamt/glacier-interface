@@ -6,12 +6,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.matoski.glacier.enums.UploadMultipartStatus;
 
 /**
  * A state file, used to store the state of the uploading file, we use this to
@@ -34,6 +37,18 @@ public class MultipartUploadStatus {
 
 	return status;
 
+    }
+
+    /**
+     * Do we have an upload status or not ?
+     * 
+     * @param file
+     * @return
+     */
+    public static Boolean has(File file) {
+	file = generateFile(file);
+
+	return file.exists() && file.isFile();
     }
 
     /**
@@ -71,9 +86,14 @@ public class MultipartUploadStatus {
     }
 
     /**
+     * The file for the upload state
+     */
+    private transient File file;
+
+    /**
      * The ID of the upload process
      */
-    private String id;
+    private String id;;
 
     /**
      * The total parts available
@@ -112,7 +132,6 @@ public class MultipartUploadStatus {
 	for (int i = 0; i < total; i++) {
 	    this.pieces.put(i, null);
 	}
-
     }
 
     /**
@@ -122,6 +141,15 @@ public class MultipartUploadStatus {
      */
     public void addPiece(UploadPiece piece) {
 	this.pieces.put(piece.getPart(), piece);
+    }
+
+    /**
+     * Get the file
+     * 
+     * @return
+     */
+    public File getFile() {
+	return file;
     }
 
     /**
@@ -157,6 +185,68 @@ public class MultipartUploadStatus {
      */
     public Date getStarted() {
 	return started;
+    }
+
+    /**
+     * Is everything finished?
+     * 
+     * It will iterate over {@link MultipartUploadStatus#pieces} and compare the
+     * status with {@link UploadMultipartStatus#PIECE_COMPLETE}
+     * 
+     * If the state is finished, {@link MultipartUploadStatus#remove()} is
+     * called.
+     * 
+     * @return
+     */
+    public Boolean isFinished() {
+
+	if (parts < this.pieces.size()) {
+	    // we have less elements in the map than there should be
+	    // parts, so it's not finished
+	    return false;
+	}
+
+	Boolean valid = parts == this.pieces.size();
+
+	// go over the elements, and compare if all the pieces are complete
+	for (Entry<Integer, UploadPiece> piece : this.pieces.entrySet()) {
+	    valid &= (piece.getValue().getStatus() == UploadMultipartStatus.PIECE_COMPLETE);
+	}
+
+	if (valid) {
+	    this.remove();
+	}
+
+	return valid;
+    }
+
+    /**
+     * Remove the state file
+     * 
+     * @return
+     */
+    public Boolean remove() {
+
+	File file = this.getFile();
+
+	if (null == file) {
+	    return false;
+	}
+
+	if (!file.exists() || !file.isFile()) {
+	    return false;
+	}
+
+	return file.delete();
+    }
+
+    /**
+     * Set the file
+     * 
+     * @param file
+     */
+    public void setFile(File file) {
+	this.file = generateFile(file);
     }
 
     /**

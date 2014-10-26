@@ -1,14 +1,11 @@
 package com.matoski.glacier.pojo;
 
-import org.msgpack.annotation.Message;
-
 import com.matoski.glacier.enums.UploadMultipartStatus;
 
 /**
  * @author ilijamt
  *
  */
-@Message
 public class UploadPiece {
 
     /**

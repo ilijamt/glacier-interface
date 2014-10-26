@@ -10,6 +10,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -33,6 +35,7 @@ import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.enums.UploadMultipartStatus;
 import com.matoski.glacier.errors.InvalidUploadedChecksumException;
 import com.matoski.glacier.errors.UploadTooManyPartsException;
+import com.matoski.glacier.interfaces.IUploadPieceHandler;
 import com.matoski.glacier.pojo.Archive;
 import com.matoski.glacier.pojo.MultipartUploadStatus;
 import com.matoski.glacier.pojo.UploadPiece;
@@ -46,6 +49,11 @@ import com.matoski.glacier.pojo.UploadPiece;
  * @author ilijamt
  */
 public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
+
+    /**
+     * Maximum executor threads
+     */
+    private static final int MAX_EXECUTOR_THREADS = 10;
 
     /**
      * Constructor
@@ -210,12 +218,10 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     }
 
-    
     public Archive UploadMultipartFile(File file, int retry, int partSize,
 	    String vaultName, Metadata metadata, boolean doNotComplete)
 	    throws UploadTooManyPartsException {
 
-	MultipartUploadStatus uploadStatus = null;
 	Archive archive = new Archive();
 	long fileSize = file.length();
 	UploadPiece piece = null;
@@ -226,12 +232,14 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	    throw new UploadTooManyPartsException();
 	}
 
-	final AmazonGlacierProgressBar bar = new AmazonGlacierProgressBar();
-	bar.setTotal(fileSize);
+	// final AmazonGlacierProgressBar bar = new AmazonGlacierProgressBar();
+	// bar.setTotal(fileSize);
+
 	archive.setCreatedDate(new Date());
 
 	// 0. Get the upload state file
-	uploadStatus = new MultipartUploadStatus(pieces);
+	final MultipartUploadStatus uploadStatus = new MultipartUploadStatus(
+		pieces);
 	uploadStatus.setPartSize(partSize);
 	uploadStatus.setParts(pieces);
 
@@ -240,6 +248,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 		.InitiateMultipartUpload(vaultName, Parser.getParser(metadata)
 			.encode(archive), partSize);
 
+	uploadStatus.setFile(file);
 	uploadStatus.setId(initiate.getUploadId());
 	try {
 	    uploadStatus.write(file);
@@ -250,7 +259,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	// 2. Upload Pieces
 	for (int i = 0; i < pieces; i++) {
 	    try {
-		piece = this.UploadMultipartPiece(file, pieces, i, partSize,
+		piece = UploadMultipartPiece(file, pieces, i, partSize,
 			vaultName, initiate.getUploadId());
 
 		if (retry <= 3
@@ -278,6 +287,8 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	    }
 
 	}
+
+	uploadStatus.isFinished();
 
 	if (doNotComplete) {
 	    this.CancelMultipartUpload(initiate.getUploadId(), vaultName);
