@@ -113,13 +113,8 @@ public class Config {
 	if (null != arguments.amazonVault) {
 	    this.setVault(arguments.amazonVault);
 	}
-	
-    }
 
-    /**
-     * The location of the journal to be used in the
-     */
-    private String journal;
+    }
 
     /**
      * Amazon region to use
@@ -284,21 +279,4 @@ public class Config {
 
     }
 
-    /**
-     * Get journal 
-     * 
-     * @return
-     */
-    public String getJournal() {
-        return journal;
-    }
-
-    /**
-     * Set journal
-     * 
-     * @param journal
-     */
-    public void setJournal(String journal) {
-        this.journal = journal;
-    }
 }
