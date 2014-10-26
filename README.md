@@ -6,39 +6,40 @@ A command line tool to interface with glacier.
 Tasks
 -----
 
-- [ ] Help
-- [ ] Main
-  - [ ] Config
-    - [ ] Save
-    - [ ] Load
-- [ ] Pojo
-  - [ ] Archive
-  - [ ] Config
-  - [ ] Journal
-  - [ ] Upload Piece
-  - [ ] Upload Status
-- [ ] Vaults
-  - [ ] List
-  - [ ] Create
-  - [ ] Delete
-- [ ] Journal
-  - [ ] Create
-  - [ ] Load
-  - [ ] Parse from GlacierInventory
-  - [ ] Metadata
-    - [ ] mt-aws-glacier B  
-- [ ] Inventory
-  - [ ] Retrieve
-  - [ ] Download
-- [ ] Archive
-  - [ ] Delete
-  - [ ] Upload
-    - [ ] Save Journal
-    - [ ] Resume
-      - [ ] Save state
-      - [ ] Load state
-      - [ ] 
-  - [ ] Download
+* [x] Help
+* [x] Main
+  * [x] Config
+    * [x] Save
+    * [x] Load
+* [x] Pojo
+  * [x] Archive
+  * [x] Config
+  * [x] Journal
+  * [x] Upload Piece
+  * [x] Upload Status
+* [x] Vaults
+  * [x] List
+  * [x] Create
+  * [x] Delete
+* [ ] Journal
+  * [x] Create
+  * [x] Load
+  * [x] Parse from GlacierInventory
+  * [x] Metadata
+    * [x] mt-aws-glacier B  
+* [x] Inventory
+  * [x] Retrieve
+  * [x] Download
+* [ ] Archive
+  * [x] Delete
+  * [ ] Upload
+    * [x] Save Journal
+    * [ ] Resume
+      * [x] Save state
+      * [ ] Load state 
+  * [ ] Download
+* [ ] Sync
+* [ ] Filters
 
 Usage
 -----
