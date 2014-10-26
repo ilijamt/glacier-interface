@@ -6,5 +6,7 @@ public interface IUploadPieceHandler {
 
     void start();
 
+    void exception(Exception e);
+
     void end(int part, UploadPiece piece);
 }

@@ -10,8 +10,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -34,8 +32,8 @@ import com.amazonaws.util.BinaryUtils;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.enums.UploadMultipartStatus;
 import com.matoski.glacier.errors.InvalidUploadedChecksumException;
+import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.UploadTooManyPartsException;
-import com.matoski.glacier.interfaces.IUploadPieceHandler;
 import com.matoski.glacier.pojo.Archive;
 import com.matoski.glacier.pojo.MultipartUploadStatus;
 import com.matoski.glacier.pojo.UploadPiece;
@@ -51,11 +49,6 @@ import com.matoski.glacier.pojo.UploadPiece;
 public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     /**
-     * Maximum executor threads
-     */
-    private static final int MAX_EXECUTOR_THREADS = 10;
-
-    /**
      * Constructor
      * 
      * @param credentials
@@ -65,6 +58,20 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     public AmazonGlacierUploadUtil(BasicAWSCredentials credentials,
 	    AmazonGlacierClient client, Region region) {
 	super(credentials, client, region);
+    }
+
+    /**
+     * Constructor
+     * 
+     * @param accessKey
+     * @param secretKey
+     * @param region
+     * 
+     * @throws RegionNotSupportedException
+     */
+    public AmazonGlacierUploadUtil(String accessKey, String secretKey,
+	    String region) throws RegionNotSupportedException {
+	super(accessKey, secretKey, region);
     }
 
     /**
