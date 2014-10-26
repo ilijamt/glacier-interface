@@ -16,7 +16,7 @@ import com.matoski.glacier.pojo.UploadPiece;
  * 
  * @author ilijamt
  */
-public class ThreadUploadPiece extends AmazonGlacierUploadUtil implements
+public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil implements
 	Runnable {
 
     /**
@@ -68,7 +68,7 @@ public class ThreadUploadPiece extends AmazonGlacierUploadUtil implements
      * 
      * @throws RegionNotSupportedException
      */
-    public ThreadUploadPiece(File file, int pieces, int part, int partSize,
+    public ThreadAmazonGlacierUploadUtil(File file, int pieces, int part, int partSize,
 	    String vaultName, String uploadId, String accessKey,
 	    String secretKey, String region, ProgressListener listener,
 	    RequestMetricCollector collector)
@@ -93,7 +93,7 @@ public class ThreadUploadPiece extends AmazonGlacierUploadUtil implements
      * 
      * @throws RegionNotSupportedException
      */
-    public ThreadUploadPiece(File file, int pieces, int part, int partSize,
+    public ThreadAmazonGlacierUploadUtil(File file, int pieces, int part, int partSize,
 	    String vaultName, String uploadId, String accessKey,
 	    String secretKey, String region) throws RegionNotSupportedException {
 	super(accessKey, secretKey, region);
