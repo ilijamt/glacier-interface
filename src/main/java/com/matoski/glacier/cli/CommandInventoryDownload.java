@@ -18,4 +18,7 @@ public class CommandInventoryDownload {
     @Parameter(names = "--metadata", description = "Available: mt2")
     public String metadata = "mt2";
 
+    @Parameter(names = "--raw", description = "Store the glacier full data instead of the parsed one, usefull for creating new metadata parsers")
+    public Boolean raw = false;
+
 }

@@ -2,7 +2,7 @@ package com.matoski.glacier.enums;
 
 public enum Metadata {
 
-    MT_AWS_GLACIER_B("mt2");
+    FAST_GLACIER("fg"), MT_AWS_GLACIER_B("mt2");
 
     private String propertyName;
 

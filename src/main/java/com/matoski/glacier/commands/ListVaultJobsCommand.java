@@ -31,7 +31,7 @@ public class ListVaultJobsCommand extends AbstractCommand<CommandListVaultJobs> 
     @Override
     public void run() {
 
-	System.out.println("START: list-jobs\n");
+	System.out.println("START: list-vault-jobs\n");
 
 	try {
 
@@ -115,6 +115,6 @@ public class ListVaultJobsCommand extends AbstractCommand<CommandListVaultJobs> 
 		    e.getMessage()));
 	}
 
-	System.out.println("\nEND: list-jobs");
+	System.out.println("\nEND: list-vault-jobs");
     }
 }

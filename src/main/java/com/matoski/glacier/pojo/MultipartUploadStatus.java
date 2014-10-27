@@ -147,8 +147,9 @@ public class MultipartUploadStatus {
      * Add a piece that has been processed
      * 
      * @param piece
+     * @throws IOException
      */
-    public void addPiece(UploadPiece piece) {
+    public void addPiece(UploadPiece piece) throws IOException {
 	this.pieces.put(piece.getPart(), piece);
 	this.write();
     }
@@ -304,8 +305,9 @@ public class MultipartUploadStatus {
      * 
      * @return
      * @throws IOException
+     * @throws NullPointerException
      */
-    public boolean write() throws IOException {
+    public boolean write() throws NullPointerException, IOException {
 	return write(getFile());
     }
 
@@ -315,10 +317,13 @@ public class MultipartUploadStatus {
      * @param file
      * @return
      * @throws IOException
+     * @throws NullPointerException
      */
-    public boolean write(File file) throws IOException {
+    protected boolean write(File file) throws NullPointerException, IOException {
 
-	file = generateFile(file);
+	if (null == file) {
+	    throw new NullPointerException();
+	}
 
 	if (!file.exists()) {
 	    file.createNewFile();
@@ -333,17 +338,6 @@ public class MultipartUploadStatus {
 	fileWriter.close();
 
 	return true;
-    }
-
-    /**
-     * Write the status to file
-     * 
-     * @param file
-     * @return
-     * @throws IOException
-     */
-    public boolean write(String file) throws IOException {
-	return this.write(new File(file));
     }
 
 }

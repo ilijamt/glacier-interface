@@ -17,7 +17,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -265,8 +264,8 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	uploadStatus.setId(initiate.getUploadId());
 
 	try {
-	    uploadStatus.write(file);
-	} catch (IOException e) {
+	    uploadStatus.write();
+	} catch (NullPointerException | IOException e) {
 	    System.err.println(String.format("ERROR: %s", e.getMessage()));
 	}
 
@@ -286,47 +285,37 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	    }
 
 	}
+	pool.shutdown();
+
+	try {
+	    while (!pool.awaitTermination(24L, TimeUnit.HOURS)) {
+		System.out.println("Still waiting for the executor to finish");
+	    }
+	} catch (InterruptedException e) {
+	    System.err.println(String.format("ERROR: %s", e.getMessage()));
+	}
 
 	// contains a list of the parts, with the required checksum for each
 	// part, we use this to calculate the whole checksum
-	boolean processing = true;
 	HashMap<Integer, String> state = new HashMap<>();
 	UploadPiece piece = null;
 	Future<UploadPiece> future;
 
-	// Iterate until all are done
-	while (processing) {
-	    processing = false;
-	    for (Entry<Integer, Future<UploadPiece>> entry : map.entrySet()) {
-
-		future = entry.getValue();
-
-		try {
-
-		    if (future.isDone() && !future.isCancelled()) {
-			piece = entry.getValue().get();
-		    } else {
-
-		    }
-
-		} catch (InterruptedException | ExecutionException e) {
+	// Iterate through all of them
+	for (Entry<Integer, Future<UploadPiece>> entry : map.entrySet()) {
+	    future = entry.getValue();
+	    try {
+		if (future.isDone() && !future.isCancelled()) {
+		    piece = entry.getValue().get();
+		    uploadStatus.addPiece(piece);
+		    state.put(piece.getPart(), piece.getCalculatedChecksum());
 		}
-
+	    } catch (InterruptedException | ExecutionException | IOException e) {
+		System.err.println(String.format("ERROR: %s", e.getMessage()));
 	    }
 	}
 
 	// 3. Go through the future to check the data and calculate the output
-	// for (Entry<> entry : set) {
-
-	// checksums
-	// .add(BinaryUtils.fromHex(piece.getCalculatedChecksum()));
-	//
-	// // add the piece to the state file
-	// uploadStatus.addPiece(piece);
-	// uploadStatus.write(file);
-
-	// }
-
 	// all the items are finished now, let's calculate the checksum
 	List<byte[]> checksums = new LinkedList<byte[]>();
 	for (Entry<Integer, String> entry : state.entrySet()) {

@@ -25,6 +25,7 @@ import com.matoski.glacier.util.Parser;
  * @author ilijamt
  */
 public class Journal {
+   
 
     /**
      * Load the journal into memory

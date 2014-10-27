@@ -18,6 +18,7 @@ import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.pojo.GlacierInventory;
 import com.matoski.glacier.pojo.Journal;
+import com.matoski.glacier.util.FileWriteUtils;
 
 public class InventoryDownloadCommand extends
 	AbstractCommand<CommandInventoryDownload> {
@@ -64,11 +65,10 @@ public class InventoryDownloadCommand extends
 		if (j.isCompleted()
 			&& j.getStatusCode().equalsIgnoreCase("Succeeded")) {
 		    job = j;
+		    jobId = job.getJobId();
 		}
 
 	    }
-
-	    jobId = job.getJobId();
 
 	} else {
 
@@ -101,9 +101,14 @@ public class InventoryDownloadCommand extends
 		String json = IOUtils.toString(jobOutputResult.getBody());
 		inventory = new Gson().fromJson(json, GlacierInventory.class);
 
-		Journal journal = Journal.parse(inventory, command.vaultName,
-			metadata);
-		journal.save(command.journal);
+		if (command.raw) {
+		    FileWriteUtils.toJson(command.journal, inventory);
+		} else {
+		    Journal journal = Journal.parse(inventory,
+			    command.vaultName, metadata);
+		    journal.setFile(command.journal);
+		    journal.save();
+		}
 
 	    } catch (IOException e) {
 		System.err.println("ERROR: " + e.getMessage());
