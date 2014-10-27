@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.Callable;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -11,7 +12,6 @@ import com.amazonaws.event.ProgressListener;
 import com.amazonaws.metrics.RequestMetricCollector;
 import com.matoski.glacier.enums.UploadMultipartStatus;
 import com.matoski.glacier.errors.RegionNotSupportedException;
-import com.matoski.glacier.interfaces.IUploadPieceHandler;
 import com.matoski.glacier.pojo.UploadPiece;
 
 /**
@@ -20,7 +20,7 @@ import com.matoski.glacier.pojo.UploadPiece;
  * @author ilijamt
  */
 public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
-	implements Runnable {
+	implements Callable<UploadPiece> {
 
     /**
      * The file for the upload
@@ -137,29 +137,6 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
     }
 
     /**
-     * Set a handler
-     * 
-     * @param handler
-     */
-    public void setHandler(IUploadPieceHandler handler) {
-	this.handler = handler;
-    }
-
-    /**
-     * A generic handler, used to notify it's progress
-     */
-    private IUploadPieceHandler handler;
-
-    /**
-     * Has handler
-     * 
-     * @return
-     */
-    public Boolean hasHandler() {
-	return null != handler;
-    }
-
-    /**
      * Upload
      * 
      * @param time
@@ -176,10 +153,6 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
 	    NoSuchAlgorithmException, AmazonClientException,
 	    FileNotFoundException, IOException {
 
-	if (hasHandler()) {
-	    this.handler.upload(time);
-	}
-
 	return this.UploadMultipartPiece(requestFile, requestPieces,
 		requestPart, requestPartSize, requestVaultName,
 		requestUploadId, requestListener, requestCollector);
@@ -190,14 +163,9 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
      * {@inheritDoc}
      */
     @Override
-    public void run() {
-
+    public UploadPiece call() throws Exception {
 	UploadPiece piece = null;
 	int count = 0;
-
-	if (hasHandler()) {
-	    handler.start();
-	}
 
 	for (int i = 0; i < requestRetryFailedUploads; i++) {
 
@@ -213,19 +181,15 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
 
 	    } catch (NoSuchAlgorithmException | AmazonClientException
 		    | IOException e) {
-		if (hasHandler()) {
-		    handler.exception(e);
-		} else {
-		    e.printStackTrace();
-		}
+		throw e;
 	    }
 
 	}
 
-	if (hasHandler()) {
-	    handler.end(requestPart, piece);
-	}
+	System.out.println(String.format("Uploaded piece: %s/%s", requestPart,
+		requestPieces));
 
+	return piece;
     }
 
 }

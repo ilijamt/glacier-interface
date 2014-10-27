@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -137,10 +136,21 @@ public class MultipartUploadStatus {
     /**
      * Add a piece that has been processed
      * 
+     * @param part
+     * @param piece
+     */
+    public void addPiece(int part, UploadPiece piece) {
+	this.pieces.put(part, piece);
+    }
+
+    /**
+     * Add a piece that has been processed
+     * 
      * @param piece
      */
     public void addPiece(UploadPiece piece) {
 	this.pieces.put(piece.getPart(), piece);
+	this.write();
     }
 
     /**
@@ -287,6 +297,16 @@ public class MultipartUploadStatus {
      */
     public void setStarted(Date started) {
 	this.started = started;
+    }
+
+    /**
+     * Write the status to file
+     * 
+     * @return
+     * @throws IOException
+     */
+    public boolean write() throws IOException {
+	return write(getFile());
     }
 
     /**

@@ -71,37 +71,42 @@ public class UploadPiece {
     /**
      * @param calculatedChecksum
      */
-    public void setCalculatedChecksum(String calculatedChecksum) {
+    public UploadPiece setCalculatedChecksum(String calculatedChecksum) {
 	this.calculatedChecksum = calculatedChecksum;
+	return this;
     }
 
     /**
      * @param id
      *            the id to set
      */
-    public void setId(String id) {
+    public UploadPiece setId(String id) {
 	this.id = id;
+	return this;
     }
 
     /**
      * @param part
      */
-    public void setPart(int part) {
+    public UploadPiece setPart(int part) {
 	this.part = part;
+	return this;
     }
 
     /**
      * @param status
      */
-    public void setStatus(UploadMultipartStatus status) {
+    public UploadPiece setStatus(UploadMultipartStatus status) {
 	this.status = status;
+	return this;
     }
 
     /**
      * @param uploadedChecksum
      */
-    public void setUploadedChecksum(String uploadedChecksum) {
+    public UploadPiece setUploadedChecksum(String uploadedChecksum) {
 	this.uploadedChecksum = uploadedChecksum;
+	return this;
     }
 
 }

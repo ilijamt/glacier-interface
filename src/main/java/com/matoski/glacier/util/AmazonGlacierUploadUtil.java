@@ -8,8 +8,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -225,15 +233,16 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     }
 
-    public Archive UploadMultipartFile(File file, int retry, int partSize,
-	    String vaultName, Metadata metadata, boolean doNotComplete)
-	    throws UploadTooManyPartsException {
+    public Archive UploadMultipartFile(File file, int threads, int retry,
+	    int partSize, String vaultName, Metadata metadata,
+	    boolean doNotComplete) throws UploadTooManyPartsException {
+
+	ExecutorService pool = Executors.newFixedThreadPool(threads);
+	HashMap<Integer, Future<UploadPiece>> map = new HashMap<Integer, Future<UploadPiece>>();
 
 	Archive archive = new Archive();
 	long fileSize = file.length();
-	UploadPiece piece = null;
 	int pieces = (int) Math.ceil(fileSize / (double) partSize);
-	List<byte[]> checksums = new LinkedList<byte[]>();
 
 	if (!isValidMaxParts(file, partSize)) {
 	    throw new UploadTooManyPartsException();
@@ -254,46 +263,77 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
 	uploadStatus.setFile(file);
 	uploadStatus.setId(initiate.getUploadId());
+
 	try {
 	    uploadStatus.write(file);
 	} catch (IOException e) {
 	    System.err.println(String.format("ERROR: %s", e.getMessage()));
 	}
 
-	ThreadAmazonGlacierUploadUtil upload = null;
-	
 	// 2. Upload Pieces
 	for (int i = 0; i < pieces; i++) {
 	    try {
-		piece = UploadMultipartPiece(file, pieces, i, partSize,
-			vaultName, initiate.getUploadId());
 
-		if (retry <= 3
-			&& (piece.getStatus() == UploadMultipartStatus.PIECE_CHECKSUM_MISMATCH)) {
-		    System.err
-			    .println(String
-				    .format("ERROR: Piece: %s/%s failed to upload, retrying again",
-					    i, pieces));
-		    i--;
-		    retry++;
-		} else {
-		    retry = 0;
-		}
+		map.put(i, pool.submit(new ThreadAmazonGlacierUploadUtil(retry,
+			file, pieces, i, partSize, vaultName, initiate
+				.getUploadId(),
+			credentials.getAWSAccessKeyId(), credentials
+				.getAWSSecretKey(), region.getName())));
 
-		checksums
-			.add(BinaryUtils.fromHex(piece.getCalculatedChecksum()));
-
-		// add the piece to the state file
-		uploadStatus.addPiece(piece);
-		uploadStatus.write(file);
-
-	    } catch (NoSuchAlgorithmException | AmazonClientException
-		    | IOException | InvalidUploadedChecksumException e) {
+	    } catch (AmazonClientException | RegionNotSupportedException e) {
 		System.err.println(String.format("ERROR: %s", e.getMessage()));
+		map.put(i, null);
 	    }
 
 	}
 
+	// contains a list of the parts, with the required checksum for each
+	// part, we use this to calculate the whole checksum
+	boolean processing = true;
+	HashMap<Integer, String> state = new HashMap<>();
+	UploadPiece piece = null;
+	Future<UploadPiece> future;
+
+	// Iterate until all are done
+	while (processing) {
+	    processing = false;
+	    for (Entry<Integer, Future<UploadPiece>> entry : map.entrySet()) {
+
+		future = entry.getValue();
+
+		try {
+
+		    if (future.isDone() && !future.isCancelled()) {
+			piece = entry.getValue().get();
+		    } else {
+
+		    }
+
+		} catch (InterruptedException | ExecutionException e) {
+		}
+
+	    }
+	}
+
+	// 3. Go through the future to check the data and calculate the output
+	// for (Entry<> entry : set) {
+
+	// checksums
+	// .add(BinaryUtils.fromHex(piece.getCalculatedChecksum()));
+	//
+	// // add the piece to the state file
+	// uploadStatus.addPiece(piece);
+	// uploadStatus.write(file);
+
+	// }
+
+	// all the items are finished now, let's calculate the checksum
+	List<byte[]> checksums = new LinkedList<byte[]>();
+	for (Entry<Integer, String> entry : state.entrySet()) {
+	    checksums.add(BinaryUtils.fromHex(entry.getValue()));
+	}
+
+	// process the upload state
 	uploadStatus.isFinished();
 
 	if (doNotComplete) {
