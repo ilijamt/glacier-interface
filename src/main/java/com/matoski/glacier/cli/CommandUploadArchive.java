@@ -15,7 +15,7 @@ public class CommandUploadArchive {
     @Parameter(required = true, names = "--file", description = "The file(s) to be uploaded, you can specifiy this parameter multiple times")
     public List<String> files = new ArrayList<String>();
 
-    @Parameter(names = "--metadata", description = "Available: mt2")
+    @Parameter(names = "--metadata", description = "Available: mt2, fgv2")
     public String metadata = "mt2";
 
     @Parameter(required = true, names = "--journal", description = "Journal")

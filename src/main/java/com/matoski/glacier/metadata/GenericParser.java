@@ -38,4 +38,9 @@ public abstract class GenericParser implements IMetadata {
 	return this.metadata == metadata;
     }
 
+    @Override
+    public boolean verify(String data) {
+	return false;
+    }
+
 }
