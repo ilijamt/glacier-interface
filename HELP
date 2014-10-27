@@ -100,7 +100,7 @@ Usage: <main class> [options] [command] [command options]
               --concurrent
              How many threads to open to use when uploading the data to amazon
              glacier, the more threads you have the more memory it will eat. The memory
-             requirements will be partSize * conncurent
+             requirements will be partSize * concurrent
              Default: 1
         *     --file
              The file(s) to be uploaded, you can specifiy this parameter
@@ -116,7 +116,7 @@ Usage: <main class> [options] [command] [command options]
              request
              Default: 1
               --retry-failed-upload
-             How many times shuold it retry to upload a failed piece before
+             How many times should it retry to upload a failed piece before
              giving up.
              Default: 2
               --vault

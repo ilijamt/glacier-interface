@@ -24,10 +24,10 @@ public class CommandUploadArchive {
     @Parameter(names = "--part-size", description = "How big chunks of data to upload to amazon glacier during one request")
     public Integer partSize = 1;
 
-    @Parameter(names = "--retry-failed-upload", description = "How many times shuold it retry to upload a failed piece before giving up.")
+    @Parameter(names = "--retry-failed-upload", description = "How many times should it retry to upload a failed piece before giving up.")
     public Integer retryFailedUpload = 2;
 
-    @Parameter(names = "--concurrent", description = "How many threads to open to use when uploading the data to amazon glacier, the more threads you have the more memory it will eat. The memory requirements will be partSize * conncurent")
+    @Parameter(names = "--concurrent", description = "How many threads to open to use when uploading the data to amazon glacier, the more threads you have the more memory it will eat. The memory requirements will be partSize * concurrent")
     public Integer concurrent = 1;
 
     @Parameter(hidden = true, names = "--testing", description = "Testing command")
