@@ -1,5 +1,6 @@
 package com.matoski.glacier.commands;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -65,7 +66,9 @@ public abstract class AbstractCommand<T> implements ICommand, Runnable {
 	this.region = Region.getRegion(Regions.fromName(config.getRegion()));
 	this.credentials = new BasicAWSCredentials(config.getKey(),
 		config.getSecretKey());
-	this.client = new AmazonGlacierClient(this.credentials);
+	ClientConfiguration configuration = new ClientConfiguration();
+	configuration.setConnectionTimeout(70 * 1000);
+	this.client = new AmazonGlacierClient(this.credentials, configuration);
 
 	if (!this.region.isServiceSupported(AbstractCommand.SERVICE_NAME)) {
 	    throw new RegionNotSupportedException();

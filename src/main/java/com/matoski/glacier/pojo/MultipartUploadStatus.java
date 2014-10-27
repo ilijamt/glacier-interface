@@ -7,10 +7,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
+import com.amazonaws.services.glacier.TreeHashGenerator;
+import com.amazonaws.util.BinaryUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.matoski.glacier.enums.UploadMultipartStatus;
@@ -36,7 +39,7 @@ public class MultipartUploadStatus {
 
 	return status;
 
-    }
+    };
 
     /**
      * Do we have an upload status or not ?
@@ -69,7 +72,10 @@ public class MultipartUploadStatus {
 	String json = new String(Files.readAllBytes(file.toPath()),
 		StandardCharsets.UTF_8);
 
-	return new Gson().fromJson(json, MultipartUploadStatus.class);
+	MultipartUploadStatus status = new Gson().fromJson(json,
+		MultipartUploadStatus.class);
+	status.setFile(file, true);
+	return status;
 
     }
 
@@ -85,6 +91,36 @@ public class MultipartUploadStatus {
     }
 
     /**
+     * The checksums
+     */
+    private List<byte[]> checksums = new LinkedList<byte[]>();
+
+    /**
+     * The final checksum
+     */
+    private String finalChecksum;
+
+    /**
+     * A dirty flag, used to know if we should write it or not?
+     */
+    private transient boolean dirty = false;
+
+    /**
+     * The original location for the upload
+     */
+    private String location;
+
+    /**
+     * Is the transfer initiated
+     */
+    private boolean initiated = false;
+
+    /**
+     * The generic status
+     */
+    UploadMultipartStatus status = UploadMultipartStatus.NOP;
+
+    /**
      * The file for the upload state
      */
     private transient File file;
@@ -92,7 +128,7 @@ public class MultipartUploadStatus {
     /**
      * The ID of the upload process
      */
-    private String id;;
+    private String id;
 
     /**
      * The total parts available
@@ -107,30 +143,24 @@ public class MultipartUploadStatus {
     /**
      * The pieces
      */
-    private Map<Integer, UploadPiece> pieces;
+    private TreeMap<Integer, UploadPiece> pieces;
 
     /**
      * When did this upload start?
      */
-    private Date started = new Date();
+    private Date started;
+
+    /**
+     * When was the last time this was updated
+     */
+    private Date lastUpdate;
 
     /**
      * Constructor
      */
     public MultipartUploadStatus() {
-	this.pieces = new HashMap<Integer, UploadPiece>();
-    }
-
-    /**
-     * Constructor
-     * 
-     * @param total
-     */
-    public MultipartUploadStatus(int total) {
-	this.pieces = new HashMap<Integer, UploadPiece>(total);
-	for (int i = 0; i < total; i++) {
-	    this.pieces.put(i, null);
-	}
+	dirty = true;
+	this.pieces = new TreeMap<Integer, UploadPiece>();
     }
 
     /**
@@ -138,9 +168,18 @@ public class MultipartUploadStatus {
      * 
      * @param part
      * @param piece
+     * @throws IOException
+     * @throws NullPointerException
      */
-    public void addPiece(int part, UploadPiece piece) {
-	this.pieces.put(part, piece);
+    public void addPiece(int part, UploadPiece piece)
+	    throws NullPointerException, IOException {
+	dirty = true;
+	if (!this.pieces.containsKey(part)) {
+	    this.pieces.put(part, piece);
+	    this.lastUpdate = new Date();
+	    this.write();
+	    update();
+	}
     }
 
     /**
@@ -150,8 +189,32 @@ public class MultipartUploadStatus {
      * @throws IOException
      */
     public void addPiece(UploadPiece piece) throws IOException {
-	this.pieces.put(piece.getPart(), piece);
-	this.write();
+	dirty = true;
+	if (!this.pieces.containsKey(piece.getPart())) {
+	    this.pieces.put(piece.getPart(), piece);
+	    this.lastUpdate = new Date();
+	    update();
+	    this.write();
+	}
+    }
+
+    /**
+     * Do we actually have the {@link UploadPiece} already in {@link #pieces}
+     * 
+     * @param piece
+     * @return
+     */
+    public Boolean exists(UploadPiece piece) {
+	return this.pieces.containsValue(piece);
+    }
+
+    /**
+     * Get the checksums list
+     * 
+     * @return
+     */
+    public List<byte[]> getChecksums() {
+	return this.checksums;
     }
 
     /**
@@ -164,10 +227,33 @@ public class MultipartUploadStatus {
     }
 
     /**
+     * Get the calculated checksum
+     * 
+     * @return
+     */
+    public String getFinalChecksum() {
+	return this.finalChecksum;
+    }
+
+    /**
      * @return the id
      */
     public String getId() {
 	return id;
+    }
+
+    /**
+     * @return the lastUpdate
+     */
+    public Date getLastUpdate() {
+	return lastUpdate;
+    }
+
+    /**
+     * @return the location
+     */
+    public String getLocation() {
+	return location;
     }
 
     /**
@@ -184,10 +270,14 @@ public class MultipartUploadStatus {
 	return partSize;
     }
 
+    public UploadPiece getPiece(int part) {
+	return this.pieces.get(part);
+    }
+
     /**
      * @return the pieces
      */
-    public Map<Integer, UploadPiece> getPieces() {
+    public TreeMap<Integer, UploadPiece> getPieces() {
 	return pieces;
     }
 
@@ -196,6 +286,20 @@ public class MultipartUploadStatus {
      */
     public Date getStarted() {
 	return started;
+    }
+
+    /**
+     * @return the status
+     */
+    public UploadMultipartStatus getStatus() {
+	return status;
+    }
+
+    /**
+     * @return the dirty
+     */
+    public boolean isDirty() {
+	return dirty;
     }
 
     /**
@@ -228,7 +332,30 @@ public class MultipartUploadStatus {
 	    this.remove();
 	}
 
+	this.update();
+
 	return valid;
+    }
+
+    /**
+     * @return the initiated
+     */
+    public boolean isInitiated() {
+	return initiated;
+    }
+
+    /**
+     * Is the piece completed?
+     * 
+     * Compares the {@link UploadPiece#getStatus()} to
+     * {@link UploadMultipartStatus#PIECE_COMPLETE}
+     * 
+     * @param piece
+     * @return
+     */
+    public boolean isPieceCompleted(int piece) {
+	return this.pieces.containsKey(piece)
+		&& this.pieces.get(piece).isFinished();
     }
 
     /**
@@ -252,12 +379,40 @@ public class MultipartUploadStatus {
     }
 
     /**
+     * @param checksums
+     *            the checksums to set
+     */
+    public void setChecksums(List<byte[]> checksums) {
+	this.checksums = checksums;
+    }
+
+    /**
+     * @param dirty
+     *            the dirty to set
+     */
+    public void setDirty(boolean dirty) {
+	this.dirty = dirty;
+    }
+
+    /**
      * Set the file
      * 
      * @param file
      */
     public void setFile(File file) {
-	this.file = generateFile(file);
+	setFile(file, false);
+    }
+
+    public void setFile(File file, Boolean doNotGenerate) {
+	this.file = doNotGenerate ? file : generateFile(file);
+    }
+
+    /**
+     * @param finalChecksum
+     *            the finalChecksum to set
+     */
+    public void setFinalChecksum(String finalChecksum) {
+	this.finalChecksum = finalChecksum;
     }
 
     /**
@@ -265,7 +420,34 @@ public class MultipartUploadStatus {
      *            the id to set
      */
     public void setId(String id) {
+	dirty = true;
 	this.id = id;
+    }
+
+    /**
+     * @param initiated
+     *            the initiated to set
+     */
+    public void setInitiated(boolean initiated) {
+	dirty = true;
+	this.initiated = initiated;
+    }
+
+    /**
+     * @param lastUpdate
+     *            the lastUpdate to set
+     */
+    public void setLastUpdate(Date lastUpdate) {
+	this.lastUpdate = lastUpdate;
+    }
+
+    /**
+     * @param location
+     *            the location to set
+     */
+    public void setLocation(String location) {
+	dirty = true;
+	this.location = location;
     }
 
     /**
@@ -273,6 +455,7 @@ public class MultipartUploadStatus {
      *            the parts to set
      */
     public void setParts(int parts) {
+	dirty = true;
 	this.parts = parts;
     }
 
@@ -281,6 +464,7 @@ public class MultipartUploadStatus {
      *            the partSize to set
      */
     public void setPartSize(int partSize) {
+	dirty = true;
 	this.partSize = partSize;
     }
 
@@ -288,7 +472,8 @@ public class MultipartUploadStatus {
      * @param pieces
      *            the pieces to set
      */
-    public void setPieces(Map<Integer, UploadPiece> pieces) {
+    public void setPieces(TreeMap<Integer, UploadPiece> pieces) {
+	dirty = true;
 	this.pieces = pieces;
     }
 
@@ -297,7 +482,30 @@ public class MultipartUploadStatus {
      *            the started to set
      */
     public void setStarted(Date started) {
+	dirty = true;
 	this.started = started;
+    }
+
+    /**
+     * @param status
+     *            the status to set
+     */
+    public void setStatus(UploadMultipartStatus status) {
+	dirty = true;
+	this.status = status;
+    }
+
+    /**
+     * Updates the checksum
+     */
+    public void update() {
+	this.checksums.clear();
+	for (Entry<Integer, UploadPiece> entry : this.pieces.entrySet()) {
+	    this.checksums.add(BinaryUtils.fromHex(entry.getValue()
+		    .getCalculatedChecksum()));
+	}
+
+	this.finalChecksum = TreeHashGenerator.calculateTreeHash(checksums);
     }
 
     /**
@@ -321,6 +529,11 @@ public class MultipartUploadStatus {
      */
     protected boolean write(File file) throws NullPointerException, IOException {
 
+	if (!dirty) {
+	    // no need to write the file as the data has not been updated
+	    return true;
+	}
+
 	if (null == file) {
 	    throw new NullPointerException();
 	}
@@ -336,6 +549,8 @@ public class MultipartUploadStatus {
 
 	bufferedWriter.close();
 	fileWriter.close();
+
+	dirty = false;
 
 	return true;
     }

@@ -95,9 +95,9 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 
 		try {
 		    archive = this.upload.UploadMultipartFile(
-			    new File(fileName), command.concurrent, command.retryFailedUpload,
-			    command.partSize, command.vaultName, metadata,
-			    command.testing);
+			    new File(fileName), command.concurrent,
+			    command.retryFailedUpload, command.partSize,
+			    command.vaultName, metadata);
 
 		    this.journal.addArchive(archive);
 		    this.journal.save();
@@ -105,6 +105,8 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 		} catch (UploadTooManyPartsException e) {
 		    e.printStackTrace();
 		} catch (IOException e) {
+		    e.printStackTrace();
+		} catch (RegionNotSupportedException e) {
 		    e.printStackTrace();
 		}
 

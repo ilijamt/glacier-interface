@@ -1,7 +1,5 @@
 package com.matoski.glacier.metadata;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.InvalidMetadataException;
 import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
@@ -92,8 +90,7 @@ public class FastGlacierV2 extends GenericParser implements
 	    throw new InvalidMetadataException();
 	}
 
-	throw new NotImplementedException();
-
+	return null;
     }
 
     /**

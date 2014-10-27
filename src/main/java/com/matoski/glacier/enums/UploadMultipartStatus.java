@@ -8,7 +8,9 @@ public enum UploadMultipartStatus {
     PIECE_ERROR,
     PIECE_INVALID_PART,
     
+    NOP,
     START,
+    IN_PROGRESS,
     COMPLETE,
     ERROR
 

@@ -3,6 +3,7 @@ package com.matoski.glacier.util;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.InvalidMetadataException;
 import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
+import com.matoski.glacier.metadata.FastGlacierV2;
 import com.matoski.glacier.metadata.GenericParser;
 import com.matoski.glacier.metadata.MT_AWS_GLACIER_B;
 import com.matoski.glacier.pojo.Archive;
@@ -55,6 +56,8 @@ public class Parser {
 	switch (metadata) {
 	case MT_AWS_GLACIER_B:
 	    return (GenericParser) (new MT_AWS_GLACIER_B());
+	case FAST_GLACIER_V2:
+	    return (GenericParser) (new FastGlacierV2());
 	}
 
 	return null;

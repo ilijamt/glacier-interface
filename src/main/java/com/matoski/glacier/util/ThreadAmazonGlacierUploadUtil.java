@@ -10,6 +10,7 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.event.ProgressListener;
 import com.amazonaws.metrics.RequestMetricCollector;
+import com.amazonaws.services.glacier.model.RequestTimeoutException;
 import com.matoski.glacier.enums.UploadMultipartStatus;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.pojo.UploadPiece;
@@ -146,12 +147,13 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
      * @throws AmazonClientException
      * @throws FileNotFoundException
      * @throws IOException
+     * @throws RequestTimeoutException
      * 
      * @return
      */
     private UploadPiece upload(int time) throws AmazonServiceException,
 	    NoSuchAlgorithmException, AmazonClientException,
-	    FileNotFoundException, IOException {
+	    FileNotFoundException, IOException, RequestTimeoutException {
 
 	return this.UploadMultipartPiece(requestFile, requestPieces,
 		requestPart, requestPartSize, requestVaultName,
@@ -186,8 +188,12 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
 		    break;
 		}
 
-	    } catch (NoSuchAlgorithmException | AmazonClientException
-		    | IOException e) {
+	    } catch (RequestTimeoutException e) {
+		System.err.println(String.format("HTTP 408, retry %s", i + 1));
+	    } catch (AmazonClientException e) {
+		System.err.println(String.format(
+			"Amazon client exception, retry %s", i + 1));
+	    } catch (NoSuchAlgorithmException | IOException e) {
 		throw e;
 	    }
 

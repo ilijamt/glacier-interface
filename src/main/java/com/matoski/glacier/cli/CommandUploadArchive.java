@@ -31,6 +31,6 @@ public class CommandUploadArchive {
     public Integer concurrent = 1;
 
     @Parameter(hidden = true, names = "--testing", description = "Testing command")
-    public Boolean testing;
+    public Boolean testing = false;
 
 }

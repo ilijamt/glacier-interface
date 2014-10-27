@@ -2,6 +2,7 @@ package com.matoski.glacier.util;
 
 import java.io.File;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -121,9 +122,13 @@ public abstract class AmazonGlacierBaseUtil {
     public AmazonGlacierBaseUtil(String accessKey, String secretKey,
 	    String region) throws RegionNotSupportedException {
 
+	ClientConfiguration clientConfiguration = new ClientConfiguration();
+	clientConfiguration.setConnectionTimeout(70 * 1000);
+
 	this.region = Region.getRegion(Regions.fromName(region));
 	this.credentials = new BasicAWSCredentials(accessKey, secretKey);
-	this.client = new AmazonGlacierClient(this.credentials);
+	this.client = new AmazonGlacierClient(this.credentials,
+		clientConfiguration);
 
 	if (!this.region.isServiceSupported(AbstractCommand.SERVICE_NAME)) {
 	    throw new RegionNotSupportedException();

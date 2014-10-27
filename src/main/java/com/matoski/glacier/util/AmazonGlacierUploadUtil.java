@@ -9,14 +9,14 @@ import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -31,11 +31,12 @@ import com.amazonaws.services.glacier.model.CompleteMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.CompleteMultipartUploadResult;
 import com.amazonaws.services.glacier.model.InitiateMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.InitiateMultipartUploadResult;
+import com.amazonaws.services.glacier.model.RequestTimeoutException;
 import com.amazonaws.services.glacier.model.UploadArchiveRequest;
 import com.amazonaws.services.glacier.model.UploadArchiveResult;
 import com.amazonaws.services.glacier.model.UploadMultipartPartRequest;
 import com.amazonaws.services.glacier.model.UploadMultipartPartResult;
-import com.amazonaws.util.BinaryUtils;
+import com.matoski.glacier.Constants;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.enums.UploadMultipartStatus;
 import com.matoski.glacier.errors.InvalidUploadedChecksumException;
@@ -233,8 +234,9 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     }
 
     public Archive UploadMultipartFile(File file, int threads, int retry,
-	    int partSize, String vaultName, Metadata metadata,
-	    boolean doNotComplete) throws UploadTooManyPartsException {
+	    int partSize, String vaultName, Metadata metadata)
+	    throws UploadTooManyPartsException, IOException,
+	    RegionNotSupportedException {
 
 	ExecutorService pool = Executors.newFixedThreadPool(threads);
 	HashMap<Integer, Future<UploadPiece>> map = new HashMap<Integer, Future<UploadPiece>>();
@@ -249,96 +251,162 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
 	archive.setCreatedDate(new Date());
 
-	// 0. Get the upload state file
-	final MultipartUploadStatus uploadStatus = new MultipartUploadStatus(
-		pieces);
-	uploadStatus.setPartSize(partSize);
-	uploadStatus.setParts(pieces);
+	// 0. Get the upload state file, check if we have a state already
+	final MultipartUploadStatus uploadStatus;
+
+	if (MultipartUploadStatus.has(file)) {
+	    System.out.println(String.format(
+		    "Upload state found for %s, loading", file.getName()));
+	    uploadStatus = MultipartUploadStatus.load(file);
+	} else {
+	    uploadStatus = new MultipartUploadStatus();
+	}
+
+	String location = null;
+	String uploadId = null;
 
 	// 1. Initiate MultiPart Upload
-	InitiateMultipartUploadResult initiate = this
-		.InitiateMultipartUpload(vaultName, Parser.getParser(metadata)
-			.encode(archive), partSize);
+	if (uploadStatus.isInitiated()) {
+	    location = uploadStatus.getLocation();
+	    uploadId = uploadStatus.getId();
+	    System.out.println(String.format(
+		    "Upload already initiated with location: %s and id: %s",
+		    location, uploadId));
 
-	uploadStatus.setFile(file);
-	uploadStatus.setId(initiate.getUploadId());
+	    if (partSize != uploadStatus.getPartSize()
+		    || pieces != uploadStatus.getParts()) {
+		pieces = uploadStatus.getParts();
+		partSize = uploadStatus.getPartSize();
+		System.out.println(String.format(
+			"[Overriding] Parts: %s and piece size: %s bytes",
+			pieces, partSize));
+	    }
+	} else {
+	    InitiateMultipartUploadResult initiate = this
+		    .InitiateMultipartUpload(vaultName,
+			    Parser.getParser(metadata).encode(archive),
+			    partSize);
 
-	try {
-	    uploadStatus.write();
-	} catch (NullPointerException | IOException e) {
-	    System.err.println(String.format("ERROR: %s", e.getMessage()));
+	    location = initiate.getLocation();
+	    uploadId = initiate.getUploadId();
+
+	    uploadStatus.setStatus(UploadMultipartStatus.START);
+	    uploadStatus.setPartSize(partSize);
+	    uploadStatus.setParts(pieces);
+	    uploadStatus.setInitiated(true);
+	    uploadStatus.setFile(file);
+	    uploadStatus.setId(uploadId);
+	    uploadStatus.setLocation(location);
+	    uploadStatus.setStarted(new Date());
+
+	    try {
+		uploadStatus.write();
+	    } catch (NullPointerException | IOException e) {
+		System.err.println(String.format("ERROR: %s", e.getMessage()));
+	    }
+
+	    uploadStatus.setStatus(UploadMultipartStatus.IN_PROGRESS);
 	}
+
+	Callable<UploadPiece> thread;
 
 	// 2. Upload Pieces
 	for (int i = 0; i < pieces; i++) {
-	    try {
 
-		map.put(i, pool.submit(new ThreadAmazonGlacierUploadUtil(retry,
-			file, pieces, i, partSize, vaultName, initiate
-				.getUploadId(),
-			credentials.getAWSAccessKeyId(), credentials
-				.getAWSSecretKey(), region.getName())));
+	    if (uploadStatus.isPieceCompleted(i)) {
 
-	    } catch (AmazonClientException | RegionNotSupportedException e) {
-		System.err.println(String.format("ERROR: %s", e.getMessage()));
-		map.put(i, null);
+		thread = new ThreadAmazonGlacierUploadDummy(pieces, file,
+			uploadStatus.getPiece(i));
+
+	    } else {
+
+		thread = new ThreadAmazonGlacierUploadUtil(retry, file, pieces,
+			i, partSize, vaultName, uploadId,
+			credentials.getAWSAccessKeyId(),
+			credentials.getAWSSecretKey(), region.getName());
+
 	    }
 
+	    map.put(i, pool.submit(thread));
+
 	}
+
 	pool.shutdown();
 
+	UploadPiece piece = null;
+	Future<UploadPiece> future;
+	Boolean pieceExists = false;
+
 	try {
-	    while (!pool.awaitTermination(24L, TimeUnit.HOURS)) {
-		System.out.println("Still waiting for the executor to finish");
+	    while (!pool.awaitTermination(Constants.WAIT_TIME_THREAD_CHECK,
+		    TimeUnit.SECONDS)) {
+
+		for (Entry<Integer, Future<UploadPiece>> entry : map.entrySet()) {
+
+		    future = entry.getValue();
+
+		    try {
+
+			piece = future.get(
+				Constants.WAIT_FETCH_OBJECT_FROM_POOL,
+				TimeUnit.MILLISECONDS);
+
+			pieceExists = uploadStatus.exists(piece);
+
+			if (!pieceExists && future.isDone()
+				&& !future.isCancelled()) {
+			    uploadStatus.addPiece(piece);
+			}
+		    } catch (InterruptedException e) {
+
+		    } catch (ExecutionException e) {
+
+		    } catch (IOException e) {
+			System.err.println(String.format("ERROR: %s",
+				e.getMessage()));
+		    } catch (TimeoutException e) {
+			// we skip this item as it has not finished yet we don't
+			// do anything here
+		    }
+
+		}
 	    }
 	} catch (InterruptedException e) {
 	    System.err.println(String.format("ERROR: %s", e.getMessage()));
 	}
 
-	// contains a list of the parts, with the required checksum for each
-	// part, we use this to calculate the whole checksum
-	HashMap<Integer, String> state = new HashMap<>();
-	UploadPiece piece = null;
-	Future<UploadPiece> future;
-
-	// Iterate through all of them
+	// go through them again, in case we missed them , can happen if it
+	// finishes very shortly after completion
 	for (Entry<Integer, Future<UploadPiece>> entry : map.entrySet()) {
+
 	    future = entry.getValue();
+
 	    try {
-		if (future.isDone() && !future.isCancelled()) {
-		    piece = entry.getValue().get();
+
+		piece = future.get();
+
+		pieceExists = uploadStatus.exists(piece);
+
+		if (!pieceExists && future.isDone() && !future.isCancelled()) {
 		    uploadStatus.addPiece(piece);
-		    state.put(piece.getPart(), piece.getCalculatedChecksum());
 		}
-	    } catch (InterruptedException | ExecutionException | IOException e) {
+
+	    } catch (InterruptedException | ExecutionException e) {
 		System.err.println(String.format("ERROR: %s", e.getMessage()));
 	    }
-	}
 
-	// 3. Go through the future to check the data and calculate the output
-	// all the items are finished now, let's calculate the checksum
-	List<byte[]> checksums = new LinkedList<byte[]>();
-	for (Entry<Integer, String> entry : state.entrySet()) {
-	    checksums.add(BinaryUtils.fromHex(entry.getValue()));
 	}
 
 	// process the upload state
 	uploadStatus.isFinished();
 
-	if (doNotComplete) {
-	    this.CancelMultipartUpload(initiate.getUploadId(), vaultName);
-	} else {
-	    // 3. Finish MultiPart Upload
-	    CompleteMultipartUploadResult complete = this
-		    .CompleteMultipartUpload(fileSize, initiate.getUploadId(),
-			    vaultName,
-			    TreeHashGenerator.calculateTreeHash(checksums));
+	// 3. Finish MultiPart Upload
+	CompleteMultipartUploadResult complete = this.CompleteMultipartUpload(
+		fileSize, uploadId, vaultName, uploadStatus.getFinalChecksum());
 
-	    archive.setHash(complete.getChecksum());
-	    archive.setId(complete.getArchiveId());
-	    archive.setUri(complete.getLocation());
-
-	}
+	archive.setHash(complete.getChecksum());
+	archive.setId(complete.getArchiveId());
+	archive.setUri(complete.getLocation());
 
 	archive.setSize(fileSize);
 	archive.setName(file.toString());
@@ -364,12 +432,13 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
      * @throws AmazonClientException
      * @throws FileNotFoundException
      * @throws IOException
+     * @throws RequestTimeoutException
      */
     public UploadPiece UploadMultipartPiece(File file, int pieces, int part,
 	    int partSize, String vaultName, String uploadId)
 	    throws AmazonServiceException, NoSuchAlgorithmException,
 	    AmazonClientException, FileNotFoundException, IOException,
-	    InvalidUploadedChecksumException {
+	    InvalidUploadedChecksumException, RequestTimeoutException {
 	return UploadMultipartPiece(file, pieces, part, partSize, vaultName,
 		uploadId, null, null);
     }
@@ -393,12 +462,14 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
      * @throws AmazonClientException
      * @throws FileNotFoundException
      * @throws IOException
+     * @throws RequestTimeoutException
      */
     public UploadPiece UploadMultipartPiece(File file, int pieces, int part,
 	    int partSize, String vaultName, String uploadId,
 	    ProgressListener listener, RequestMetricCollector collector)
 	    throws AmazonServiceException, NoSuchAlgorithmException,
-	    AmazonClientException, FileNotFoundException, IOException {
+	    AmazonClientException, FileNotFoundException, IOException,
+	    RequestTimeoutException {
 
 	UploadPiece ret = new UploadPiece();
 

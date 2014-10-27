@@ -109,4 +109,16 @@ public class UploadPiece {
 	return this;
     }
 
+    /**
+     * Is the piece completed?
+     * 
+     * Compares the {@link #status} to
+     * {@link UploadMultipartStatus#PIECE_COMPLETE}
+     * 
+     * @return
+     */
+    public boolean isFinished() {
+	return this.status == UploadMultipartStatus.PIECE_COMPLETE;
+    }
+
 }
