@@ -77,6 +77,10 @@ Usage: <main class> [options] [command] [command options]
               --metadata
              Available: mt2
              Default: mt2
+              --raw
+             Store the glacier full data instead of the parsed one, usefull for
+             creating new metadata parsers
+             Default: false
               --vault
              The name of the vault for whom the inventory needs to be retrieved,
              will be overwriten by --aws-vault if not specified
@@ -93,10 +97,28 @@ Usage: <main class> [options] [command] [command options]
     upload-archive      Initiate an upload of archive
       Usage: upload-archive [options]
         Options:
+              --concurrent
+             How many threads to open to use when uploading the data to amazon
+             glacier, the more threads you have the more memory it will eat. The memory
+             requirements will be partSize * conncurent
+             Default: 1
         *     --file
              The file(s) to be uploaded, you can specifiy this parameter
              multiple times
-             Default: {}
+             Default: []
+        *     --journal
+             Journal
+              --metadata
+             Available: mt2
+             Default: mt2
+              --part-size
+             How big chunks of data to upload to amazon glacier during one
+             request
+             Default: 1
+              --retry-failed-upload
+             How many times shuold it retry to upload a failed piece before
+             giving up.
+             Default: 2
               --vault
              The name of the vault from where the archive will be deleted, will
              be overwriten by --aws-vault if not specified
