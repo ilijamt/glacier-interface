@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,155 +27,46 @@ import com.matoski.glacier.util.Parser;
 public class Journal {
 
     /**
-     * History, contains all the action done in the journal, whenever you
-     * replace an item it is pushed into the history.
-     */
-    private List<Archive> history;
-
-    /**
-     * List of archives
-     */
-    private HashMap<String, Archive> archives = new HashMap<String, Archive>();
-
-    /**
-     * Vault ARN
-     */
-    private String ARN;
-
-    /**
-     * @return the metadata
-     */
-    public Metadata getMetadata() {
-	return metadata;
-    }
-
-    /**
-     * @param metadata
-     *            the metadata to set
-     */
-    public void setMetadata(Metadata metadata) {
-	this.metadata = metadata;
-    }
-
-    /**
-     * Inventory date
-     */
-    private Date date;
-
-    /**
-     * Metadata used in the inventory
-     */
-    private Metadata metadata;
-
-    /**
-     * Vault Name
-     */
-    private String name;
-
-    /**
-     * @return the aRN
-     */
-    public String getARN() {
-	return ARN;
-    }
-
-    /**
-     * @return the date
-     */
-    public Date getDate() {
-	return date;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-	return name;
-    }
-
-    /**
-     * @return the archives
-     */
-    public HashMap<String, Archive> getArchives() {
-	return archives;
-    }
-
-    /**
-     * @param archives
-     *            the archives to set
-     */
-    public void setArchives(HashMap<String, Archive> archives) {
-	this.archives = archives;
-    }
-
-    /**
-     * Add an archive in the HashMap
+     * Load the journal into memory
      * 
-     * @param archive
-     * @return
-     */
-    public boolean addArchive(Archive archive) {
-	Boolean keyExists = this.archives.containsKey(archive.getId());
-
-	if (keyExists && archive.equals(this.archives.get(archive.getId()))) {
-	    // we already have the same archive into journal,
-	    // why ????
-	    return false;
-	}
-
-	Archive previous = this.archives.put(archive.getId(), archive);
-
-	if (null != previous) {
-	    this.history.add(previous);
-	}
-
-	return true;
-    }
-
-    /**
-     * @param aRN
-     *            the aRN to set
-     */
-    public void setARN(String aRN) {
-	ARN = aRN;
-    }
-
-    /**
-     * @param date
-     *            the date to set
-     */
-    public void setDate(String date) {
-	this.date = ISO8601Utils.parse(date);
-    }
-
-    /**
-     * @param date
-     *            the date to set
-     */
-    public void setDate(Date date) {
-	this.date = date;
-    }
-
-    /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-	this.name = name;
-    }
-
-    /**
-     * Parse the data so we can store it
-     * 
-     * @param inventory
-     * @param vault
-     * @param metadata
+     * @param file
      * 
      * @return
+     * 
+     * @throws IOException
      */
-    public static Journal parse(GlacierInventory inventory, String vault,
-	    String metadata) {
-	return Journal.parse(inventory, vault, Metadata.from(metadata));
+    public static Journal load(File file) throws IOException {
+
+	Journal journal = null;
+
+	if (!file.exists()) {
+	    // no journal, it's an empty one so we just return an empty Journal
+	    journal = new Journal();
+	    journal.setFile(file);
+	    return journal;
+	}
+
+	String json = new String(Files.readAllBytes(file.toPath()),
+		StandardCharsets.UTF_8);
+
+	journal = new Gson().fromJson(json, Journal.class);
+	journal.setFile(file);
+
+	return journal;
+
+    }
+
+    /**
+     * Load the journal into memory
+     * 
+     * @param file
+     * 
+     * @return
+     * 
+     * @throws IOException
+     */
+    public static Journal load(String file) throws IOException {
+	return load(new File(file));
     }
 
     /**
@@ -231,50 +121,130 @@ public class Journal {
     }
 
     /**
-     * Load the journal into memory
+     * Parse the data so we can store it
      * 
-     * @param file
+     * @param inventory
+     * @param vault
+     * @param metadata
      * 
      * @return
-     * 
-     * @throws IOException
      */
-    public static Journal load(String file) throws IOException {
-	return load(new File(file));
+    public static Journal parse(GlacierInventory inventory, String vault,
+	    String metadata) {
+	return Journal.parse(inventory, vault, Metadata.from(metadata));
     }
 
     /**
-     * Load the journal into memory
-     * 
-     * @param file
-     * 
-     * @return
-     * 
-     * @throws IOException
+     * History, contains all the action done in the journal, whenever you
+     * replace an item it is pushed into the history.
      */
-    public static Journal load(File file) throws IOException {
+    private List<Archive> history;
 
-	if (!file.exists()) {
-	    // no journal, it's an empty one so we just return an empty Journal
-	    return new Journal();
+    /**
+     * List of archives
+     */
+    private HashMap<String, Archive> archives = new HashMap<String, Archive>();
+
+    /**
+     * Vault ARN
+     */
+    private String ARN;
+
+    /**
+     * Inventory date
+     */
+    private Date date;
+
+    /**
+     * Metadata used in the inventory
+     */
+    private Metadata metadata;
+
+    /**
+     * Vault Name
+     */
+    private String name;
+
+    /**
+     * The file that is used for the journal
+     */
+    private transient File file;
+
+    /**
+     * Add an archive in the HashMap
+     * 
+     * @param archive
+     * @return
+     */
+    public boolean addArchive(Archive archive) {
+	Boolean keyExists = this.archives.containsKey(archive.getId());
+
+	if (keyExists && archive.equals(this.archives.get(archive.getId()))) {
+	    // we already have the same archive into journal,
+	    // why ????
+	    return false;
 	}
 
-	String json = new String(Files.readAllBytes(file.toPath()),
-		StandardCharsets.UTF_8);
+	Archive previous = this.archives.put(archive.getId(), archive);
 
-	return new Gson().fromJson(json, Journal.class);
+	if (null != previous) {
+	    this.history.add(previous);
+	}
 
+	return true;
+    }
+
+    /**
+     * @return the archives
+     */
+    public HashMap<String, Archive> getArchives() {
+	return archives;
+    }
+
+    /**
+     * @return the aRN
+     */
+    public String getARN() {
+	return ARN;
+    }
+
+    /**
+     * @return the date
+     */
+    public Date getDate() {
+	return date;
+    }
+
+    /**
+     * Get the file to use
+     * 
+     * @return
+     */
+    public File getFile() {
+	return this.file;
+    }
+
+    /**
+     * @return the metadata
+     */
+    public Metadata getMetadata() {
+	return metadata;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+	return name;
     }
 
     /**
      * Save the journal to a file as a JSON
      * 
-     * @param file
-     * 
      * @throws IOException
      */
-    public void save(String file) throws IOException {
-	save(new File(file));
+    public void save() throws IOException {
+	save(this.getFile());
     }
 
     /**
@@ -298,5 +268,82 @@ public class Journal {
 	bufferedWriter.close();
 	fileWriter.close();
 
+    }
+
+    /**
+     * Save the journal to a file as a JSON
+     * 
+     * @param file
+     * 
+     * @throws IOException
+     */
+    public void save(String file) throws IOException {
+	save(new File(file));
+    }
+
+    /**
+     * @param archives
+     *            the archives to set
+     */
+    public void setArchives(HashMap<String, Archive> archives) {
+	this.archives = archives;
+    }
+
+    /**
+     * @param aRN
+     *            the aRN to set
+     */
+    public void setARN(String aRN) {
+	ARN = aRN;
+    }
+
+    /**
+     * @param date
+     *            the date to set
+     */
+    public void setDate(Date date) {
+	this.date = date;
+    }
+
+    /**
+     * @param date
+     *            the date to set
+     */
+    public void setDate(String date) {
+	this.date = ISO8601Utils.parse(date);
+    }
+
+    /**
+     * Sets the file to use
+     * 
+     * @param file
+     */
+    public void setFile(File file) {
+	this.file = file;
+    }
+
+    /**
+     * Sets the file to use
+     * 
+     * @param file
+     */
+    public void setFile(String file) {
+	this.file = new File(file);
+    }
+
+    /**
+     * @param metadata
+     *            the metadata to set
+     */
+    public void setMetadata(Metadata metadata) {
+	this.metadata = metadata;
+    }
+
+    /**
+     * @param name
+     *            the name to set
+     */
+    public void setName(String name) {
+	this.name = name;
     }
 }

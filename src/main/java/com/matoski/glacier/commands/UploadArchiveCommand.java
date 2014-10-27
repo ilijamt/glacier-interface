@@ -64,7 +64,10 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 	try {
 	    this.journal = Journal.load(command.journal);
 	} catch (IOException e) {
+	    System.out.println(String.format("Creating a new journal: %s",
+		    command.journal));
 	    this.journal = new Journal();
+	    this.journal.setFile(command.journal);
 	}
 
 	this.metadata = Metadata.from(command.metadata);
@@ -86,8 +89,6 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 
 	    Archive archive = null;
 
-	    // fix the Journal if the data doesn't exist
-
 	    for (String fileName : command.files) {
 		System.out.println(String.format("Processing: %s (size: %s)",
 			fileName, new File(fileName).length()));
@@ -99,8 +100,11 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 			    command.testing);
 
 		    this.journal.addArchive(archive);
+		    this.journal.save();
 
 		} catch (UploadTooManyPartsException e) {
+		    e.printStackTrace();
+		} catch (IOException e) {
 		    e.printStackTrace();
 		}
 

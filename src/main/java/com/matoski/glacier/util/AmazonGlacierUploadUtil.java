@@ -239,9 +239,6 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	    throw new UploadTooManyPartsException();
 	}
 
-	// final AmazonGlacierProgressBar bar = new AmazonGlacierProgressBar();
-	// bar.setTotal(fileSize);
-
 	archive.setCreatedDate(new Date());
 
 	// 0. Get the upload state file
@@ -263,6 +260,8 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	    System.err.println(String.format("ERROR: %s", e.getMessage()));
 	}
 
+	ThreadAmazonGlacierUploadUtil upload = null;
+	
 	// 2. Upload Pieces
 	for (int i = 0; i < pieces; i++) {
 	    try {
