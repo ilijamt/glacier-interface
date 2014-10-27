@@ -91,13 +91,14 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 
 	    for (String fileName : command.files) {
 		System.out.println(String.format("Processing: %s (size: %s)",
-			fileName, new File(fileName).length()));
+			fileName, new File(Config.getInstance().getDirectory(),
+				fileName).length()));
 
 		try {
-		    archive = this.upload.UploadMultipartFile(
-			    new File(fileName), command.concurrent,
-			    command.retryFailedUpload, command.partSize,
-			    command.vaultName, metadata);
+		    archive = this.upload.UploadMultipartFile(new File(Config
+			    .getInstance().getDirectory(), fileName),
+			    command.concurrent, command.retryFailedUpload,
+			    command.partSize, command.vaultName, metadata);
 
 		    this.journal.addArchive(archive);
 		    this.journal.save();

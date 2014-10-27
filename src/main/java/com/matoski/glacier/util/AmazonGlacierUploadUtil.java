@@ -57,6 +57,11 @@ import com.matoski.glacier.pojo.UploadPiece;
 public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     /**
+     * Generic string format
+     */
+    final public static String FORMAT = "[#%1$05d/#%2$05d] %3$-15s | (%4$s) %5$s";
+
+    /**
      * Constructor
      * 
      * @param credentials
@@ -281,6 +286,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 			"[Overriding] Parts: %s and piece size: %s bytes",
 			pieces, partSize));
 	    }
+	    System.out.println();
 	} else {
 	    InitiateMultipartUploadResult initiate = this
 		    .InitiateMultipartUpload(vaultName,

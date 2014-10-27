@@ -22,4 +22,7 @@ public class Arguments {
     @Parameter(names = "--create-config", description = "Create a config file based on the parameters you have supplied into the application")
     public String createConfig;
 
+    @Parameter(names = "--directory", description = "The base directory from which we start, if not specified then the directory is set to the current working directory")
+    public String directory;
+
 }

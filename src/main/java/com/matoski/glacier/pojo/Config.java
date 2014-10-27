@@ -22,6 +22,26 @@ import com.matoski.glacier.cli.Arguments;
 public class Config {
 
     /**
+     * Static instance
+     */
+    private static Config instance;
+
+    /**
+     * Get the current instance
+     * 
+     * @return
+     */
+    public static Config getInstance() {
+
+	if (null != instance) {
+	    return instance;
+	}
+
+	return null;
+
+    }
+
+    /**
      * Create the config from the JSON data
      * 
      * @param json
@@ -31,7 +51,8 @@ public class Config {
      * @throws JsonSyntaxException
      */
     public static Config fromJSON(String json) throws JsonSyntaxException {
-	return new Gson().fromJson(json, Config.class);
+	instance = new Gson().fromJson(json, Config.class);
+	return instance;
     }
 
     /**
@@ -42,25 +63,29 @@ public class Config {
      */
     public static Config fromArguments(Arguments arguments) {
 
-	Config config = new Config();
+	instance = new Config();
 
 	if (null != arguments.amazonKey) {
-	    config.setKey(arguments.amazonKey);
+	    instance.setKey(arguments.amazonKey);
 	}
 
 	if (null != arguments.amazonSecretKey) {
-	    config.setSecretKey(arguments.amazonSecretKey);
+	    instance.setSecretKey(arguments.amazonSecretKey);
 	}
 
 	if (null != arguments.amazonRegion) {
-	    config.setRegion(arguments.amazonRegion);
+	    instance.setRegion(arguments.amazonRegion);
 	}
 
 	if (null != arguments.amazonVault) {
-	    config.setVault(arguments.amazonVault);
+	    instance.setVault(arguments.amazonVault);
 	}
 
-	return config;
+	if (null != arguments.directory) {
+	    instance.setDirectory(arguments.directory);
+	}
+
+	return instance;
     }
 
     /**
@@ -78,15 +103,13 @@ public class Config {
 	    FileNotFoundException, IOException {
 
 	File f = new File(filename);
-	Config c = null;
 
 	if (f.exists() && !f.isFile()) {
 	    throw new FileNotFoundException(filename);
 	}
 
-	c = fromJSON(new String(Files.readAllBytes(Paths.get(filename))));
-
-	return c;
+	instance = fromJSON(new String(Files.readAllBytes(Paths.get(filename))));
+	return instance;
 
     }
 
@@ -145,6 +168,9 @@ public class Config {
      * @return the directory
      */
     public String getDirectory() {
+	if (null == directory) {
+	    directory = System.getProperty("user.dir");
+	}
 	return directory;
     }
 

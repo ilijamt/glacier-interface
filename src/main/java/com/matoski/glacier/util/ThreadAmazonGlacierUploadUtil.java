@@ -169,9 +169,9 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
 	UploadPiece piece = null;
 	int count = 0;
 
-	System.out.println(String.format(
-		"[%s] Starting upload for piece: %s/%s", requestFile,
-		requestPart + 1, requestPieces));
+	System.out.println(String.format(FORMAT, requestPart + 1,
+		requestPieces, UploadMultipartStatus.PIECE_START, requestFile,
+		"Upload started"));
 
 	for (int i = 0; i < requestRetryFailedUploads; i++) {
 
@@ -182,9 +182,9 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
 		if (piece.getStatus() == UploadMultipartStatus.PIECE_COMPLETE) {
 		    // we have successfully uploaded the file, so we break now,
 		    // no need to continue trying to re-upload the part again
-		    System.out.println(String.format(
-			    "[%s] Uploaded piece: %s/%s", requestFile,
-			    requestPart + 1, requestPieces));
+		    System.out.println(String.format(FORMAT, requestPart + 1,
+			    requestPieces, piece.getStatus(), requestFile,
+			    "Uploaded"));
 		    break;
 		}
 

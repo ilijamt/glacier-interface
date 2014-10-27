@@ -87,7 +87,7 @@ public class MultipartUploadStatus {
      * @throws IOException
      */
     public static MultipartUploadStatus load(String file) throws IOException {
-	return load(new File(file));
+	return load(new File(Config.getInstance().getDirectory(), file));
     }
 
     /**

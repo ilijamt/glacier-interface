@@ -30,7 +30,4 @@ public class CommandUploadArchive {
     @Parameter(names = "--concurrent", description = "How many threads to open to use when uploading the data to amazon glacier, the more threads you have the more memory it will eat. The memory requirements will be partSize * concurrent")
     public Integer concurrent = 1;
 
-    @Parameter(hidden = true, names = "--testing", description = "Testing command")
-    public Boolean testing = false;
-
 }

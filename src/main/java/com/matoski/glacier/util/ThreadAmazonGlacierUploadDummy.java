@@ -18,8 +18,9 @@ public class ThreadAmazonGlacierUploadDummy extends ThreadAmazonGlacierDummy {
 
     @Override
     public void __call() {
-	System.out.println(String.format("[%s] Piece already uploaded: %s/%s",
-		file, piece.getPart() + 1, pieces));
+	System.out.println(String.format(AmazonGlacierUploadUtil.FORMAT,
+		piece.getPart() + 1, pieces, piece.getStatus(), file,
+		"Already uploaded"));
     }
 
 }
