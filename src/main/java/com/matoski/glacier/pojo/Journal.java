@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.google.gson.Gson;
@@ -25,7 +26,6 @@ import com.matoski.glacier.util.Parser;
  * @author ilijamt
  */
 public class Journal {
-   
 
     /**
      * Load the journal into memory
@@ -347,4 +347,21 @@ public class Journal {
     public void setName(String name) {
 	this.name = name;
     }
+
+    /**
+     * Is the file in archive?
+     * 
+     * @param file
+     * @return
+     */
+    public Boolean isFileInArchive(File file) {
+
+	// go through all the archives and check if it's there or not
+	for (Entry<String, Archive> entry : this.archives.entrySet()) {
+
+	}
+
+	return true;
+    }
+
 }
