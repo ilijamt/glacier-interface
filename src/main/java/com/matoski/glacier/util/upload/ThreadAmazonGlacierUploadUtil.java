@@ -1,4 +1,4 @@
-package com.matoski.glacier.util;
+package com.matoski.glacier.util.upload;
 
 import java.io.File;
 import java.io.FileNotFoundException;

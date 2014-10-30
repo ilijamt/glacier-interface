@@ -1,4 +1,4 @@
-package com.matoski.glacier.util;
+package com.matoski.glacier.util.upload;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -7,8 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -17,6 +19,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import org.apache.commons.io.FileUtils;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -29,11 +33,20 @@ import com.amazonaws.services.glacier.TreeHashGenerator;
 import com.amazonaws.services.glacier.model.AbortMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.CompleteMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.CompleteMultipartUploadResult;
+import com.amazonaws.services.glacier.model.DescribeVaultOutput;
 import com.amazonaws.services.glacier.model.InitiateMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.InitiateMultipartUploadResult;
+import com.amazonaws.services.glacier.model.ListMultipartUploadsRequest;
+import com.amazonaws.services.glacier.model.ListMultipartUploadsResult;
+import com.amazonaws.services.glacier.model.ListPartsRequest;
+import com.amazonaws.services.glacier.model.ListPartsResult;
+import com.amazonaws.services.glacier.model.ListVaultsRequest;
+import com.amazonaws.services.glacier.model.ListVaultsResult;
+import com.amazonaws.services.glacier.model.PartListElement;
 import com.amazonaws.services.glacier.model.RequestTimeoutException;
 import com.amazonaws.services.glacier.model.UploadArchiveRequest;
 import com.amazonaws.services.glacier.model.UploadArchiveResult;
+import com.amazonaws.services.glacier.model.UploadListElement;
 import com.amazonaws.services.glacier.model.UploadMultipartPartRequest;
 import com.amazonaws.services.glacier.model.UploadMultipartPartResult;
 import com.matoski.glacier.Constants;
@@ -45,6 +58,8 @@ import com.matoski.glacier.errors.UploadTooManyPartsException;
 import com.matoski.glacier.pojo.Archive;
 import com.matoski.glacier.pojo.MultipartUploadStatus;
 import com.matoski.glacier.pojo.UploadPiece;
+import com.matoski.glacier.util.AmazonGlacierBaseUtil;
+import com.matoski.glacier.util.Parser;
 
 /**
  * Amazon Glacier helper utilities
@@ -590,4 +605,94 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     }
 
+    /**
+     * List all multipart uploads for a vault
+     * 
+     * @param vaultName
+     * @return
+     */
+    public List<UploadListElement> ListMultipartUploads(String vaultName) {
+
+	String marker = null;
+	List<UploadListElement> list = new ArrayList<UploadListElement>();
+
+	do {
+
+	    ListMultipartUploadsRequest request = new ListMultipartUploadsRequest()
+		    .withVaultName(vaultName).withUploadIdMarker(marker);
+
+	    ListMultipartUploadsResult result = this.client
+		    .listMultipartUploads(request);
+
+	    list.addAll(result.getUploadsList());
+
+	    marker = result.getMarker();
+
+	} while (marker != null);
+
+	return list;
+
+    }
+
+    /**
+     * Get a list of the parts in the specified multipart upload id
+     * 
+     * @param vaultName
+     * @param uploadId
+     * @return
+     */
+    public ListPartsResult GetMultipartUploadInfo(String vaultName,
+	    String uploadId) {
+
+	String marker = null;
+	ListPartsResult response = new ListPartsResult();
+
+	do {
+
+	    ListPartsRequest request = new ListPartsRequest()
+		    .withVaultName(vaultName).withUploadId(uploadId)
+		    .withMarker(marker);
+
+	    ListPartsResult result = this.client.listParts(request);
+
+	    if (null == marker) {
+		response.setArchiveDescription(result.getArchiveDescription());
+		response.setCreationDate(result.getCreationDate());
+		response.setMultipartUploadId(result.getMultipartUploadId());
+		response.setVaultARN(result.getVaultARN());
+		response.setPartSizeInBytes(result.getPartSizeInBytes());
+		response.setParts(result.getParts());
+	    } else {
+		response.getParts().addAll(result.getParts());
+	    }
+
+	    marker = result.getMarker();
+
+	} while (marker != null);
+
+	return response;
+
+    }
+
+    public List<DescribeVaultOutput> ListVaults() {
+
+	String marker = null;
+	List<DescribeVaultOutput> list = new ArrayList<DescribeVaultOutput>();
+
+	do {
+
+	    ListVaultsRequest request = new ListVaultsRequest()
+		    .withMarker(marker);
+
+	    ListVaultsResult listVaultsResult = client.listVaults(request);
+
+	    list.addAll(listVaultsResult.getVaultList());
+
+	    marker = listVaultsResult.getMarker();
+
+	} while (marker != null);
+
+	return list;
+
+    }
 }

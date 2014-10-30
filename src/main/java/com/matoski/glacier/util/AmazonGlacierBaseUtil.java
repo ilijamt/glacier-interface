@@ -88,7 +88,7 @@ public abstract class AmazonGlacierBaseUtil {
      * The client Endpoint
      */
     protected final String clientEndpoint;
-
+    
     /**
      * Constructor
      * 

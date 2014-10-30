@@ -1,8 +1,9 @@
-package com.matoski.glacier.util;
+package com.matoski.glacier.util.upload;
 
 import java.io.File;
 
 import com.matoski.glacier.pojo.UploadPiece;
+import com.matoski.glacier.util.ThreadAmazonGlacierDummy;
 
 /**
  * A threaded dummy, used for completion

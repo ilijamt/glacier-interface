@@ -11,9 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.amazonaws.services.glacier.TreeHashGenerator;
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.matoski.glacier.enums.GenericValidateEnum;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.InvalidMetadataException;
 import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
@@ -354,14 +356,71 @@ public class Journal {
      * @param file
      * @return
      */
-    public Boolean isFileInArchive(File file) {
+    public Boolean isFileInArchive(String file) {
+	return null != getByName(file);
+    }
+
+    /**
+     * Get the archive by Name
+     * 
+     * @param name
+     * @return
+     */
+    public Archive getByName(String name) {
+
+	Archive archive = null;
 
 	// go through all the archives and check if it's there or not
 	for (Entry<String, Archive> entry : this.archives.entrySet()) {
 
+	    archive = entry.getValue();
+
+	    if (archive.getName().equals(file)) {
+		break;
+	    }
+
 	}
 
-	return true;
+	return archive;
+    }
+
+    /**
+     * Checks if the size in the archive is the same as it's in the file
+     * 
+     * @param archive
+     * @return
+     */
+    public static GenericValidateEnum archiveValidateFileSize(Archive archive) {
+	return new File(archive.getName()).length() == archive.getSize() ? GenericValidateEnum.VALID
+		: GenericValidateEnum.INVALID;
+    }
+
+    /**
+     * We check if the last modified is the same as the one in archive
+     * 
+     * @param archive
+     * @return
+     */
+    public static GenericValidateEnum archiveValidateLastModified(
+	    Archive archive) {
+	return new File(archive.getName()).lastModified() == archive
+		.getModifiedDate() ? GenericValidateEnum.VALID
+		: GenericValidateEnum.INVALID;
+    }
+
+    /**
+     * Checks if the hash is correct between the archvie and the file on the
+     * disk
+     * 
+     * @param archive
+     * @return
+     */
+    public static GenericValidateEnum archiveValidateTreeHash(Archive archive) {
+	File file = new File(archive.getName());
+	String checksum = TreeHashGenerator.calculateTreeHash(file);
+
+	return archive.getHash().equals(checksum) ? GenericValidateEnum.VALID
+		: GenericValidateEnum.INVALID;
     }
 
 }

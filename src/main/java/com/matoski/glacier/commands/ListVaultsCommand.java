@@ -5,12 +5,11 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 import com.amazonaws.services.glacier.model.DescribeVaultOutput;
-import com.amazonaws.services.glacier.model.ListVaultsRequest;
-import com.amazonaws.services.glacier.model.ListVaultsResult;
 import com.matoski.glacier.cli.CommandListVaults;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
+import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
 public class ListVaultsCommand extends AbstractCommand<CommandListVaults> {
 
@@ -24,43 +23,30 @@ public class ListVaultsCommand extends AbstractCommand<CommandListVaults> {
 
 	System.out.println("START: list-vaults\n");
 
-	String marker = null;
+	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(
+		credentials, client, region);
 
-	do {
+	List<DescribeVaultOutput> result = upload.ListVaults();
 
-	    ListVaultsRequest request = new ListVaultsRequest()
-		    .withMarker(marker);
+	System.out.println(String.format("Total available vaults: %s\n",
+		result.size()));
 
-	    ListVaultsResult listVaultsResult = client.listVaults(request);
+	for (DescribeVaultOutput vault : result) {
 
-	    List<DescribeVaultOutput> vaultList = listVaultsResult
-		    .getVaultList();
-	    marker = listVaultsResult.getMarker();
-
-	    System.out.println(String.format("Total available vaults: %s\n",
-		    vaultList.size()));
-
-	    for (DescribeVaultOutput vault : vaultList) {
-
-		System.out.println(String.format("%1$20s: %2$s", "ARN",
-			vault.getVaultARN()));
-		System.out.println(String.format("%1$20s: %2$s", "Vault Name",
-			vault.getVaultName()));
-		System.out.println(String.format("%1$20s: %2$s", "Created",
-			vault.getCreationDate()));
-		System.out
-			.println(String.format("%1$20s: %2$s (%3$s bytes)",
-				"Inventory Size", FileUtils
-					.byteCountToDisplaySize(vault
-						.getSizeInBytes()), vault
-					.getSizeInBytes()));
-		System.out.println(String.format("%1$20s: %2$s",
-			"Last Inventory Date", vault.getLastInventoryDate()));
-		System.out.println();
-
-	    }
-
-	} while (marker != null);
+	    System.out.println(String.format("%1$20s: %2$s", "ARN",
+		    vault.getVaultARN()));
+	    System.out.println(String.format("%1$20s: %2$s", "Vault Name",
+		    vault.getVaultName()));
+	    System.out.println(String.format("%1$20s: %2$s", "Created",
+		    vault.getCreationDate()));
+	    System.out.println(String.format("%1$20s: %2$s (%3$s bytes)",
+		    "Inventory Size",
+		    FileUtils.byteCountToDisplaySize(vault.getSizeInBytes()),
+		    vault.getSizeInBytes()));
+	    System.out.println(String.format("%1$20s: %2$s",
+		    "Last Inventory Date", vault.getLastInventoryDate()));
+	    System.out.println();
+	}
 
 	System.out.println("END: list-vaults");
     }

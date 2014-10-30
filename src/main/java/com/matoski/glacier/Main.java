@@ -2,27 +2,36 @@ package com.matoski.glacier;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.beust.jcommander.JCommander;
 import com.google.gson.JsonSyntaxException;
 import com.matoski.glacier.cli.Arguments;
+import com.matoski.glacier.cli.CommandAbortMultipartUpload;
 import com.matoski.glacier.cli.CommandCreateVault;
 import com.matoski.glacier.cli.CommandDeleteArchive;
 import com.matoski.glacier.cli.CommandDeleteVault;
 import com.matoski.glacier.cli.CommandHelp;
 import com.matoski.glacier.cli.CommandInventoryDownload;
 import com.matoski.glacier.cli.CommandInventoryRetrieval;
+import com.matoski.glacier.cli.CommandListMultipartUploads;
 import com.matoski.glacier.cli.CommandListVaultJobs;
 import com.matoski.glacier.cli.CommandListVaults;
+import com.matoski.glacier.cli.CommandMultipartUploadInfo;
 import com.matoski.glacier.cli.CommandUploadArchive;
 import com.matoski.glacier.cli.CommandVaultJobInfo;
+import com.matoski.glacier.commands.AbortMultipartUploadCommand;
 import com.matoski.glacier.commands.CreateVaultCommand;
 import com.matoski.glacier.commands.DeleteArchiveCommand;
 import com.matoski.glacier.commands.DeleteVaultCommand;
 import com.matoski.glacier.commands.InventoryDownloadCommand;
 import com.matoski.glacier.commands.InventoryRetrievalCommand;
+import com.matoski.glacier.commands.ListMultipartUploadsCommand;
 import com.matoski.glacier.commands.ListVaultJobsCommand;
 import com.matoski.glacier.commands.ListVaultsCommand;
+import com.matoski.glacier.commands.MultipartUploadInfoCommand;
 import com.matoski.glacier.commands.UploadArchiveCommand;
 import com.matoski.glacier.commands.VaultJobInfoCommand;
 import com.matoski.glacier.enums.CliCommands;
@@ -32,6 +41,30 @@ import com.matoski.glacier.pojo.Config;
 
 public class Main {
 
+    final private static Map<CliCommands, Object> commands = new HashMap<CliCommands, Object>();
+
+    public static void init() {
+
+	commands.put(CliCommands.Help, new CommandHelp());
+	commands.put(CliCommands.ListVaults, new CommandListVaults());
+	commands.put(CliCommands.CreateVault, new CommandCreateVault());
+	commands.put(CliCommands.DeleteVault, new CommandDeleteVault());
+	commands.put(CliCommands.ListVaultJobs, new CommandListVaultJobs());
+	commands.put(CliCommands.VaultJobInfo, new CommandVaultJobInfo());
+	commands.put(CliCommands.InventoryRetrieve,
+		new CommandInventoryRetrieval());
+	commands.put(CliCommands.InventoryDownload,
+		new CommandInventoryDownload());
+	commands.put(CliCommands.UploadArchive, new CommandUploadArchive());
+	commands.put(CliCommands.DeleteArchive, new CommandDeleteArchive());
+	commands.put(CliCommands.ListMultipartUploads,
+		new CommandListMultipartUploads());
+	commands.put(CliCommands.MultipartUploadInfo,
+		new CommandMultipartUploadInfo());
+	commands.put(CliCommands.AbortMultipartUpload,
+		new CommandAbortMultipartUpload());
+    }
+
     public static void main(String[] args) {
 
 	System.out.println("Glacier Interface, Copyright 2014, Ilija Matoski");
@@ -39,30 +72,15 @@ public class Main {
 
 	JCommander commander = null;
 	Arguments arguments = new Arguments();
-	CommandHelp commandHelp = new CommandHelp();
-	CommandListVaults commandListVaults = new CommandListVaults();
-	CommandCreateVault commandCreateVault = new CommandCreateVault();
-	CommandDeleteVault commandDeleteVault = new CommandDeleteVault();
-	CommandListVaultJobs commandListVaultJobs = new CommandListVaultJobs();
-	CommandVaultJobInfo commandVaultJobInfo = new CommandVaultJobInfo();
-	CommandInventoryRetrieval commandInventoryRetrieval = new CommandInventoryRetrieval();
-	CommandInventoryDownload commandInventoryDownload = new CommandInventoryDownload();
-	CommandDeleteArchive commandDeleteArchive = new CommandDeleteArchive();
-	CommandUploadArchive commandUploadArchive = new CommandUploadArchive();
+
+	init();
 
 	try {
 
 	    commander = new JCommander(arguments);
-	    commander.addCommand(commandHelp);
-	    commander.addCommand(commandListVaults);
-	    commander.addCommand(commandCreateVault);
-	    commander.addCommand(commandDeleteVault);
-	    commander.addCommand(commandListVaultJobs);
-	    commander.addCommand(commandVaultJobInfo);
-	    commander.addCommand(commandInventoryRetrieval);
-	    commander.addCommand(commandInventoryDownload);
-	    commander.addCommand(commandDeleteArchive);
-	    commander.addCommand(commandUploadArchive);
+	    for (Entry<CliCommands, Object> entry : commands.entrySet()) {
+		commander.addCommand(entry.getValue());
+	    }
 
 	    commander.parse(args);
 
@@ -143,44 +161,74 @@ public class Main {
 		    break;
 
 		case ListVaults:
-		    new ListVaultsCommand(config, commandListVaults).run();
+		    new ListVaultsCommand(config,
+			    (CommandListVaults) commands.get(cliCommand)).run();
 		    break;
 
 		case CreateVault:
-		    new CreateVaultCommand(config, commandCreateVault).run();
+		    new CreateVaultCommand(config,
+			    (CommandCreateVault) commands.get(cliCommand))
+			    .run();
 		    break;
 
 		case DeleteVault:
-		    new DeleteVaultCommand(config, commandDeleteVault).run();
+		    new DeleteVaultCommand(config,
+			    (CommandDeleteVault) commands.get(cliCommand))
+			    .run();
 		    break;
 
 		case ListVaultJobs:
-		    new ListVaultJobsCommand(config, commandListVaultJobs)
+		    new ListVaultJobsCommand(config,
+			    (CommandListVaultJobs) commands.get(cliCommand))
 			    .run();
 		    break;
 
 		case VaultJobInfo:
-		    new VaultJobInfoCommand(config, commandVaultJobInfo).run();
+		    new VaultJobInfoCommand(config,
+			    (CommandVaultJobInfo) commands.get(cliCommand))
+			    .run();
 		    break;
 
 		case InventoryRetrieve:
 		    new InventoryRetrievalCommand(config,
-			    commandInventoryRetrieval).run();
+			    (CommandInventoryRetrieval) commands
+				    .get(cliCommand)).run();
 		    break;
 
 		case InventoryDownload:
 		    new InventoryDownloadCommand(config,
-			    commandInventoryDownload).run();
+			    (CommandInventoryDownload) commands.get(cliCommand))
+			    .run();
 		    break;
 
 		case DeleteArchive:
-		    new DeleteArchiveCommand(config, commandDeleteArchive)
+		    new DeleteArchiveCommand(config,
+			    (CommandDeleteArchive) commands.get(cliCommand))
 			    .run();
 		    break;
 
 		case UploadArchive:
-		    new UploadArchiveCommand(config, commandUploadArchive)
+		    new UploadArchiveCommand(config,
+			    (CommandUploadArchive) commands.get(cliCommand))
 			    .run();
+		    break;
+
+		case ListMultipartUploads:
+		    new ListMultipartUploadsCommand(config,
+			    (CommandListMultipartUploads) commands
+				    .get(cliCommand)).run();
+		    break;
+
+		case MultipartUploadInfo:
+		    new MultipartUploadInfoCommand(config,
+			    (CommandMultipartUploadInfo) commands
+				    .get(cliCommand)).run();
+		    break;
+
+		case AbortMultipartUpload:
+		    new AbortMultipartUploadCommand(config,
+			    (CommandAbortMultipartUpload) commands
+				    .get(cliCommand)).run();
 		    break;
 
 		default:

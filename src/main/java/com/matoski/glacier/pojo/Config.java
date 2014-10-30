@@ -27,6 +27,13 @@ public class Config {
     private static Config instance;
 
     /**
+     * Constructor
+     */
+    private Config() {
+
+    }
+
+    /**
      * Get the current instance
      * 
      * @return

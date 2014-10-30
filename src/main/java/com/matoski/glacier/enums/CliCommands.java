@@ -6,7 +6,9 @@ public enum CliCommands {
 	    "delete-vault"), ListVaultJobs("list-vault-jobs"), VaultJobInfo(
 	    "vault-job-info"), InventoryRetrieve("inventory-retrieve"), InventoryDownload(
 	    "inventory-download"), DeleteArchive("delete-archive"), UploadArchive(
-	    "upload-archive");
+	    "upload-archive"), ListMultipartUploads("list-multipart-uploads"), MultipartUploadInfo(
+	    "multipart-upload-info"), AbortMultipartUpload(
+	    "abort-multipart-upload");
 
     private String propertyName;
 
