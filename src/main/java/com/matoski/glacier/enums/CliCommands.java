@@ -19,7 +19,7 @@ public enum CliCommands {
     MultipartUploadInfo("multipart-upload-info"),
     AbortMultipartUpload("abort-multipart-upload"),
     Sync("sync"),
-    Purge("purge");
+    PurgeVault("purge-vault");
 
     public static CliCommands from(String x) {
 	for (CliCommands currentType : CliCommands.values()) {

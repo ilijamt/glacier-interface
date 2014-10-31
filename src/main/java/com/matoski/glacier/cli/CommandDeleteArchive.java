@@ -23,6 +23,9 @@ public class CommandDeleteArchive extends GenericCommand {
     @Parameter(names = "--name", description = "The name of the archive")
     public String name;
 
+    @Parameter(names = "--ignore-journal", description = "Ignore the journal when deleting, you should only use this with ID")
+    public Boolean ignoreJournal = false;
+
     public CommandDeleteArchive() {
 	super(CliCommands.DeleteArchive);
     }

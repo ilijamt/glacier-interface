@@ -77,12 +77,11 @@ public class State {
      */
     public static State load(File file) throws IOException {
 
-	State journal = new State();
-
 	if (!file.exists()) {
-	    journal.setFile(file);
-	    return journal;
+	    throw new IOException();
 	}
+
+	State journal = new State();
 
 	String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
 
@@ -122,7 +121,6 @@ public class State {
 	State journal = new State();
 
 	journal.setName(vault);
-	journal.setARN(inventory.getVaultARN());
 	journal.setDate(inventory.getInventoryDate());
 	journal.setMetadata(metadata);
 
@@ -187,22 +185,6 @@ public class State {
     private transient File file;
 
     /**
-     * Delete archive from the journal
-     * 
-     * @param id
-     */
-    public void deleteArchive(String id) {
-
-	Archive archive = getById(id);
-
-	if (null != archive) {
-	    archive.setState(ArchiveState.DELETED);
-	    addArchive(archive);
-	}
-
-    }
-
-    /**
      * Add an archive in the HashMap
      * 
      * @param archive
@@ -225,17 +207,27 @@ public class State {
     }
 
     /**
+     * Delete archive from the journal
+     * 
+     * @param id
+     */
+    public void deleteArchive(String id) {
+
+	Archive archive = getById(id);
+
+	if (null != archive) {
+	    archive = (Archive) archive.clone();
+	    archive.setState(ArchiveState.DELETED);
+	    addArchive(archive);
+	}
+
+    }
+
+    /**
      * @return the archives
      */
     public HashMap<String, Archive> getArchives() {
 	return archives;
-    }
-
-    /**
-     * @return the aRN
-     */
-    public String getARN() {
-	return journal.getARN();
     }
 
     /**
@@ -342,7 +334,6 @@ public class State {
 	    this.addArchive(archive);
 	}
 
-	this.setARN(journal.getARN());
 	this.setName(journal.getName());
 	this.setMetadata(journal.getMetadata());
 	this.setDate(journal.getDate());
@@ -389,16 +380,6 @@ public class State {
      */
     public void save(String file) throws IOException {
 	save(new File(file));
-    }
-
-    /**
-     * @param aRN
-     *            the aRN to set
-     * @return
-     */
-    public State setARN(String ARN) {
-	journal.setARN(ARN);
-	return this;
     }
 
     /**
@@ -460,4 +441,14 @@ public class State {
     public void setName(String name) {
 	journal.setName(name);
     }
+
+    /**
+     * The size of the journal
+     * 
+     * @return
+     */
+    public Integer size() {
+	return archives.size();
+    }
+
 }

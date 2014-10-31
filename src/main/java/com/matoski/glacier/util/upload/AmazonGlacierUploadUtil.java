@@ -31,6 +31,7 @@ import com.amazonaws.services.glacier.TreeHashGenerator;
 import com.amazonaws.services.glacier.model.AbortMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.CompleteMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.CompleteMultipartUploadResult;
+import com.amazonaws.services.glacier.model.DeleteArchiveRequest;
 import com.amazonaws.services.glacier.model.DescribeVaultOutput;
 import com.amazonaws.services.glacier.model.GetJobOutputRequest;
 import com.amazonaws.services.glacier.model.GetJobOutputResult;
@@ -200,6 +201,40 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	}
 
 	return this.client.completeMultipartUpload(request);
+
+    }
+
+    /**
+     * Delete an archive
+     * 
+     * @param vaultName
+     * @param archiveId
+     */
+    public void DeleteArchive(String vaultName, String archiveId) {
+	DeleteArchive(vaultName, archiveId, null, null);
+    }
+
+    /**
+     * Delete an archive
+     * 
+     * @param vaultName
+     * @param archiveId
+     * @param listener
+     * @param collector
+     */
+    public void DeleteArchive(String vaultName, String archiveId, ProgressListener listener, RequestMetricCollector collector) {
+
+	DeleteArchiveRequest request = new DeleteArchiveRequest().withVaultName(vaultName).withArchiveId(archiveId);
+
+	if (null != listener) {
+	    request.withGeneralProgressListener(listener);
+	}
+
+	if (null != collector) {
+	    request.withRequestMetricCollector(collector);
+	}
+
+	client.deleteArchive(request);
 
     }
 

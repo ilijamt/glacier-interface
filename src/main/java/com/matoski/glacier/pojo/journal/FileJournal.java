@@ -17,11 +17,6 @@ public class FileJournal {
     private List<Archive> journal = new ArrayList<Archive>();
 
     /**
-     * Vault ARN
-     */
-    private String ARN;
-
-    /**
      * Inventory date
      */
     private Date date;
@@ -43,13 +38,6 @@ public class FileJournal {
      */
     public void addArchive(Archive archive) {
 	this.journal.add(archive);
-    }
-
-    /**
-     * @return the aRN
-     */
-    public String getARN() {
-	return ARN;
     }
 
     /**
@@ -78,14 +66,6 @@ public class FileJournal {
      */
     public String getName() {
 	return name;
-    }
-
-    /**
-     * @param aRN
-     *            the aRN to set
-     */
-    public void setARN(String aRN) {
-	ARN = aRN;
     }
 
     /**

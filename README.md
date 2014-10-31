@@ -37,7 +37,7 @@ Commands
 * **list-multipart-uploads**
 * **multipart-upload-info**
 * **abort-multipart-upload**
-* **purge** (TODO)
+* **purge-vault**
 * **sync** (TODO)
 
 Minimum Amazon Glacier permissions:

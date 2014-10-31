@@ -2,6 +2,7 @@ package com.matoski.glacier.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandUploadArchive;
@@ -55,12 +56,6 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 	Boolean validVaultName = null != command.vaultName;
 	Boolean validVaultNameConfig = null != config.getVault();
 
-	try {
-	    this.journal = State.load(command.journal);
-	} catch (IOException e) {
-	    throw new RuntimeException("Journal doesn't exist");
-	}
-
 	if (!validVaultName && !validVaultNameConfig) {
 	    throw new VaultNameNotPresentException();
 	}
@@ -73,18 +68,21 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 	    throw new IllegalArgumentException("Part size has to be a multiple of 2");
 	}
 
-	command.partSize = command.partSize * (int) AmazonGlacierBaseUtil.MINIMUM_PART_SIZE;
+	this.metadata = Metadata.from(command.metadata);
+	this.upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
 	try {
 	    this.journal = State.load(command.journal);
 	} catch (IOException e) {
 	    System.out.println(String.format("Creating a new journal: %s", command.journal));
 	    this.journal = new State();
+	    this.journal.setMetadata(metadata);
+	    this.journal.setName(command.vaultName);
+	    this.journal.setDate(new Date());
 	    this.journal.setFile(command.journal);
 	}
 
-	this.metadata = Metadata.from(command.metadata);
-	this.upload = new AmazonGlacierUploadUtil(credentials, client, region);
+	command.partSize = command.partSize * (int) AmazonGlacierBaseUtil.MINIMUM_PART_SIZE;
 
     }
 
@@ -102,13 +100,15 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 
 	    Archive archive = null;
 	    Boolean upload = true;
+	    Boolean exists = false;
 
 	    for (String fileName : command.files) {
 
 		upload = true;
+		exists = journal.isFileInArchive(fileName);
 
 		// check if this file exists in the journal
-		if (journal.isFileInArchive(fileName)) {
+		if (exists) {
 
 		    System.out.println(String.format("%s is already present in the journal", fileName));
 		    System.out.println(String.format("Verifying ..."));
@@ -125,6 +125,7 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 		    GenericValidateEnum validTreeHash = State.archiveValidateTreeHash(testArchive);
 
 		    System.out.println(String.format("Hash is: %s", validTreeHash));
+		    System.out.println();
 
 		    upload = command.forceUpload;
 
@@ -139,7 +140,7 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 			archive = this.upload.UploadMultipartFile(fileName, new File(Config.getInstance().getDirectory(), fileName),
 				command.concurrent, command.retryFailedUpload, command.partSize, command.vaultName, metadata);
 
-			if (command.forceUpload) {
+			if (command.forceUpload && exists) {
 			    archive.setState(ArchiveState.FORCE_UPLOAD);
 			}
 

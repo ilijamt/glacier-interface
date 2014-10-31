@@ -22,7 +22,7 @@ import com.matoski.glacier.cli.CommandListMultipartUploads;
 import com.matoski.glacier.cli.CommandListVaultJobs;
 import com.matoski.glacier.cli.CommandListVaults;
 import com.matoski.glacier.cli.CommandMultipartUploadInfo;
-import com.matoski.glacier.cli.CommandPurge;
+import com.matoski.glacier.cli.CommandPurgeVault;
 import com.matoski.glacier.cli.CommandSync;
 import com.matoski.glacier.cli.CommandUploadArchive;
 import com.matoski.glacier.cli.CommandVaultJobInfo;
@@ -39,7 +39,7 @@ import com.matoski.glacier.commands.ListMultipartUploadsCommand;
 import com.matoski.glacier.commands.ListVaultJobsCommand;
 import com.matoski.glacier.commands.ListVaultsCommand;
 import com.matoski.glacier.commands.MultipartUploadInfoCommand;
-import com.matoski.glacier.commands.PurgeCommand;
+import com.matoski.glacier.commands.PurgeVaultCommand;
 import com.matoski.glacier.commands.SyncCommand;
 import com.matoski.glacier.commands.UploadArchiveCommand;
 import com.matoski.glacier.commands.VaultJobInfoCommand;
@@ -68,7 +68,7 @@ public class Main {
 	commands.put(CliCommands.AbortMultipartUpload.ordinal(), new CommandAbortMultipartUpload());
 	commands.put(CliCommands.DownloadArchive.ordinal(), new CommandDownloadArchive());
 	commands.put(CliCommands.InitDownload.ordinal(), new CommandInitDownload());
-	commands.put(CliCommands.Purge.ordinal(), new CommandPurge());
+	commands.put(CliCommands.PurgeVault.ordinal(), new CommandPurgeVault());
 	commands.put(CliCommands.Sync.ordinal(), new CommandSync());
 
     }
@@ -225,23 +225,23 @@ public class Main {
 		case AbortMultipartUpload:
 		    new AbortMultipartUploadCommand(config, (CommandAbortMultipartUpload) commands.get(cliCommand.ordinal())).run();
 		    break;
-		    
+
 		case DownloadArchive:
 		    new DownloadArchiveCommand(config, (CommandDownloadArchive) commands.get(cliCommand.ordinal())).run();
 		    break;
-		    
+
 		case InitDownload:
 		    new InitDownloadCommand(config, (CommandInitDownload) commands.get(cliCommand.ordinal())).run();
 		    break;
-		    
-		case Purge:
-		    new PurgeCommand(config, (CommandPurge) commands.get(cliCommand.ordinal())).run();
+
+		case PurgeVault:
+		    new PurgeVaultCommand(config, (CommandPurgeVault) commands.get(cliCommand.ordinal())).run();
 		    break;
-		    
+
 		case Sync:
 		    new SyncCommand(config, (CommandSync) commands.get(cliCommand.ordinal())).run();
 		    break;
-		    
+
 		default:
 		    break;
 

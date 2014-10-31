@@ -2,7 +2,6 @@ package com.matoski.glacier.commands;
 
 import java.io.IOException;
 
-import com.amazonaws.services.glacier.model.DeleteArchiveRequest;
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandDeleteArchive;
 import com.matoski.glacier.errors.RegionNotSupportedException;
@@ -10,6 +9,7 @@ import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Archive;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.pojo.journal.State;
+import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
 public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> {
 
@@ -42,13 +42,18 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 	Boolean validId = (null != command.id);
 	Boolean validName = (null != command.name);
 
-	try {
-	    this.journal = State.load(command.journal);
-	} catch (IOException e) {
-	    System.out.println(String.format("Creating a new journal: %s", command.journal));
-	    this.journal = new State();
-	    this.journal.setFile(command.journal);
-	    throw new RuntimeException("Journal doesn't exist");
+	if (command.ignoreJournal) {
+	    try {
+		this.journal = State.load(command.journal);
+	    } catch (IOException e) {
+		throw new RuntimeException("Journal doesn't exist");
+	    }
+
+	    try {
+		this.journal.save();
+	    } catch (IOException e) {
+		System.out.println("Journal failed to save");
+	    }
 	}
 
 	if (!validVaultName && !validVaultNameConfig) {
@@ -61,6 +66,10 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 
 	if (!validId && !validName) {
 	    throw new IllegalArgumentException("ID or NAME are required");
+	}
+
+	if (command.ignoreJournal && !validId) {
+	    throw new IllegalArgumentException("ID is required");
 	}
 
 	if (validId && !validName) {
@@ -83,9 +92,11 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 
 	System.out.println("START: delete-archive\n");
 
+	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
+
 	try {
 
-	    client.deleteArchive(new DeleteArchiveRequest().withVaultName(command.vaultName).withArchiveId(archiveId));
+	    upload.DeleteArchive(command.vaultName, archiveId);
 
 	    System.out.println("Archive deleted.\n");
 
@@ -93,6 +104,8 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 
 	    System.out.println(String.format("%1$10s: %2$s", "Vault", command.vaultName));
 	    System.out.println(String.format("%1$10s: %2$s", "Archive ID", command.id));
+
+	    this.journal.save();
 
 	} catch (Exception e) {
 	    System.err.println("Failed to delete the archive");
