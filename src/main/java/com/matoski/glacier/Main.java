@@ -12,7 +12,9 @@ import com.matoski.glacier.cli.CommandAbortMultipartUpload;
 import com.matoski.glacier.cli.CommandCreateVault;
 import com.matoski.glacier.cli.CommandDeleteArchive;
 import com.matoski.glacier.cli.CommandDeleteVault;
+import com.matoski.glacier.cli.CommandDownloadArchive;
 import com.matoski.glacier.cli.CommandHelp;
+import com.matoski.glacier.cli.CommandInitDownload;
 import com.matoski.glacier.cli.CommandInventoryDownload;
 import com.matoski.glacier.cli.CommandInventoryRetrieval;
 import com.matoski.glacier.cli.CommandListJournal;
@@ -20,12 +22,16 @@ import com.matoski.glacier.cli.CommandListMultipartUploads;
 import com.matoski.glacier.cli.CommandListVaultJobs;
 import com.matoski.glacier.cli.CommandListVaults;
 import com.matoski.glacier.cli.CommandMultipartUploadInfo;
+import com.matoski.glacier.cli.CommandPurge;
+import com.matoski.glacier.cli.CommandSync;
 import com.matoski.glacier.cli.CommandUploadArchive;
 import com.matoski.glacier.cli.CommandVaultJobInfo;
 import com.matoski.glacier.commands.AbortMultipartUploadCommand;
 import com.matoski.glacier.commands.CreateVaultCommand;
 import com.matoski.glacier.commands.DeleteArchiveCommand;
 import com.matoski.glacier.commands.DeleteVaultCommand;
+import com.matoski.glacier.commands.DownloadArchiveCommand;
+import com.matoski.glacier.commands.InitDownloadCommand;
 import com.matoski.glacier.commands.InventoryDownloadCommand;
 import com.matoski.glacier.commands.InventoryRetrievalCommand;
 import com.matoski.glacier.commands.ListJournalCommand;
@@ -33,6 +39,8 @@ import com.matoski.glacier.commands.ListMultipartUploadsCommand;
 import com.matoski.glacier.commands.ListVaultJobsCommand;
 import com.matoski.glacier.commands.ListVaultsCommand;
 import com.matoski.glacier.commands.MultipartUploadInfoCommand;
+import com.matoski.glacier.commands.PurgeCommand;
+import com.matoski.glacier.commands.SyncCommand;
 import com.matoski.glacier.commands.UploadArchiveCommand;
 import com.matoski.glacier.commands.VaultJobInfoCommand;
 import com.matoski.glacier.enums.CliCommands;
@@ -70,6 +78,12 @@ public class Main {
 		new CommandMultipartUploadInfo());
 	commands.put(CliCommands.AbortMultipartUpload.ordinal(),
 		new CommandAbortMultipartUpload());
+	commands.put(CliCommands.DownloadArchive.ordinal(),
+		new CommandDownloadArchive());
+	commands.put(CliCommands.InitDownload.ordinal(),
+		new CommandInitDownload());
+	commands.put(CliCommands.Purge.ordinal(), new CommandPurge());
+	commands.put(CliCommands.Sync.ordinal(), new CommandSync());
 
     }
 
@@ -254,9 +268,29 @@ public class Main {
 			    (CommandAbortMultipartUpload) commands
 				    .get(cliCommand.ordinal())).run();
 		    break;
-
+		case DownloadArchive:
+		    new DownloadArchiveCommand(config,
+			    (CommandDownloadArchive) commands.get(cliCommand
+				    .ordinal())).run();
+		    break;
+		case InitDownload:
+		    new InitDownloadCommand(config,
+			    (CommandInitDownload) commands.get(cliCommand
+				    .ordinal())).run();
+		    break;
+		case Purge:
+		    new PurgeCommand(config,
+			    (CommandPurge) commands.get(cliCommand.ordinal()))
+			    .run();
+		    break;
+		case Sync:
+		    new SyncCommand(config,
+			    (CommandSync) commands.get(cliCommand.ordinal()))
+			    .run();
+		    break;
 		default:
 		    break;
+
 		}
 	    } catch (RuntimeException e) {
 		System.err.println(String.format("ERROR: %s", e.getMessage()));

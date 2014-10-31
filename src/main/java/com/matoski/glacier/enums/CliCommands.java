@@ -11,6 +11,7 @@ public enum CliCommands {
     InventoryRetrieve("inventory-retrieve"),
     InventoryDownload("inventory-download"),
     ListJournal("list-journal"),
+    InitDownload("init-download"),
     DownloadArchive("download-archive"),
     DeleteArchive("delete-archive"),
     UploadArchive("upload-archive"),

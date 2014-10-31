@@ -72,10 +72,6 @@ Usage: <main class> [options] [command] [command options]
               --vault
              The name of the vault for whom the inventory needs to be retrieved,
              will be overwriten by --aws-vault if not specified
-              --wait
-             Wait for completion of the command, this sets up a SQS/SNS so it
-             can be told when to job is finished
-             Default: false
 
     inventory-download      Initiate an inventory download, and it will download the last succesfull InventoryRetrieval
       Usage: inventory-download [options]
@@ -103,6 +99,12 @@ Usage: <main class> [options] [command] [command options]
              Default: false
               --journal
              The journal to read the data from
+
+    init-download      Initiate a download job
+      Usage: init-download [options]
+
+    download-archive      Download an archive
+      Usage: download-archive [options]
 
     delete-archive      Initiate a deletion of archive
       Usage: delete-archive [options]
@@ -180,6 +182,12 @@ Usage: <main class> [options] [command] [command options]
               --vault
              The name of the vault from which the multipart upload will be
              aborted, will be overwriten by --aws-vault if not specified
+
+    purge      Purge the data from the vault that is missing in the journal
+      Usage: purge [options]
+
+    sync      Sync a folder contents to amazon glacier
+      Usage: sync [options]
 
 
 
