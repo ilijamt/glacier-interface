@@ -225,18 +225,23 @@ public class Main {
 		case AbortMultipartUpload:
 		    new AbortMultipartUploadCommand(config, (CommandAbortMultipartUpload) commands.get(cliCommand.ordinal())).run();
 		    break;
+		    
 		case DownloadArchive:
 		    new DownloadArchiveCommand(config, (CommandDownloadArchive) commands.get(cliCommand.ordinal())).run();
 		    break;
+		    
 		case InitDownload:
 		    new InitDownloadCommand(config, (CommandInitDownload) commands.get(cliCommand.ordinal())).run();
 		    break;
+		    
 		case Purge:
 		    new PurgeCommand(config, (CommandPurge) commands.get(cliCommand.ordinal())).run();
 		    break;
+		    
 		case Sync:
 		    new SyncCommand(config, (CommandSync) commands.get(cliCommand.ordinal())).run();
 		    break;
+		    
 		default:
 		    break;
 
