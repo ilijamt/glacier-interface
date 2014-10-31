@@ -3,6 +3,7 @@ package com.matoski.glacier.commands;
 import com.amazonaws.services.glacier.model.InitiateJobRequest;
 import com.amazonaws.services.glacier.model.InitiateJobResult;
 import com.amazonaws.services.glacier.model.JobParameters;
+import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandInventoryRetrieval;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;

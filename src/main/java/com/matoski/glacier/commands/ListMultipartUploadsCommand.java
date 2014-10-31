@@ -3,6 +3,7 @@ package com.matoski.glacier.commands;
 import java.util.List;
 
 import com.amazonaws.services.glacier.model.UploadListElement;
+import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandListMultipartUploads;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;

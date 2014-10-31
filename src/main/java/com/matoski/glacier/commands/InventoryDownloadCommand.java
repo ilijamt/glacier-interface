@@ -11,6 +11,7 @@ import com.amazonaws.services.glacier.model.GlacierJobDescription;
 import com.amazonaws.services.glacier.model.ListJobsRequest;
 import com.amazonaws.services.glacier.model.ListJobsResult;
 import com.google.gson.Gson;
+import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandInventoryDownload;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.RegionNotSupportedException;

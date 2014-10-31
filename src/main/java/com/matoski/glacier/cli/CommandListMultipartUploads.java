@@ -2,6 +2,7 @@ package com.matoski.glacier.cli;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.matoski.glacier.base.GenericCommand;
 import com.matoski.glacier.enums.CliCommands;
 
 @Parameters(commandNames = "list-multipart-uploads", commandDescription = "List all the present multipart uploads for the vault")

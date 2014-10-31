@@ -7,7 +7,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.glacier.AmazonGlacierClient;
-import com.matoski.glacier.commands.AbstractCommand;
+import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 
 /**

@@ -3,7 +3,6 @@ package com.matoski.glacier;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import com.beust.jcommander.JCommander;
@@ -41,7 +40,7 @@ import com.matoski.glacier.pojo.Config;
 
 public class Main {
 
-    final private static Map<CliCommands, Object> commands = new HashMap<CliCommands, Object>();
+    final private static HashMap<CliCommands, Object> commands = new HashMap<CliCommands, Object>();
 
     public static void init() {
 
@@ -234,7 +233,8 @@ public class Main {
 		default:
 		    break;
 		}
-
+	    } catch (RuntimeException e) {
+		System.err.println(String.format("ERROR: %s", e.getMessage()));
 	    } catch (RegionNotSupportedException e) {
 		System.err.println(String.format(
 			"Service glacier not support in region: %s",

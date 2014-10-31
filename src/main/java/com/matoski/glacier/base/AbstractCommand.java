@@ -1,4 +1,4 @@
-package com.matoski.glacier.commands;
+package com.matoski.glacier.base;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -66,6 +66,7 @@ public abstract class AbstractCommand<T> implements ICommand, Runnable {
 	this.region = Region.getRegion(Regions.fromName(config.getRegion()));
 	this.credentials = new BasicAWSCredentials(config.getKey(),
 		config.getSecretKey());
+
 	ClientConfiguration configuration = new ClientConfiguration();
 	configuration.setConnectionTimeout(70 * 1000);
 	this.client = new AmazonGlacierClient(this.credentials, configuration);

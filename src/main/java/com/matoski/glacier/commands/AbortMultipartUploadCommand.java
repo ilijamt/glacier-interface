@@ -1,5 +1,6 @@
 package com.matoski.glacier.commands;
 
+import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandAbortMultipartUpload;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;

@@ -2,6 +2,7 @@ package com.matoski.glacier.commands;
 
 import com.amazonaws.services.glacier.model.ListPartsResult;
 import com.amazonaws.services.glacier.model.PartListElement;
+import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandMultipartUploadInfo;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;

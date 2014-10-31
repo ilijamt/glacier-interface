@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
+import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandUploadArchive;
 import com.matoski.glacier.enums.GenericValidateEnum;
 import com.matoski.glacier.enums.Metadata;
@@ -51,13 +52,26 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 	    throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
 
-	if ((null == command.vaultName || command.vaultName.isEmpty())
-		&& (null == config.getVault() || config.getVault().isEmpty())) {
+	Boolean validVaultName = null != command.vaultName;
+	Boolean validVaultNameConfig = null != config.getVault();
+
+	try {
+	    this.journal = Journal.load(command.journal);
+	} catch (IOException e) {
+	    throw new RuntimeException("Journal doesn't exist");
+	}
+
+	if (!validVaultName && !validVaultNameConfig) {
 	    throw new VaultNameNotPresentException();
 	}
 
-	if ((null == command.vaultName) || command.vaultName.isEmpty()) {
+	if (validVaultNameConfig) {
 	    command.vaultName = config.getVault();
+	}
+
+	if (command.partSize % 2 != 0) {
+	    throw new IllegalArgumentException(
+		    "Part size has to be a multiple of 2");
 	}
 
 	command.partSize = command.partSize
@@ -129,7 +143,7 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 				continue;
 			    }
 			}
-
+			in.close();
 		    }
 
 		}

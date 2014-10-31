@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 import com.amazonaws.services.glacier.model.DescribeVaultOutput;
+import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandListVaults;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;

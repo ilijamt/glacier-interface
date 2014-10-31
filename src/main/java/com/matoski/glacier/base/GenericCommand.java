@@ -1,4 +1,4 @@
-package com.matoski.glacier.cli;
+package com.matoski.glacier.base;
 
 import com.matoski.glacier.enums.CliCommands;
 
@@ -13,7 +13,7 @@ public abstract class GenericCommand {
     /**
      * The command name
      */
-    final private String name;
+    final private String __name;
 
     /**
      * Constructor
@@ -21,7 +21,7 @@ public abstract class GenericCommand {
      * @param command
      */
     public GenericCommand(CliCommands command) {
-	this.name = command.getPropertyName();
+	this.__name = command.getPropertyName();
     }
 
     /**
@@ -30,7 +30,7 @@ public abstract class GenericCommand {
      * @param name
      */
     public GenericCommand(String name) {
-	this.name = name;
+	this.__name = name;
     }
 
     /**
@@ -38,8 +38,8 @@ public abstract class GenericCommand {
      * 
      * @return
      */
-    public String getName() {
-	return name;
+    public String __getCommandName() {
+	return __name;
     }
 
     /**
@@ -50,7 +50,7 @@ public abstract class GenericCommand {
 	final int prime = 31;
 	int hashCode = 1;
 
-	hashCode = prime * hashCode + name.hashCode();
+	hashCode = prime * hashCode + __name.hashCode();
 	return hashCode;
     }
 }

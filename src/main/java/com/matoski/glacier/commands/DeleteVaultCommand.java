@@ -3,6 +3,7 @@ package com.matoski.glacier.commands;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.glacier.model.DeleteVaultRequest;
+import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandDeleteVault;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
