@@ -195,6 +195,22 @@ public class State {
     private transient File file;
 
     /**
+     * Delete archive from the journal
+     * 
+     * @param id
+     */
+    public void deleteArchive(String id) {
+
+	Archive archive = getById(id);
+
+	if (null != archive) {
+	    archive.setState(ArchiveState.DELETED);
+	    addArchive(archive);
+	}
+
+    }
+
+    /**
      * Add an archive in the HashMap
      * 
      * @param archive

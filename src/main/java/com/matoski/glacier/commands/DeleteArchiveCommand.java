@@ -90,6 +90,8 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 
 	    System.out.println("Archive deleted.\n");
 
+	    this.journal.deleteArchive(archiveId);
+
 	    System.out.println(String.format("%1$10s: %2$s", "Vault",
 		    command.vaultName));
 	    System.out.println(String.format("%1$10s: %2$s", "Archive ID",
