@@ -72,6 +72,10 @@ Usage: <main class> [options] [command] [command options]
               --vault
              The name of the vault for whom the inventory needs to be retrieved,
              will be overwriten by --aws-vault if not specified
+              --wait
+             Wait for completion of the command, this sets up a SQS/SNS so it
+             can be told when to job is finished
+             Default: false
 
     inventory-download      Initiate an inventory download, and it will download the last succesfull InventoryRetrieval
       Usage: inventory-download [options]
@@ -90,6 +94,15 @@ Usage: <main class> [options] [command] [command options]
               --vault
              The name of the vault for whom the inventory needs to be retrieved,
              will be overwriten by --aws-vault if not specified
+
+    list-journal      List the data in the journal
+      Usage: list-journal [options]
+        Options:
+              --full
+             Display the full data from the journal
+             Default: false
+              --journal
+             The journal to read the data from
 
     delete-archive      Initiate a deletion of archive
       Usage: delete-archive [options]

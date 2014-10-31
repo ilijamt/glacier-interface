@@ -16,6 +16,7 @@ Options
 * **--aws-vault** Sets the amazon vault, if specified it will overide the data loaded from the configuration file
 * **--config** Location to the configuration file to load
 * **--create-config** Create a config file based on the parameters you have supplied into the application
+* **--directory** The base directory from which we start, if not specified then the directory is set to the current working directory
 
 Commands
 --------
@@ -28,5 +29,9 @@ Commands
 * **vault-job-info**
 * **inventory-retrieve**
 * **inventory-download**
+* **list-journal**
 * **delete-archive**
 * **upload-archive**
+* **list-multipart-uploads**
+* **multipart-upload-info**
+* **abort-multipart-upload**
