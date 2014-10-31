@@ -78,6 +78,9 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
 
