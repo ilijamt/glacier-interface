@@ -249,7 +249,7 @@ public class State {
 
 	for (Entry<String, Archive> entry : this.archives.entrySet()) {
 
-	    if (entry.getValue().getId().equals(file)) {
+	    if (entry.getValue().getId().equals(id)) {
 		archive = entry.getValue();
 		break;
 	    }
@@ -272,7 +272,7 @@ public class State {
 	// go through all the archives and check if it's there or not
 	for (Entry<String, Archive> entry : this.archives.entrySet()) {
 
-	    if (entry.getValue().getName().equals(file)) {
+	    if (entry.getValue().getName().equals(name)) {
 		archive = entry.getValue();
 		break;
 	    }

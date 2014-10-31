@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandUploadArchive;
+import com.matoski.glacier.enums.ArchiveState;
 import com.matoski.glacier.enums.GenericValidateEnum;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.RegionNotSupportedException;
@@ -68,7 +69,7 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 	    command.vaultName = config.getVault();
 	}
 
-	if (command.partSize % 2 != 0) {
+	if (command.partSize % 2 != 0 && command.partSize != 1) {
 	    throw new IllegalArgumentException("Part size has to be a multiple of 2");
 	}
 
@@ -135,8 +136,12 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 			    fileName).length()));
 
 		    try {
-			archive = this.upload.UploadMultipartFile(new File(Config.getInstance().getDirectory(), fileName),
+			archive = this.upload.UploadMultipartFile(fileName, new File(Config.getInstance().getDirectory(), fileName),
 				command.concurrent, command.retryFailedUpload, command.partSize, command.vaultName, metadata);
+
+			if (command.forceUpload) {
+			    archive.setState(ArchiveState.FORCE_UPLOAD);
+			}
 
 			this.journal.addArchive(archive);
 			this.journal.save();

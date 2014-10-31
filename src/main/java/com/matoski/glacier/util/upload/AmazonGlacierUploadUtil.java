@@ -55,6 +55,7 @@ import com.amazonaws.services.glacier.model.UploadListElement;
 import com.amazonaws.services.glacier.model.UploadMultipartPartRequest;
 import com.amazonaws.services.glacier.model.UploadMultipartPartResult;
 import com.matoski.glacier.Constants;
+import com.matoski.glacier.enums.ArchiveState;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.enums.UploadMultipartStatus;
 import com.matoski.glacier.errors.InvalidUploadedChecksumException;
@@ -485,7 +486,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	return this.client.uploadArchive(request);
     }
 
-    public Archive UploadMultipartFile(File file, int threads, int retry, int partSize, String vaultName, Metadata metadata)
+    public Archive UploadMultipartFile(String fileName, File file, int threads, int retry, int partSize, String vaultName, Metadata metadata)
 	    throws UploadTooManyPartsException, IOException, RegionNotSupportedException {
 
 	ExecutorService pool = Executors.newFixedThreadPool(threads);
@@ -500,6 +501,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	}
 
 	archive.setCreatedDate(new Date());
+	archive.setState(ArchiveState.CREATED);
 
 	// 0. Get the upload state file, check if we have a state already
 	final MultipartUploadStatus uploadStatus;
@@ -644,7 +646,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	archive.setUri(complete.getLocation());
 
 	archive.setSize(fileSize);
-	archive.setName(file.toString());
+	archive.setName(fileName);
 	archive.setModifiedDate(file.lastModified());
 
 	return archive;
