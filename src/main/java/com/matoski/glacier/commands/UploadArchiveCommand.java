@@ -95,9 +95,9 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 
 		// check if this file exists in the journal
 		if (journal.isFileInArchive(fileName)) {
+
 		    System.out.println(String.format(
-			    "File: %s is already present in the journal",
-			    fileName));
+			    "%s is already present in the journal", fileName));
 		    System.out.println(String.format("Verifying ..."));
 
 		    Archive testArchive = journal.getByName(fileName);
@@ -117,7 +117,7 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 			    && validModifiedDate == GenericValidateEnum.VALID) {
 			Scanner in = new Scanner(System.in);
 			System.out
-				.print("Do you want to check tree hash (yes/no/quit?");
+				.print("Do you want to check tree hash (yes/no/quit?)");
 			String response = in.nextLine();
 			if (response.trim().equalsIgnoreCase("yes")) {
 			    validTreeHash = Journal

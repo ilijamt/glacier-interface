@@ -3,6 +3,7 @@ package com.matoski.glacier.pojo;
 import java.util.Date;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
+import com.matoski.glacier.enums.ArchiveState;
 
 /**
  * An archive element, it's used to store all the relevant information about the
@@ -11,6 +12,11 @@ import com.fasterxml.jackson.databind.util.ISO8601Utils;
  * @author ilijamt
  */
 public class Archive {
+
+    /**
+     * The state of the file in the journal
+     */
+    private ArchiveState state;
 
     /**
      * The ID of the Archive
@@ -22,6 +28,24 @@ public class Archive {
      * glacier doesn't support names
      */
     private String name;
+
+    /**
+     * Get the state of the Archive
+     * 
+     * @return
+     */
+    public ArchiveState getState() {
+	return state;
+    }
+
+    /**
+     * Sets the archive status
+     * 
+     * @param state
+     */
+    public void setState(ArchiveState state) {
+	this.state = state;
+    }
 
     /**
      * The date when the archive was last modified, as a timestamp

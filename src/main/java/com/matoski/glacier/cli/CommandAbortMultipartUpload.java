@@ -2,9 +2,14 @@ package com.matoski.glacier.cli;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.matoski.glacier.enums.CliCommands;
 
 @Parameters(commandNames = "abort-multipart-upload", commandDescription = "Aborts a multipart upload")
-public class CommandAbortMultipartUpload {
+public class CommandAbortMultipartUpload extends GenericCommand {
+
+    public CommandAbortMultipartUpload() {
+	super(CliCommands.AbortMultipartUpload);
+    }
 
     @Parameter(names = "--vault", description = "The name of the vault from which the multipart upload will be aborted, will be overwriten by --aws-vault if not specified")
     public String vaultName;

@@ -2,9 +2,14 @@ package com.matoski.glacier.cli;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.matoski.glacier.enums.CliCommands;
 
 @Parameters(commandNames = "vault-job-info", commandDescription = "Gets the information about the job in question")
-public class CommandVaultJobInfo {
+public class CommandVaultJobInfo extends GenericCommand {
+
+    public CommandVaultJobInfo() {
+	super(CliCommands.VaultJobInfo);
+    }
 
     @Parameter(names = "--vault", description = "The name of the vault from which the jobs will be retrieved, will be overwriten by --aws-vault if not specified")
     public String vaultName;
