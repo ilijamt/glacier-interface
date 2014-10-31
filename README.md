@@ -33,7 +33,7 @@ Commands
 * **init-download** (TODO)
 * **download-archive** (TODO)
 * **delete-archive**
-* **upload-archive** (TODO)
+* **upload-archive**
 * **list-multipart-uploads**
 * **multipart-upload-info**
 * **abort-multipart-upload**
