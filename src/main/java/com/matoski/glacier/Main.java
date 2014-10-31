@@ -15,6 +15,7 @@ import com.matoski.glacier.cli.CommandDeleteVault;
 import com.matoski.glacier.cli.CommandHelp;
 import com.matoski.glacier.cli.CommandInventoryDownload;
 import com.matoski.glacier.cli.CommandInventoryRetrieval;
+import com.matoski.glacier.cli.CommandListJournal;
 import com.matoski.glacier.cli.CommandListMultipartUploads;
 import com.matoski.glacier.cli.CommandListVaultJobs;
 import com.matoski.glacier.cli.CommandListVaults;
@@ -27,6 +28,7 @@ import com.matoski.glacier.commands.DeleteArchiveCommand;
 import com.matoski.glacier.commands.DeleteVaultCommand;
 import com.matoski.glacier.commands.InventoryDownloadCommand;
 import com.matoski.glacier.commands.InventoryRetrievalCommand;
+import com.matoski.glacier.commands.ListJournalCommand;
 import com.matoski.glacier.commands.ListMultipartUploadsCommand;
 import com.matoski.glacier.commands.ListVaultJobsCommand;
 import com.matoski.glacier.commands.ListVaultsCommand;
@@ -45,6 +47,8 @@ public class Main {
     public static void init() {
 
 	commands.put(CliCommands.Help.ordinal(), new CommandHelp());
+	commands.put(CliCommands.ListJournal.ordinal(),
+		new CommandListJournal());
 	commands.put(CliCommands.ListVaults.ordinal(), new CommandListVaults());
 	commands.put(CliCommands.CreateVault.ordinal(),
 		new CommandCreateVault());
@@ -126,7 +130,16 @@ public class Main {
 
 	if (validCommand) {
 	    cliCommand = CliCommands.from(command);
-	    validConfig = config.valid(false);
+	    switch (cliCommand) {
+	    case Help:
+	    case ListJournal:
+		validConfig = true;
+		break;
+
+	    default:
+		validConfig = config.valid(false);
+		break;
+	    }
 	}
 
 	System.out.println(String.format("Current working dir: %s",
@@ -164,6 +177,12 @@ public class Main {
 
 		case Help:
 		    commander.usage();
+		    break;
+
+		case ListJournal:
+		    new ListJournalCommand(config,
+			    (CommandListJournal) commands.get(cliCommand
+				    .ordinal())).run();
 		    break;
 
 		case ListVaults:

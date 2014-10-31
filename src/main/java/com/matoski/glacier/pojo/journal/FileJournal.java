@@ -37,6 +37,15 @@ public class FileJournal {
     private String name;
 
     /**
+     * The size of the journal
+     * 
+     * @return
+     */
+    public Integer size() {
+	return journal.size();
+    }
+
+    /**
      * Add an archive to the journal
      * 
      * @param archive
@@ -119,7 +128,5 @@ public class FileJournal {
     public void setName(String name) {
 	this.name = name;
     }
-    
-    
 
 }

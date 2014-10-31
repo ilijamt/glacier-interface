@@ -187,7 +187,7 @@ public class State {
     /**
      * The journal
      */
-    private transient FileJournal journal;
+    private transient FileJournal journal = new FileJournal();
 
     /**
      * The file that is used for the journal
@@ -445,4 +445,12 @@ public class State {
 	journal.setName(name);
     }
 
+    /**
+     * Gets the journal
+     * 
+     * @return
+     */
+    public FileJournal getJournal() {
+	return journal;
+    }
 }

@@ -38,6 +38,7 @@ bin/
 
 #
 config.json
-demo.log
-demo.log.state
 /build/
+demo.log
+*.state
+*.journal

@@ -32,8 +32,11 @@ import com.amazonaws.services.glacier.model.AbortMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.CompleteMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.CompleteMultipartUploadResult;
 import com.amazonaws.services.glacier.model.DescribeVaultOutput;
+import com.amazonaws.services.glacier.model.GlacierJobDescription;
 import com.amazonaws.services.glacier.model.InitiateMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.InitiateMultipartUploadResult;
+import com.amazonaws.services.glacier.model.ListJobsRequest;
+import com.amazonaws.services.glacier.model.ListJobsResult;
 import com.amazonaws.services.glacier.model.ListMultipartUploadsRequest;
 import com.amazonaws.services.glacier.model.ListMultipartUploadsResult;
 import com.amazonaws.services.glacier.model.ListPartsRequest;
@@ -671,6 +674,11 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     }
 
+    /**
+     * Get a list of vaults available in the region
+     * 
+     * @return
+     */
     public List<DescribeVaultOutput> ListVaults() {
 
 	String marker = null;
@@ -686,6 +694,34 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	    list.addAll(listVaultsResult.getVaultList());
 
 	    marker = listVaultsResult.getMarker();
+
+	} while (marker != null);
+
+	return list;
+
+    }
+
+    /**
+     * Get's a list of vault jobs
+     * 
+     * @param vaultName
+     * @return
+     */
+    public List<GlacierJobDescription> ListVaultJobs(String vaultName) {
+
+	String marker = null;
+	List<GlacierJobDescription> list = new ArrayList<GlacierJobDescription>();
+
+	do {
+
+	    ListJobsRequest request = new ListJobsRequest().withVaultName(
+		    vaultName).withMarker(marker);
+
+	    ListJobsResult result = this.client.listJobs(request);
+
+	    list.addAll(result.getJobList());
+
+	    marker = result.getMarker();
 
 	} while (marker != null);
 

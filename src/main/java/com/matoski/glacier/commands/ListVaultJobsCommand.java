@@ -5,13 +5,12 @@ import java.util.List;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.glacier.model.GlacierJobDescription;
-import com.amazonaws.services.glacier.model.ListJobsRequest;
-import com.amazonaws.services.glacier.model.ListJobsResult;
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandListVaultJobs;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
+import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
 public class ListVaultJobsCommand extends AbstractCommand<CommandListVaultJobs> {
 
@@ -36,11 +35,11 @@ public class ListVaultJobsCommand extends AbstractCommand<CommandListVaultJobs> 
 
 	try {
 
-	    ListJobsRequest request = new ListJobsRequest()
-		    .withVaultName(command.vaultName);
-	    ListJobsResult result = this.client.listJobs(request);
+	    AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(
+		    credentials, client, region);
 
-	    List<GlacierJobDescription> jobs = result.getJobList();
+	    List<GlacierJobDescription> jobs = upload
+		    .ListVaultJobs(command.vaultName);
 
 	    if (jobs.isEmpty()) {
 		System.out.println(String.format(

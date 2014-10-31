@@ -7,7 +7,6 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.glacier.AmazonGlacierClient;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
-import com.matoski.glacier.interfaces.ICommand;
 import com.matoski.glacier.pojo.Config;
 
 /**
@@ -17,7 +16,7 @@ import com.matoski.glacier.pojo.Config;
  * @author ilijamt
  * @param <T>
  */
-public abstract class AbstractCommand<T> implements ICommand, Runnable {
+public abstract class AbstractCommand<T> extends AbstractEmptyCommand<T> {
 
     /**
      * Basic AWS credentials
@@ -30,19 +29,9 @@ public abstract class AbstractCommand<T> implements ICommand, Runnable {
     protected AmazonGlacierClient client = null;
 
     /**
-     * The configuration
-     */
-    protected Config config = null;
-
-    /**
      * The region used for all operations with Amazon Glacier
      */
     protected Region region = null;
-
-    /**
-     * The specific command for the command in question
-     */
-    protected T command;
 
     /**
      * Service name
@@ -60,9 +49,8 @@ public abstract class AbstractCommand<T> implements ICommand, Runnable {
     @SuppressWarnings("unused")
     public AbstractCommand(Config config, T command)
 	    throws VaultNameNotPresentException, RegionNotSupportedException {
+	super(config, command);
 
-	this.command = command;
-	this.config = config;
 	this.region = Region.getRegion(Regions.fromName(config.getRegion()));
 	this.credentials = new BasicAWSCredentials(config.getKey(),
 		config.getSecretKey());
@@ -84,11 +72,4 @@ public abstract class AbstractCommand<T> implements ICommand, Runnable {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean valid() {
-	return true;
-    }
 }
