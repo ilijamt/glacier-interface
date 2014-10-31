@@ -40,27 +40,33 @@ import com.matoski.glacier.pojo.Config;
 
 public class Main {
 
-    final private static HashMap<CliCommands, Object> commands = new HashMap<CliCommands, Object>();
+    final private static HashMap<Integer, Object> commands = new HashMap<Integer, Object>();
 
     public static void init() {
 
-	commands.put(CliCommands.Help, new CommandHelp());
-	commands.put(CliCommands.ListVaults, new CommandListVaults());
-	commands.put(CliCommands.CreateVault, new CommandCreateVault());
-	commands.put(CliCommands.DeleteVault, new CommandDeleteVault());
-	commands.put(CliCommands.ListVaultJobs, new CommandListVaultJobs());
-	commands.put(CliCommands.VaultJobInfo, new CommandVaultJobInfo());
-	commands.put(CliCommands.InventoryRetrieve,
+	commands.put(CliCommands.Help.ordinal(), new CommandHelp());
+	commands.put(CliCommands.ListVaults.ordinal(), new CommandListVaults());
+	commands.put(CliCommands.CreateVault.ordinal(),
+		new CommandCreateVault());
+	commands.put(CliCommands.DeleteVault.ordinal(),
+		new CommandDeleteVault());
+	commands.put(CliCommands.ListVaultJobs.ordinal(),
+		new CommandListVaultJobs());
+	commands.put(CliCommands.VaultJobInfo.ordinal(),
+		new CommandVaultJobInfo());
+	commands.put(CliCommands.InventoryRetrieve.ordinal(),
 		new CommandInventoryRetrieval());
-	commands.put(CliCommands.InventoryDownload,
+	commands.put(CliCommands.InventoryDownload.ordinal(),
 		new CommandInventoryDownload());
-	commands.put(CliCommands.UploadArchive, new CommandUploadArchive());
-	commands.put(CliCommands.DeleteArchive, new CommandDeleteArchive());
-	commands.put(CliCommands.ListMultipartUploads,
+	commands.put(CliCommands.UploadArchive.ordinal(),
+		new CommandUploadArchive());
+	commands.put(CliCommands.DeleteArchive.ordinal(),
+		new CommandDeleteArchive());
+	commands.put(CliCommands.ListMultipartUploads.ordinal(),
 		new CommandListMultipartUploads());
-	commands.put(CliCommands.MultipartUploadInfo,
+	commands.put(CliCommands.MultipartUploadInfo.ordinal(),
 		new CommandMultipartUploadInfo());
-	commands.put(CliCommands.AbortMultipartUpload,
+	commands.put(CliCommands.AbortMultipartUpload.ordinal(),
 		new CommandAbortMultipartUpload());
     }
 
@@ -77,7 +83,7 @@ public class Main {
 	try {
 
 	    commander = new JCommander(arguments);
-	    for (Entry<CliCommands, Object> entry : commands.entrySet()) {
+	    for (Entry<Integer, Object> entry : commands.entrySet()) {
 		commander.addCommand(entry.getValue());
 	    }
 
@@ -161,73 +167,74 @@ public class Main {
 
 		case ListVaults:
 		    new ListVaultsCommand(config,
-			    (CommandListVaults) commands.get(cliCommand)).run();
+			    (CommandListVaults) commands.get(cliCommand
+				    .ordinal())).run();
 		    break;
 
 		case CreateVault:
 		    new CreateVaultCommand(config,
-			    (CommandCreateVault) commands.get(cliCommand))
-			    .run();
+			    (CommandCreateVault) commands.get(cliCommand
+				    .ordinal())).run();
 		    break;
 
 		case DeleteVault:
 		    new DeleteVaultCommand(config,
-			    (CommandDeleteVault) commands.get(cliCommand))
-			    .run();
+			    (CommandDeleteVault) commands.get(cliCommand
+				    .ordinal())).run();
 		    break;
 
 		case ListVaultJobs:
 		    new ListVaultJobsCommand(config,
-			    (CommandListVaultJobs) commands.get(cliCommand))
-			    .run();
+			    (CommandListVaultJobs) commands.get(cliCommand
+				    .ordinal())).run();
 		    break;
 
 		case VaultJobInfo:
 		    new VaultJobInfoCommand(config,
-			    (CommandVaultJobInfo) commands.get(cliCommand))
-			    .run();
+			    (CommandVaultJobInfo) commands.get(cliCommand
+				    .ordinal())).run();
 		    break;
 
 		case InventoryRetrieve:
 		    new InventoryRetrievalCommand(config,
-			    (CommandInventoryRetrieval) commands
-				    .get(cliCommand)).run();
+			    (CommandInventoryRetrieval) commands.get(cliCommand
+				    .ordinal())).run();
 		    break;
 
 		case InventoryDownload:
 		    new InventoryDownloadCommand(config,
-			    (CommandInventoryDownload) commands.get(cliCommand))
-			    .run();
+			    (CommandInventoryDownload) commands.get(cliCommand
+				    .ordinal())).run();
 		    break;
 
 		case DeleteArchive:
 		    new DeleteArchiveCommand(config,
-			    (CommandDeleteArchive) commands.get(cliCommand))
-			    .run();
+			    (CommandDeleteArchive) commands.get(cliCommand
+				    .ordinal())).run();
 		    break;
 
 		case UploadArchive:
 		    new UploadArchiveCommand(config,
-			    (CommandUploadArchive) commands.get(cliCommand))
-			    .run();
+			    (CommandUploadArchive) commands.get(cliCommand
+				    .ordinal())).run();
 		    break;
 
 		case ListMultipartUploads:
 		    new ListMultipartUploadsCommand(config,
 			    (CommandListMultipartUploads) commands
-				    .get(cliCommand)).run();
+				    .get(cliCommand.ordinal())).run();
 		    break;
 
 		case MultipartUploadInfo:
 		    new MultipartUploadInfoCommand(config,
 			    (CommandMultipartUploadInfo) commands
-				    .get(cliCommand)).run();
+				    .get(cliCommand.ordinal())).run();
 		    break;
 
 		case AbortMultipartUpload:
 		    new AbortMultipartUploadCommand(config,
 			    (CommandAbortMultipartUpload) commands
-				    .get(cliCommand)).run();
+				    .get(cliCommand.ordinal())).run();
 		    break;
 
 		default:
