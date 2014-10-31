@@ -5,8 +5,9 @@ public enum CliCommands {
     Help("help"), ListVaults("list-vaults"), CreateVault("create-vault"), DeleteVault(
 	    "delete-vault"), ListVaultJobs("list-vault-jobs"), VaultJobInfo(
 	    "vault-job-info"), InventoryRetrieve("inventory-retrieve"), InventoryDownload(
-	    "inventory-download"), DeleteArchive("delete-archive"), UploadArchive(
-	    "upload-archive"), ListMultipartUploads("list-multipart-uploads"), MultipartUploadInfo(
+	    "inventory-download"), DownloadArchive("download-archive"), DeleteArchive(
+	    "delete-archive"), UploadArchive("upload-archive"), ListMultipartUploads(
+	    "list-multipart-uploads"), MultipartUploadInfo(
 	    "multipart-upload-info"), AbortMultipartUpload(
 	    "abort-multipart-upload");
 

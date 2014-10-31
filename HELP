@@ -1,5 +1,8 @@
 Glacier Interface, Copyright 2014, Ilija Matoski
 
+Current working dir: /home/ilijamt/workspace/java/glacier-interface
+Command: Help
+
 Usage: <main class> [options] [command] [command options]
   Options:
         --aws-key
@@ -20,6 +23,9 @@ Usage: <main class> [options] [command] [command options]
         --create-config
        Create a config file based on the parameters you have supplied into the
        application
+        --directory
+       The base directory from which we start, if not specified then the
+       directory is set to the current working directory
   Commands:
     help      Show the help page
       Usage: help [options]
@@ -75,7 +81,7 @@ Usage: <main class> [options] [command] [command options]
         *     --journal
              Where to save the data retrieved from the inventory
               --metadata
-             Available: mt2
+             Available: mt2, fgv2
              Default: mt2
               --raw
              Store the glacier full data instead of the parsed one, usefull for
@@ -88,8 +94,15 @@ Usage: <main class> [options] [command] [command options]
     delete-archive      Initiate a deletion of archive
       Usage: delete-archive [options]
         Options:
-        *     --id
-             The ID of the archive
+              --id
+             The id of the archive
+        *     --journal
+             Journal
+              --metadata
+             Available: mt2, fgv2
+             Default: mt2
+              --name
+             The name of the archive
               --vault
              The name of the vault from where the archive will be deleted, will
              be overwriten by --aws-vault if not specified
@@ -106,14 +119,18 @@ Usage: <main class> [options] [command] [command options]
              The file(s) to be uploaded, you can specifiy this parameter
              multiple times
              Default: []
+              --force-upload
+             Force upload if it exist in the journal, but it will still keep the
+             old archive, you will have to delete the old one on your own
+             Default: false
         *     --journal
              Journal
               --metadata
-             Available: mt2
+             Available: mt2, fgv2
              Default: mt2
               --part-size
              How big chunks of data to upload to amazon glacier during one
-             request
+             request, the part size has to be multiple of 2, like 1MB, 2MB, 4MB, 8MB, ...
              Default: 1
               --retry-failed-upload
              How many times should it retry to upload a failed piece before
@@ -122,6 +139,34 @@ Usage: <main class> [options] [command] [command options]
               --vault
              The name of the vault from where the archive will be deleted, will
              be overwriten by --aws-vault if not specified
+
+    list-multipart-uploads      List all the present multipart uploads for the vault
+      Usage: list-multipart-uploads [options]
+        Options:
+              --cancel
+             Cancels all the multipart uploads
+             Default: false
+              --vault
+             The name of the vault from which the multipart uploads will be
+             retrieved, will be overwriten by --aws-vault if not specified
+
+    multipart-upload-info      Gets detailed info about a multipart upload
+      Usage: multipart-upload-info [options]
+        Options:
+        *     --id
+             The multipart Id for whom we need to retrieve the details
+              --vault
+             The name of the vault from which the multipart upload info will be
+             retrieved, will be overwriten by --aws-vault if not specified
+
+    abort-multipart-upload      Aborts a multipart upload
+      Usage: abort-multipart-upload [options]
+        Options:
+        *     --id
+             The multipart id we need to abort
+              --vault
+             The name of the vault from which the multipart upload will be
+             aborted, will be overwriten by --aws-vault if not specified
 
 
 
