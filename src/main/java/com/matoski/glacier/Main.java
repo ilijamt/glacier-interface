@@ -267,31 +267,4 @@ public class Main {
 
     }
 
-    /**
-     * Is a vault parameter required ?
-     * 
-     * @deprecated Handling is used in each job separately for vault name
-     * 
-     * @param command
-     * @return
-     */
-    public static boolean isVaultRequired(CliCommands command) {
-
-	switch (command) {
-	case ListVaultJobs:
-	case CreateVault:
-	case DeleteVault:
-	case VaultJobInfo:
-	case InventoryRetrieve:
-	case DeleteArchive:
-	case UploadArchive:
-	    return true;
-	default:
-	    break;
-	}
-
-	return false;
-
-    }
-
 }
