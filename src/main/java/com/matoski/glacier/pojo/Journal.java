@@ -361,6 +361,27 @@ public class Journal {
     }
 
     /**
+     * Get the archive by ID
+     * 
+     * @param id
+     * @return
+     */
+    public Archive getById(String id) {
+	Archive archive = null;
+
+	for (Entry<String, Archive> entry : this.archives.entrySet()) {
+
+	    if (entry.getValue().getId().equals(file)) {
+		archive = entry.getValue();
+		break;
+	    }
+
+	}
+
+	return archive;
+    }
+
+    /**
      * Get the archive by Name
      * 
      * @param name
@@ -373,9 +394,8 @@ public class Journal {
 	// go through all the archives and check if it's there or not
 	for (Entry<String, Archive> entry : this.archives.entrySet()) {
 
-	    archive = entry.getValue();
-
-	    if (archive.getName().equals(file)) {
+	    if (entry.getValue().getName().equals(file)) {
+		archive = entry.getValue();
 		break;
 	    }
 

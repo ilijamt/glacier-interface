@@ -68,6 +68,7 @@ public class Main {
 		new CommandMultipartUploadInfo());
 	commands.put(CliCommands.AbortMultipartUpload.ordinal(),
 		new CommandAbortMultipartUpload());
+
     }
 
     public static void main(String[] args) {
