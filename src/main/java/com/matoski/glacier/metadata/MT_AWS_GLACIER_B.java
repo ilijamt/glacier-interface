@@ -2,6 +2,7 @@ package com.matoski.glacier.metadata;
 
 import org.apache.commons.codec.binary.Base64;
 
+import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.google.gson.Gson;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.InvalidMetadataException;
@@ -49,7 +50,17 @@ public class MT_AWS_GLACIER_B extends GenericParser implements
      * @return the mtime
      */
     public long getMtime() {
-	return Long.parseLong(this.mtime);
+	StringBuilder builder = new StringBuilder();
+	builder.append(mtime.substring(0, 4));
+	builder.append("-");
+	builder.append(mtime.substring(4, 6));
+	builder.append("-");
+	builder.append(mtime.substring(6, 11));
+	builder.append(":");
+	builder.append(mtime.substring(11, 13));
+	builder.append(":");
+	builder.append(mtime.substring(13));
+	return ISO8601Utils.parse(builder.toString()).getTime();
     }
 
     /**

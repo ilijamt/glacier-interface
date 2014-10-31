@@ -13,7 +13,7 @@ import com.matoski.glacier.pojo.UploadPiece;
 public abstract class ThreadAmazonGlacierDummy implements Callable<UploadPiece> {
 
     protected UploadPiece piece;
-    protected int pieces; 
+    protected int pieces;
     protected File file;
 
     public ThreadAmazonGlacierDummy(int pieces, File file, UploadPiece piece) {

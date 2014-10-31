@@ -1,6 +1,6 @@
 package com.matoski.glacier.pojo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
 
@@ -46,7 +46,7 @@ public class ArchiveTest {
 	assertEquals(archive.getHash(), Hash);
 	assertEquals(archive.getUri(), Uri);
     }
-    
+
     public final void testCreatedConversion() {
 	String date = "2014-10-12T07:45:10Z";
 	archive.setCreatedDate(date);

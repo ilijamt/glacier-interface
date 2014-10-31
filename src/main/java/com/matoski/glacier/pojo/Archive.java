@@ -138,6 +138,15 @@ public class Archive {
     }
 
     /**
+     * Get's the key used to store it in the Journal
+     * 
+     * @return
+     */
+    public String getKeyId() {
+	return this.name;
+    }
+
+    /**
      * @param size
      *            the size to set
      */

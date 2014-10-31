@@ -2,11 +2,6 @@ package com.matoski.glacier.commands;
 
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-
-import com.amazonaws.services.glacier.model.DescribeVaultOutput;
-import com.amazonaws.services.glacier.model.ListVaultsRequest;
-import com.amazonaws.services.glacier.model.ListVaultsResult;
 import com.amazonaws.services.glacier.model.UploadListElement;
 import com.matoski.glacier.cli.CommandListMultipartUploads;
 import com.matoski.glacier.errors.RegionNotSupportedException;
@@ -67,7 +62,7 @@ public class ListMultipartUploadsCommand extends
 		System.out.println(String.format("%1$20s: %2$s", "Canceled",
 			canceled));
 	    }
-	    
+
 	    System.out.println();
 	}
 

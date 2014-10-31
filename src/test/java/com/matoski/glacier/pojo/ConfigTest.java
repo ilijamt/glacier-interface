@@ -1,6 +1,6 @@
 package com.matoski.glacier.pojo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;

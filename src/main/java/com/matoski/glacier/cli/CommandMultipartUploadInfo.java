@@ -11,5 +11,5 @@ public class CommandMultipartUploadInfo {
 
     @Parameter(required = true, names = "--id", description = "The multipart Id for whom we need to retrieve the details")
     public String multipartId;
-    
+
 }

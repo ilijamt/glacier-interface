@@ -37,7 +37,7 @@ public class AbortMultipartUploadCommand extends
 		command.vaultName);
 	System.out.println(String.format("Multipart upload canceled: %s\n",
 		canceled));
-	
+
 	System.out.println("END: abort-multipart-upload");
     }
 }

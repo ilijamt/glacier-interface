@@ -182,13 +182,13 @@ public class Journal {
     public boolean addArchive(Archive archive) {
 	Boolean keyExists = this.archives.containsKey(archive.getId());
 
-	if (keyExists && archive.equals(this.archives.get(archive.getId()))) {
+	if (keyExists && archive.equals(this.archives.get(archive.getKeyId()))) {
 	    // we already have the same archive into journal,
 	    // why ????
 	    return false;
 	}
 
-	Archive previous = this.archives.put(archive.getId(), archive);
+	Archive previous = this.archives.put(archive.getKeyId(), archive);
 
 	if (null != previous) {
 	    this.history.add(previous);

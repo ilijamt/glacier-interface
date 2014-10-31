@@ -20,8 +20,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.commons.io.FileUtils;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -42,7 +40,6 @@ import com.amazonaws.services.glacier.model.ListPartsRequest;
 import com.amazonaws.services.glacier.model.ListPartsResult;
 import com.amazonaws.services.glacier.model.ListVaultsRequest;
 import com.amazonaws.services.glacier.model.ListVaultsResult;
-import com.amazonaws.services.glacier.model.PartListElement;
 import com.amazonaws.services.glacier.model.RequestTimeoutException;
 import com.amazonaws.services.glacier.model.UploadArchiveRequest;
 import com.amazonaws.services.glacier.model.UploadArchiveResult;
