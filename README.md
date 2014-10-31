@@ -40,6 +40,12 @@ Commands
 * **purge-vault**
 * **sync** (TODO)
 
+Priorities
+-----------
+* **sync**
+* **init-download**
+* **download-archive**
+
 Minimum Amazon Glacier permissions:
 -----------------------------------
 
