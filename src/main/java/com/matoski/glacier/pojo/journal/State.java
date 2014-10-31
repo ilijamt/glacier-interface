@@ -1,4 +1,4 @@
-package com.matoski.glacier.pojo;
+package com.matoski.glacier.pojo.journal;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,17 +8,19 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 
 import com.amazonaws.services.glacier.TreeHashGenerator;
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.matoski.glacier.enums.ArchiveState;
 import com.matoski.glacier.enums.GenericValidateEnum;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.InvalidMetadataException;
 import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
+import com.matoski.glacier.pojo.Archive;
+import com.matoski.glacier.pojo.GlacierInventory;
 import com.matoski.glacier.pojo.GlacierInventory.ArchiveItem;
 import com.matoski.glacier.util.Parser;
 
@@ -27,7 +29,46 @@ import com.matoski.glacier.util.Parser;
  * 
  * @author ilijamt
  */
-public class Journal {
+public class State {
+
+    /**
+     * Checks if the size in the archive is the same as it's in the file
+     * 
+     * @param archive
+     * @return
+     */
+    public static GenericValidateEnum archiveValidateFileSize(Archive archive) {
+	return new File(archive.getName()).length() == archive.getSize() ? GenericValidateEnum.VALID
+		: GenericValidateEnum.INVALID;
+    }
+
+    /**
+     * We check if the last modified is the same as the one in archive
+     * 
+     * @param archive
+     * @return
+     */
+    public static GenericValidateEnum archiveValidateLastModified(
+	    Archive archive) {
+	return new File(archive.getName()).lastModified() == archive
+		.getModifiedDate() ? GenericValidateEnum.VALID
+		: GenericValidateEnum.INVALID;
+    }
+
+    /**
+     * Checks if the hash is correct between the archvie and the file on the
+     * disk
+     * 
+     * @param archive
+     * @return
+     */
+    public static GenericValidateEnum archiveValidateTreeHash(Archive archive) {
+	File file = new File(archive.getName());
+	String checksum = TreeHashGenerator.calculateTreeHash(file);
+
+	return archive.getHash().equals(checksum) ? GenericValidateEnum.VALID
+		: GenericValidateEnum.INVALID;
+    }
 
     /**
      * Load the journal into memory
@@ -38,13 +79,11 @@ public class Journal {
      * 
      * @throws IOException
      */
-    public static Journal load(File file) throws IOException {
+    public static State load(File file) throws IOException {
 
-	Journal journal = null;
+	State journal = new State();
 
 	if (!file.exists()) {
-	    // no journal, it's an empty one so we just return an empty Journal
-	    journal = new Journal();
 	    journal.setFile(file);
 	    return journal;
 	}
@@ -52,7 +91,9 @@ public class Journal {
 	String json = new String(Files.readAllBytes(file.toPath()),
 		StandardCharsets.UTF_8);
 
-	journal = new Gson().fromJson(json, Journal.class);
+	FileJournal fileJournal = new Gson().fromJson(json, FileJournal.class);
+
+	journal.replay(fileJournal);
 	journal.setFile(file);
 
 	return journal;
@@ -68,7 +109,7 @@ public class Journal {
      * 
      * @throws IOException
      */
-    public static Journal load(String file) throws IOException {
+    public static State load(String file) throws IOException {
 	return load(new File(file));
     }
 
@@ -81,10 +122,10 @@ public class Journal {
      * 
      * @return
      */
-    public static Journal parse(GlacierInventory inventory, String vault,
+    public static State parse(GlacierInventory inventory, String vault,
 	    Metadata metadata) {
 
-	Journal journal = new Journal();
+	State journal = new State();
 
 	journal.setName(vault);
 	journal.setARN(inventory.getVaultARN());
@@ -95,6 +136,7 @@ public class Journal {
 
 	    Archive archive = new Archive();
 
+	    archive.setState(ArchiveState.CREATED);
 	    archive.setId(archiveItem.getArchiveId());
 	    archive.setCreatedDate(archiveItem.getCreationDate());
 	    archive.setSize(archiveItem.getSize());
@@ -132,41 +174,20 @@ public class Journal {
      * 
      * @return
      */
-    public static Journal parse(GlacierInventory inventory, String vault,
+    public static State parse(GlacierInventory inventory, String vault,
 	    String metadata) {
-	return Journal.parse(inventory, vault, Metadata.from(metadata));
+	return State.parse(inventory, vault, Metadata.from(metadata));
     }
 
     /**
-     * History, contains all the action done in the journal, whenever you
-     * replace an item it is pushed into the history.
-     */
-    private List<Archive> history;
-
-    /**
-     * List of archives
+     * The replayed journal
      */
     private HashMap<String, Archive> archives = new HashMap<String, Archive>();
 
     /**
-     * Vault ARN
+     * The journal
      */
-    private String ARN;
-
-    /**
-     * Inventory date
-     */
-    private Date date;
-
-    /**
-     * Metadata used in the inventory
-     */
-    private Metadata metadata;
-
-    /**
-     * Vault Name
-     */
-    private String name;
+    private transient FileJournal journal;
 
     /**
      * The file that is used for the journal
@@ -177,24 +198,22 @@ public class Journal {
      * Add an archive in the HashMap
      * 
      * @param archive
-     * @return
      */
-    public boolean addArchive(Archive archive) {
-	Boolean keyExists = this.archives.containsKey(archive.getId());
+    public void addArchive(Archive archive) {
 
-	if (keyExists && archive.equals(this.archives.get(archive.getKeyId()))) {
-	    // we already have the same archive into journal,
-	    // why ????
-	    return false;
+	journal.addArchive(archive);
+
+	switch (archive.getState()) {
+	case DELETED:
+	    archives.remove(archive.getKeyId());
+	    break;
+	case CREATED:
+	case MODIFIED:
+	case FORCE_UPLOAD:
+	case NOT_DEFINED:
+	    archives.put(archive.getKeyId(), archive);
+	    break;
 	}
-
-	Archive previous = this.archives.put(archive.getKeyId(), archive);
-
-	if (null != previous) {
-	    this.history.add(previous);
-	}
-
-	return true;
     }
 
     /**
@@ -208,156 +227,7 @@ public class Journal {
      * @return the aRN
      */
     public String getARN() {
-	return ARN;
-    }
-
-    /**
-     * @return the date
-     */
-    public Date getDate() {
-	return date;
-    }
-
-    /**
-     * Get the file to use
-     * 
-     * @return
-     */
-    public File getFile() {
-	return this.file;
-    }
-
-    /**
-     * @return the metadata
-     */
-    public Metadata getMetadata() {
-	return metadata;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-	return name;
-    }
-
-    /**
-     * Save the journal to a file as a JSON
-     * 
-     * @throws IOException
-     */
-    public void save() throws IOException {
-	save(this.getFile());
-    }
-
-    /**
-     * Save the journal to a file as a JSON
-     * 
-     * @param file
-     * 
-     * @throws IOException
-     */
-    public void save(File file) throws IOException {
-
-	if (!file.exists()) {
-	    file.createNewFile();
-	}
-
-	FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
-	BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create()
-		.toJson(this));
-
-	bufferedWriter.close();
-	fileWriter.close();
-
-    }
-
-    /**
-     * Save the journal to a file as a JSON
-     * 
-     * @param file
-     * 
-     * @throws IOException
-     */
-    public void save(String file) throws IOException {
-	save(new File(file));
-    }
-
-    /**
-     * @param archives
-     *            the archives to set
-     */
-    public void setArchives(HashMap<String, Archive> archives) {
-	this.archives = archives;
-    }
-
-    /**
-     * @param aRN
-     *            the aRN to set
-     */
-    public void setARN(String aRN) {
-	ARN = aRN;
-    }
-
-    /**
-     * @param date
-     *            the date to set
-     */
-    public void setDate(Date date) {
-	this.date = date;
-    }
-
-    /**
-     * @param date
-     *            the date to set
-     */
-    public void setDate(String date) {
-	this.date = ISO8601Utils.parse(date);
-    }
-
-    /**
-     * Sets the file to use
-     * 
-     * @param file
-     */
-    public void setFile(File file) {
-	this.file = file;
-    }
-
-    /**
-     * Sets the file to use
-     * 
-     * @param file
-     */
-    public void setFile(String file) {
-	this.file = new File(file);
-    }
-
-    /**
-     * @param metadata
-     *            the metadata to set
-     */
-    public void setMetadata(Metadata metadata) {
-	this.metadata = metadata;
-    }
-
-    /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-	this.name = name;
-    }
-
-    /**
-     * Is the file in archive?
-     * 
-     * @param file
-     * @return
-     */
-    public Boolean isFileInArchive(String file) {
-	return null != getByName(file);
+	return journal.getARN();
     }
 
     /**
@@ -405,42 +275,174 @@ public class Journal {
     }
 
     /**
-     * Checks if the size in the archive is the same as it's in the file
-     * 
-     * @param archive
-     * @return
+     * @return the date
      */
-    public static GenericValidateEnum archiveValidateFileSize(Archive archive) {
-	return new File(archive.getName()).length() == archive.getSize() ? GenericValidateEnum.VALID
-		: GenericValidateEnum.INVALID;
+    public Date getDate() {
+	return journal.getDate();
     }
 
     /**
-     * We check if the last modified is the same as the one in archive
+     * Get the file to use
      * 
-     * @param archive
      * @return
      */
-    public static GenericValidateEnum archiveValidateLastModified(
-	    Archive archive) {
-	return new File(archive.getName()).lastModified() == archive
-		.getModifiedDate() ? GenericValidateEnum.VALID
-		: GenericValidateEnum.INVALID;
+    public File getFile() {
+	return this.file;
     }
 
     /**
-     * Checks if the hash is correct between the archvie and the file on the
-     * disk
+     * @return the metadata
+     */
+    public Metadata getMetadata() {
+	return journal.getMetadata();
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+	return journal.getName();
+    }
+
+    /**
+     * Is the file in archive?
      * 
-     * @param archive
+     * @param file
      * @return
      */
-    public static GenericValidateEnum archiveValidateTreeHash(Archive archive) {
-	File file = new File(archive.getName());
-	String checksum = TreeHashGenerator.calculateTreeHash(file);
+    public Boolean isFileInArchive(String file) {
+	return null != getByName(file);
+    }
 
-	return archive.getHash().equals(checksum) ? GenericValidateEnum.VALID
-		: GenericValidateEnum.INVALID;
+    /**
+     * Replay the journal from {@link FileJournal}
+     * 
+     * @param journal
+     */
+    protected void replay(FileJournal journal) {
+
+	for (Archive archive : journal.getJournal()) {
+	    this.addArchive(archive);
+	}
+
+	this.setARN(journal.getARN());
+	this.setName(journal.getName());
+	this.setMetadata(journal.getMetadata());
+	this.setDate(journal.getDate());
+
+    }
+
+    /**
+     * Save the journal to a file as a JSON
+     * 
+     * @throws IOException
+     */
+    public void save() throws IOException {
+	save(this.getFile());
+    }
+
+    /**
+     * Save the journal to a file as a JSON
+     * 
+     * @param file
+     * 
+     * @throws IOException
+     */
+    public void save(File file) throws IOException {
+
+	if (!file.exists()) {
+	    file.createNewFile();
+	}
+
+	FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+	BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create()
+		.toJson(journal));
+
+	bufferedWriter.close();
+	fileWriter.close();
+
+    }
+
+    /**
+     * Save the journal to a file as a JSON
+     * 
+     * @param file
+     * 
+     * @throws IOException
+     */
+    public void save(String file) throws IOException {
+	save(new File(file));
+    }
+
+    /**
+     * @param aRN
+     *            the aRN to set
+     * @return
+     */
+    public State setARN(String ARN) {
+	journal.setARN(ARN);
+	return this;
+    }
+
+    /**
+     * @param date
+     *            the date to set
+     * @return
+     */
+    public State setDate(Date date) {
+	journal.setDate(date);
+	return this;
+    }
+
+    /**
+     * @param date
+     *            the date to set
+     * @return
+     */
+    public State setDate(String date) {
+	journal.setDate(ISO8601Utils.parse(date));
+	return this;
+    }
+
+    /**
+     * Sets the file to use
+     * 
+     * @param file
+     * @return
+     */
+    public State setFile(File file) {
+	this.file = file;
+	return this;
+    }
+
+    /**
+     * Sets the file to use
+     * 
+     * @param file
+     * @return
+     */
+    public State setFile(String file) {
+	this.file = new File(file);
+	return this;
+    }
+
+    /**
+     * @param metadata
+     *            the metadata to set
+     * @return
+     */
+    public State setMetadata(Metadata metadata) {
+	journal.setMetadata(metadata);
+	return this;
+    }
+
+    /**
+     * @param name
+     *            the name to set
+     */
+    public void setName(String name) {
+	journal.setName(name);
     }
 
 }

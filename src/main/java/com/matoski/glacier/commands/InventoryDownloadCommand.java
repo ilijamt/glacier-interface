@@ -18,7 +18,7 @@ import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.pojo.GlacierInventory;
-import com.matoski.glacier.pojo.Journal;
+import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.FileWriteUtils;
 
 public class InventoryDownloadCommand extends
@@ -105,7 +105,7 @@ public class InventoryDownloadCommand extends
 		if (command.raw) {
 		    FileWriteUtils.toJson(command.journal, inventory);
 		} else {
-		    Journal journal = Journal.parse(inventory,
+		    State journal = State.parse(inventory,
 			    command.vaultName, metadata);
 		    journal.setFile(command.journal);
 		    journal.save();

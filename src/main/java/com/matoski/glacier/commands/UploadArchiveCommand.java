@@ -13,7 +13,7 @@ import com.matoski.glacier.errors.UploadTooManyPartsException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Archive;
 import com.matoski.glacier.pojo.Config;
-import com.matoski.glacier.pojo.Journal;
+import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.AmazonGlacierBaseUtil;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
@@ -37,7 +37,7 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
     /**
      * The journal, we use this for storing the data
      */
-    protected Journal journal;
+    protected State journal;
 
     /**
      * Constructor
@@ -56,7 +56,7 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 	Boolean validVaultNameConfig = null != config.getVault();
 
 	try {
-	    this.journal = Journal.load(command.journal);
+	    this.journal = State.load(command.journal);
 	} catch (IOException e) {
 	    throw new RuntimeException("Journal doesn't exist");
 	}
@@ -78,11 +78,11 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 		* (int) AmazonGlacierBaseUtil.MINIMUM_PART_SIZE;
 
 	try {
-	    this.journal = Journal.load(command.journal);
+	    this.journal = State.load(command.journal);
 	} catch (IOException e) {
 	    System.out.println(String.format("Creating a new journal: %s",
 		    command.journal));
-	    this.journal = new Journal();
+	    this.journal = new State();
 	    this.journal.setFile(command.journal);
 	}
 
@@ -116,9 +116,9 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 
 		    Archive testArchive = journal.getByName(fileName);
 
-		    GenericValidateEnum validSize = Journal
+		    GenericValidateEnum validSize = State
 			    .archiveValidateFileSize(testArchive);
-		    GenericValidateEnum validModifiedDate = Journal
+		    GenericValidateEnum validModifiedDate = State
 			    .archiveValidateLastModified(testArchive);
 		    GenericValidateEnum validTreeHash = GenericValidateEnum.INVALID;
 
@@ -132,15 +132,17 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 			Scanner in = new Scanner(System.in);
 			System.out
 				.print("Do you want to check tree hash (yes/no/quit?)");
-			String response = in.nextLine();
-			if (response.trim().equalsIgnoreCase("yes")) {
-			    validTreeHash = Journal
+			String response = in.nextLine().trim();
+			if (response.equalsIgnoreCase("yes")) {
+			    validTreeHash = State
 				    .archiveValidateTreeHash(testArchive);
 			    if (validTreeHash == GenericValidateEnum.VALID) {
 				System.out.println(String.format(
 					"%s hash is %s, skipping..", fileName,
 					validTreeHash));
 				continue;
+			    } else {
+				
 			    }
 			}
 			in.close();

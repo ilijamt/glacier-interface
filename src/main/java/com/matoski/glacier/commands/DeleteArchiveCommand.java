@@ -9,14 +9,14 @@ import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Archive;
 import com.matoski.glacier.pojo.Config;
-import com.matoski.glacier.pojo.Journal;
+import com.matoski.glacier.pojo.journal.State;
 
 public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> {
 
     /**
      * The journal, we use this for storing the data
      */
-    protected Journal journal;
+    protected State journal;
 
     /**
      * The archive ID we need to delete
@@ -44,11 +44,11 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 	Boolean validName = (null != command.name);
 
 	try {
-	    this.journal = Journal.load(command.journal);
+	    this.journal = State.load(command.journal);
 	} catch (IOException e) {
 	    System.out.println(String.format("Creating a new journal: %s",
 		    command.journal));
-	    this.journal = new Journal();
+	    this.journal = new State();
 	    this.journal.setFile(command.journal);
 	    throw new RuntimeException("Journal doesn't exist");
 	}
