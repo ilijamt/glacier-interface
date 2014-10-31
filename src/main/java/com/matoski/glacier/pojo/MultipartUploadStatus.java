@@ -69,11 +69,9 @@ public class MultipartUploadStatus {
 	    return new MultipartUploadStatus();
 	}
 
-	String json = new String(Files.readAllBytes(file.toPath()),
-		StandardCharsets.UTF_8);
+	String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
 
-	MultipartUploadStatus status = new Gson().fromJson(json,
-		MultipartUploadStatus.class);
+	MultipartUploadStatus status = new Gson().fromJson(json, MultipartUploadStatus.class);
 	status.setFile(file, true);
 	return status;
 
@@ -171,8 +169,7 @@ public class MultipartUploadStatus {
      * @throws IOException
      * @throws NullPointerException
      */
-    public void addPiece(int part, UploadPiece piece)
-	    throws NullPointerException, IOException {
+    public void addPiece(int part, UploadPiece piece) throws NullPointerException, IOException {
 	dirty = true;
 	if (!this.pieces.containsKey(part)) {
 	    this.pieces.put(part, piece);
@@ -354,8 +351,7 @@ public class MultipartUploadStatus {
      * @return
      */
     public boolean isPieceCompleted(int piece) {
-	return this.pieces.containsKey(piece)
-		&& this.pieces.get(piece).isFinished();
+	return this.pieces.containsKey(piece) && this.pieces.get(piece).isFinished();
     }
 
     /**
@@ -501,8 +497,7 @@ public class MultipartUploadStatus {
     public void update() {
 	this.checksums.clear();
 	for (Entry<Integer, UploadPiece> entry : this.pieces.entrySet()) {
-	    this.checksums.add(BinaryUtils.fromHex(entry.getValue()
-		    .getCalculatedChecksum()));
+	    this.checksums.add(BinaryUtils.fromHex(entry.getValue().getCalculatedChecksum()));
 	}
 
 	this.finalChecksum = TreeHashGenerator.calculateTreeHash(checksums);
@@ -544,8 +539,7 @@ public class MultipartUploadStatus {
 
 	FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
 	BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create()
-		.toJson(this));
+	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create().toJson(this));
 
 	bufferedWriter.close();
 	fileWriter.close();

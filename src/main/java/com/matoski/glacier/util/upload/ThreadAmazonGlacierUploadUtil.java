@@ -20,8 +20,7 @@ import com.matoski.glacier.pojo.UploadPiece;
  * 
  * @author ilijamt
  */
-public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
-	implements Callable<UploadPiece> {
+public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil implements Callable<UploadPiece> {
 
     /**
      * The file for the upload
@@ -86,10 +85,8 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
      * 
      * @throws RegionNotSupportedException
      */
-    public ThreadAmazonGlacierUploadUtil(int retryFailedUploads, File file,
-	    int pieces, int part, int partSize, String vaultName,
-	    String uploadId, String accessKey, String secretKey, String region)
-	    throws RegionNotSupportedException {
+    public ThreadAmazonGlacierUploadUtil(int retryFailedUploads, File file, int pieces, int part, int partSize, String vaultName,
+	    String uploadId, String accessKey, String secretKey, String region) throws RegionNotSupportedException {
 	super(accessKey, secretKey, region);
 	this.requestRetryFailedUploads = retryFailedUploads;
 	this.requestFile = file;
@@ -120,10 +117,8 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
      * 
      * @throws RegionNotSupportedException
      */
-    public ThreadAmazonGlacierUploadUtil(int retryFailedUploads, File file,
-	    int pieces, int part, int partSize, String vaultName,
-	    String uploadId, String accessKey, String secretKey, String region,
-	    ProgressListener listener, RequestMetricCollector collector)
+    public ThreadAmazonGlacierUploadUtil(int retryFailedUploads, File file, int pieces, int part, int partSize, String vaultName,
+	    String uploadId, String accessKey, String secretKey, String region, ProgressListener listener, RequestMetricCollector collector)
 	    throws RegionNotSupportedException {
 	super(accessKey, secretKey, region);
 	this.requestRetryFailedUploads = retryFailedUploads;
@@ -145,8 +140,7 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
 	UploadPiece piece = null;
 	int count = 0;
 
-	System.out.println(String.format(FORMAT, requestPart + 1,
-		requestPieces, UploadMultipartStatus.PIECE_START, requestFile,
+	System.out.println(String.format(FORMAT, requestPart + 1, requestPieces, UploadMultipartStatus.PIECE_START, requestFile,
 		"Upload started"));
 
 	for (int i = 0; i < requestRetryFailedUploads; i++) {
@@ -158,17 +152,14 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
 		if (piece.getStatus() == UploadMultipartStatus.PIECE_COMPLETE) {
 		    // we have successfully uploaded the file, so we break now,
 		    // no need to continue trying to re-upload the part again
-		    System.out.println(String.format(FORMAT, requestPart + 1,
-			    requestPieces, piece.getStatus(), requestFile,
-			    "Uploaded"));
+		    System.out.println(String.format(FORMAT, requestPart + 1, requestPieces, piece.getStatus(), requestFile, "Uploaded"));
 		    break;
 		}
 
 	    } catch (RequestTimeoutException e) {
 		System.err.println(String.format("HTTP 408, retry %s", i + 1));
 	    } catch (AmazonClientException e) {
-		System.err.println(String.format(
-			"Amazon client exception, retry %s", i + 1));
+		System.err.println(String.format("Amazon client exception, retry %s", i + 1));
 	    } catch (NoSuchAlgorithmException | IOException e) {
 		throw e;
 	    }
@@ -192,13 +183,11 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
      * 
      * @return
      */
-    private UploadPiece upload(int time) throws AmazonServiceException,
-	    NoSuchAlgorithmException, AmazonClientException,
+    private UploadPiece upload(int time) throws AmazonServiceException, NoSuchAlgorithmException, AmazonClientException,
 	    FileNotFoundException, IOException, RequestTimeoutException {
 
-	return this.UploadMultipartPiece(requestFile, requestPieces,
-		requestPart, requestPartSize, requestVaultName,
-		requestUploadId, requestListener, requestCollector);
+	return this.UploadMultipartPiece(requestFile, requestPieces, requestPart, requestPartSize, requestVaultName, requestUploadId,
+		requestListener, requestCollector);
 
     }
 

@@ -176,8 +176,7 @@ public abstract class AmazonGlacierBaseUtil {
      * @param client
      * @param region
      */
-    public AmazonGlacierBaseUtil(BasicAWSCredentials credentials,
-	    AmazonGlacierClient client, Region region) {
+    public AmazonGlacierBaseUtil(BasicAWSCredentials credentials, AmazonGlacierClient client, Region region) {
 	super();
 	this.credentials = credentials;
 	this.client = client;
@@ -188,13 +187,11 @@ public abstract class AmazonGlacierBaseUtil {
 
 	this.sqsClient = new AmazonSQSClient(credentials);
 	this.sqsClient.setRegion(region);
-	this.sqsClient.setEndpoint(this.region
-		.getServiceEndpoint(SERVICE_SQS_NAME));
+	this.sqsClient.setEndpoint(this.region.getServiceEndpoint(SERVICE_SQS_NAME));
 
 	this.snsClient = new AmazonSNSClient(credentials);
 	this.snsClient.setRegion(region);
-	this.snsClient.setEndpoint(this.region
-		.getServiceEndpoint(SERVICE_SNS_NAME));
+	this.snsClient.setEndpoint(this.region.getServiceEndpoint(SERVICE_SNS_NAME));
 
     }
 
@@ -207,16 +204,14 @@ public abstract class AmazonGlacierBaseUtil {
      * 
      * @throws RegionNotSupportedException
      */
-    public AmazonGlacierBaseUtil(String accessKey, String secretKey,
-	    String region) throws RegionNotSupportedException {
+    public AmazonGlacierBaseUtil(String accessKey, String secretKey, String region) throws RegionNotSupportedException {
 
 	ClientConfiguration clientConfiguration = new ClientConfiguration();
 	clientConfiguration.setConnectionTimeout(70 * 1000);
 
 	this.region = Region.getRegion(Regions.fromName(region));
 	this.credentials = new BasicAWSCredentials(accessKey, secretKey);
-	this.client = new AmazonGlacierClient(this.credentials,
-		clientConfiguration);
+	this.client = new AmazonGlacierClient(this.credentials, clientConfiguration);
 
 	if (!this.region.isServiceSupported(SERVICE_NAME)) {
 	    throw new RegionNotSupportedException();
@@ -231,13 +226,11 @@ public abstract class AmazonGlacierBaseUtil {
 
 	this.sqsClient = new AmazonSQSClient(credentials);
 	this.sqsClient.setRegion(this.region);
-	this.sqsClient.setEndpoint(this.region
-		.getServiceEndpoint(SERVICE_SQS_NAME));
+	this.sqsClient.setEndpoint(this.region.getServiceEndpoint(SERVICE_SQS_NAME));
 
 	this.snsClient = new AmazonSNSClient(credentials);
 	this.snsClient.setRegion(this.region);
-	this.snsClient.setEndpoint(this.region
-		.getServiceEndpoint(SERVICE_SNS_NAME));
+	this.snsClient.setEndpoint(this.region.getServiceEndpoint(SERVICE_SNS_NAME));
     }
 
     /**
@@ -264,14 +257,11 @@ public abstract class AmazonGlacierBaseUtil {
      */
     final protected void initSNS() {
 
-	CreateTopicRequest request = new CreateTopicRequest()
-		.withName(SNS_TOPIC_NAME);
+	CreateTopicRequest request = new CreateTopicRequest().withName(SNS_TOPIC_NAME);
 	CreateTopicResult result = snsClient.createTopic(request);
 	snsTopicArn = result.getTopicArn();
 
-	SubscribeRequest subscribeRequest = new SubscribeRequest()
-		.withTopicArn(snsTopicArn).withEndpoint(sqsQueueArn)
-		.withProtocol("sqs");
+	SubscribeRequest subscribeRequest = new SubscribeRequest().withTopicArn(snsTopicArn).withEndpoint(sqsQueueArn).withProtocol("sqs");
 
 	SubscribeResult subscribeResult = snsClient.subscribe(subscribeRequest);
 
@@ -284,26 +274,20 @@ public abstract class AmazonGlacierBaseUtil {
      */
     final protected void initSQS() {
 
-	CreateQueueRequest request = new CreateQueueRequest()
-		.withQueueName(SQS_QUEUE_NAME);
+	CreateQueueRequest request = new CreateQueueRequest().withQueueName(SQS_QUEUE_NAME);
 	CreateQueueResult result = sqsClient.createQueue(request);
 	sqsQueueUrl = result.getQueueUrl();
 
-	GetQueueAttributesRequest qRequest = new GetQueueAttributesRequest()
-		.withQueueUrl(sqsQueueUrl).withAttributeNames("QueueArn");
+	GetQueueAttributesRequest qRequest = new GetQueueAttributesRequest().withQueueUrl(sqsQueueUrl).withAttributeNames("QueueArn");
 
-	GetQueueAttributesResult qResult = sqsClient
-		.getQueueAttributes(qRequest);
+	GetQueueAttributesResult qResult = sqsClient.getQueueAttributes(qRequest);
 	sqsQueueArn = qResult.getAttributes().get("QueueArn");
 
-	Policy sqsPolicy = new Policy().withStatements(new Statement(
-		Effect.Allow).withPrincipals(Principal.AllUsers)
-		.withActions(SQSActions.SendMessage)
-		.withResources(new Resource(sqsQueueArn)));
+	Policy sqsPolicy = new Policy().withStatements(new Statement(Effect.Allow).withPrincipals(Principal.AllUsers)
+		.withActions(SQSActions.SendMessage).withResources(new Resource(sqsQueueArn)));
 	Map<String, String> queueAttributes = new HashMap<String, String>();
 	queueAttributes.put("Policy", sqsPolicy.toJson());
-	sqsClient.setQueueAttributes(new SetQueueAttributesRequest(sqsQueueUrl,
-		queueAttributes));
+	sqsClient.setQueueAttributes(new SetQueueAttributesRequest(sqsQueueUrl, queueAttributes));
 
     }
 

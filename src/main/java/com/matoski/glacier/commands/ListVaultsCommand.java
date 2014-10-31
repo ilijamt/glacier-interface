@@ -14,8 +14,7 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
 public class ListVaultsCommand extends AbstractCommand<CommandListVaults> {
 
-    public ListVaultsCommand(Config config, CommandListVaults command)
-	    throws VaultNameNotPresentException, RegionNotSupportedException {
+    public ListVaultsCommand(Config config, CommandListVaults command) throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
     }
 
@@ -24,28 +23,20 @@ public class ListVaultsCommand extends AbstractCommand<CommandListVaults> {
 
 	System.out.println("START: list-vaults\n");
 
-	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(
-		credentials, client, region);
+	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
 	List<DescribeVaultOutput> result = upload.ListVaults();
 
-	System.out.println(String.format("Total available vaults: %s\n",
-		result.size()));
+	System.out.println(String.format("Total available vaults: %s\n", result.size()));
 
 	for (DescribeVaultOutput vault : result) {
 
-	    System.out.println(String.format("%1$20s: %2$s", "ARN",
-		    vault.getVaultARN()));
-	    System.out.println(String.format("%1$20s: %2$s", "Vault Name",
-		    vault.getVaultName()));
-	    System.out.println(String.format("%1$20s: %2$s", "Created",
-		    vault.getCreationDate()));
-	    System.out.println(String.format("%1$20s: %2$s (%3$s bytes)",
-		    "Inventory Size",
-		    FileUtils.byteCountToDisplaySize(vault.getSizeInBytes()),
-		    vault.getSizeInBytes()));
-	    System.out.println(String.format("%1$20s: %2$s",
-		    "Last Inventory Date", vault.getLastInventoryDate()));
+	    System.out.println(String.format("%1$20s: %2$s", "ARN", vault.getVaultARN()));
+	    System.out.println(String.format("%1$20s: %2$s", "Vault Name", vault.getVaultName()));
+	    System.out.println(String.format("%1$20s: %2$s", "Created", vault.getCreationDate()));
+	    System.out.println(String.format("%1$20s: %2$s (%3$s bytes)", "Inventory Size",
+		    FileUtils.byteCountToDisplaySize(vault.getSizeInBytes()), vault.getSizeInBytes()));
+	    System.out.println(String.format("%1$20s: %2$s", "Last Inventory Date", vault.getLastInventoryDate()));
 	    System.out.println();
 	}
 

@@ -39,8 +39,7 @@ public class UploadPieceTest {
     @Test
     public final void test01_CalculatedChecksum() {
 	this.piece.setCalculatedChecksum(CalculatedChecksum);
-	assertSame("set/get CalculatedChecksum",
-		this.piece.getCalculatedChecksum(), CalculatedChecksum);
+	assertSame("set/get CalculatedChecksum", this.piece.getCalculatedChecksum(), CalculatedChecksum);
     }
 
     @Test
@@ -64,8 +63,7 @@ public class UploadPieceTest {
     @Test
     public final void test05_UploadedChecksum() {
 	this.piece.setUploadedChecksum(UploadedChecksum);
-	assertSame("set/get UploadedChecksum",
-		this.piece.getUploadedChecksum(), UploadedChecksum);
+	assertSame("set/get UploadedChecksum", this.piece.getUploadedChecksum(), UploadedChecksum);
     }
 
     @Test

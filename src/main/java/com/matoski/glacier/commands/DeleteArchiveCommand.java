@@ -33,9 +33,8 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
      * @throws RegionNotSupportedException
      * @throws IllegalArgumentException
      */
-    public DeleteArchiveCommand(Config config, CommandDeleteArchive command)
-	    throws VaultNameNotPresentException, RegionNotSupportedException,
-	    IllegalArgumentException {
+    public DeleteArchiveCommand(Config config, CommandDeleteArchive command) throws VaultNameNotPresentException,
+	    RegionNotSupportedException, IllegalArgumentException {
 	super(config, command);
 
 	Boolean validVaultName = null != command.vaultName;
@@ -46,8 +45,7 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 	try {
 	    this.journal = State.load(command.journal);
 	} catch (IOException e) {
-	    System.out.println(String.format("Creating a new journal: %s",
-		    command.journal));
+	    System.out.println(String.format("Creating a new journal: %s", command.journal));
 	    this.journal = new State();
 	    this.journal.setFile(command.journal);
 	    throw new RuntimeException("Journal doesn't exist");
@@ -70,8 +68,7 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 	} else {
 	    Archive archive = journal.getByName(command.name);
 	    if (null == archive) {
-		throw new IllegalArgumentException(
-			"The archive is not present in the journal");
+		throw new IllegalArgumentException("The archive is not present in the journal");
 	    }
 	    archiveId = archive.getId();
 	}
@@ -88,17 +85,14 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 
 	try {
 
-	    client.deleteArchive(new DeleteArchiveRequest().withVaultName(
-		    command.vaultName).withArchiveId(archiveId));
+	    client.deleteArchive(new DeleteArchiveRequest().withVaultName(command.vaultName).withArchiveId(archiveId));
 
 	    System.out.println("Archive deleted.\n");
 
 	    this.journal.deleteArchive(archiveId);
 
-	    System.out.println(String.format("%1$10s: %2$s", "Vault",
-		    command.vaultName));
-	    System.out.println(String.format("%1$10s: %2$s", "Archive ID",
-		    command.id));
+	    System.out.println(String.format("%1$10s: %2$s", "Vault", command.vaultName));
+	    System.out.println(String.format("%1$10s: %2$s", "Archive ID", command.id));
 
 	} catch (Exception e) {
 	    System.err.println("Failed to delete the archive");

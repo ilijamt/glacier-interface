@@ -8,8 +8,7 @@ import com.matoski.glacier.pojo.Config;
 
 public class PurgeCommand extends AbstractCommand<CommandPurge> {
 
-    public PurgeCommand(Config config, CommandPurge command)
-	    throws VaultNameNotPresentException, RegionNotSupportedException {
+    public PurgeCommand(Config config, CommandPurge command) throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
     }
 

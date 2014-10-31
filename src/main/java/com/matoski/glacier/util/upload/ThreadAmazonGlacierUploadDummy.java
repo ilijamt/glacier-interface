@@ -12,15 +12,13 @@ import com.matoski.glacier.util.ThreadAmazonGlacierDummy;
  */
 public class ThreadAmazonGlacierUploadDummy extends ThreadAmazonGlacierDummy {
 
-    public ThreadAmazonGlacierUploadDummy(int pieces, File file,
-	    UploadPiece piece) {
+    public ThreadAmazonGlacierUploadDummy(int pieces, File file, UploadPiece piece) {
 	super(pieces, file, piece);
     }
 
     @Override
     public void __call() {
-	System.out.println(String.format(AmazonGlacierUploadUtil.FORMAT,
-		piece.getPart() + 1, pieces, piece.getStatus(), file,
+	System.out.println(String.format(AmazonGlacierUploadUtil.FORMAT, piece.getPart() + 1, pieces, piece.getStatus(), file,
 		"Already uploaded"));
     }
 

@@ -38,8 +38,7 @@ public class State {
      * @return
      */
     public static GenericValidateEnum archiveValidateFileSize(Archive archive) {
-	return new File(archive.getName()).length() == archive.getSize() ? GenericValidateEnum.VALID
-		: GenericValidateEnum.INVALID;
+	return new File(archive.getName()).length() == archive.getSize() ? GenericValidateEnum.VALID : GenericValidateEnum.INVALID;
     }
 
     /**
@@ -48,10 +47,8 @@ public class State {
      * @param archive
      * @return
      */
-    public static GenericValidateEnum archiveValidateLastModified(
-	    Archive archive) {
-	return new File(archive.getName()).lastModified() == archive
-		.getModifiedDate() ? GenericValidateEnum.VALID
+    public static GenericValidateEnum archiveValidateLastModified(Archive archive) {
+	return new File(archive.getName()).lastModified() == archive.getModifiedDate() ? GenericValidateEnum.VALID
 		: GenericValidateEnum.INVALID;
     }
 
@@ -66,8 +63,7 @@ public class State {
 	File file = new File(archive.getName());
 	String checksum = TreeHashGenerator.calculateTreeHash(file);
 
-	return archive.getHash().equals(checksum) ? GenericValidateEnum.VALID
-		: GenericValidateEnum.INVALID;
+	return archive.getHash().equals(checksum) ? GenericValidateEnum.VALID : GenericValidateEnum.INVALID;
     }
 
     /**
@@ -88,8 +84,7 @@ public class State {
 	    return journal;
 	}
 
-	String json = new String(Files.readAllBytes(file.toPath()),
-		StandardCharsets.UTF_8);
+	String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
 
 	FileJournal fileJournal = new Gson().fromJson(json, FileJournal.class);
 
@@ -122,8 +117,7 @@ public class State {
      * 
      * @return
      */
-    public static State parse(GlacierInventory inventory, String vault,
-	    Metadata metadata) {
+    public static State parse(GlacierInventory inventory, String vault, Metadata metadata) {
 
 	State journal = new State();
 
@@ -146,8 +140,7 @@ public class State {
 
 	    try {
 
-		interfaceMetadata = Parser.parse(metadata,
-			archiveItem.getArchiveDescription());
+		interfaceMetadata = Parser.parse(metadata, archiveItem.getArchiveDescription());
 
 		archive.setName(interfaceMetadata.giGetName());
 		archive.setModifiedDate(interfaceMetadata.giGetModifiedDate());
@@ -174,8 +167,7 @@ public class State {
      * 
      * @return
      */
-    public static State parse(GlacierInventory inventory, String vault,
-	    String metadata) {
+    public static State parse(GlacierInventory inventory, String vault, String metadata) {
 	return State.parse(inventory, vault, Metadata.from(metadata));
     }
 
@@ -381,8 +373,7 @@ public class State {
 
 	FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
 	BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create()
-		.toJson(journal));
+	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create().toJson(journal));
 
 	bufferedWriter.close();
 	fileWriter.close();

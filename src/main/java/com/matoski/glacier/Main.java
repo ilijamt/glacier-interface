@@ -53,35 +53,21 @@ public class Main {
     public static void init() {
 
 	commands.put(CliCommands.Help.ordinal(), new CommandHelp());
-	commands.put(CliCommands.ListJournal.ordinal(),
-		new CommandListJournal());
+	commands.put(CliCommands.ListJournal.ordinal(), new CommandListJournal());
 	commands.put(CliCommands.ListVaults.ordinal(), new CommandListVaults());
-	commands.put(CliCommands.CreateVault.ordinal(),
-		new CommandCreateVault());
-	commands.put(CliCommands.DeleteVault.ordinal(),
-		new CommandDeleteVault());
-	commands.put(CliCommands.ListVaultJobs.ordinal(),
-		new CommandListVaultJobs());
-	commands.put(CliCommands.VaultJobInfo.ordinal(),
-		new CommandVaultJobInfo());
-	commands.put(CliCommands.InventoryRetrieve.ordinal(),
-		new CommandInventoryRetrieval());
-	commands.put(CliCommands.InventoryDownload.ordinal(),
-		new CommandInventoryDownload());
-	commands.put(CliCommands.UploadArchive.ordinal(),
-		new CommandUploadArchive());
-	commands.put(CliCommands.DeleteArchive.ordinal(),
-		new CommandDeleteArchive());
-	commands.put(CliCommands.ListMultipartUploads.ordinal(),
-		new CommandListMultipartUploads());
-	commands.put(CliCommands.MultipartUploadInfo.ordinal(),
-		new CommandMultipartUploadInfo());
-	commands.put(CliCommands.AbortMultipartUpload.ordinal(),
-		new CommandAbortMultipartUpload());
-	commands.put(CliCommands.DownloadArchive.ordinal(),
-		new CommandDownloadArchive());
-	commands.put(CliCommands.InitDownload.ordinal(),
-		new CommandInitDownload());
+	commands.put(CliCommands.CreateVault.ordinal(), new CommandCreateVault());
+	commands.put(CliCommands.DeleteVault.ordinal(), new CommandDeleteVault());
+	commands.put(CliCommands.ListVaultJobs.ordinal(), new CommandListVaultJobs());
+	commands.put(CliCommands.VaultJobInfo.ordinal(), new CommandVaultJobInfo());
+	commands.put(CliCommands.InventoryRetrieve.ordinal(), new CommandInventoryRetrieval());
+	commands.put(CliCommands.InventoryDownload.ordinal(), new CommandInventoryDownload());
+	commands.put(CliCommands.UploadArchive.ordinal(), new CommandUploadArchive());
+	commands.put(CliCommands.DeleteArchive.ordinal(), new CommandDeleteArchive());
+	commands.put(CliCommands.ListMultipartUploads.ordinal(), new CommandListMultipartUploads());
+	commands.put(CliCommands.MultipartUploadInfo.ordinal(), new CommandMultipartUploadInfo());
+	commands.put(CliCommands.AbortMultipartUpload.ordinal(), new CommandAbortMultipartUpload());
+	commands.put(CliCommands.DownloadArchive.ordinal(), new CommandDownloadArchive());
+	commands.put(CliCommands.InitDownload.ordinal(), new CommandInitDownload());
 	commands.put(CliCommands.Purge.ordinal(), new CommandPurge());
 	commands.put(CliCommands.Sync.ordinal(), new CommandSync());
 
@@ -122,8 +108,7 @@ public class Main {
 		config = Config.fromFile(arguments.config);
 		config.merge(arguments);
 	    } catch (JsonSyntaxException e) {
-		System.err
-			.println("ERROR: Invalid format in the configuration file");
+		System.err.println("ERROR: Invalid format in the configuration file");
 		System.exit(1);
 	    } catch (FileNotFoundException e) {
 		System.err.println("ERROR: Config file cannot be found");
@@ -154,8 +139,7 @@ public class Main {
 	    }
 	}
 
-	System.out.println(String.format("Current working dir: %s",
-		config.getDirectory()));
+	System.out.println(String.format("Current working dir: %s", config.getDirectory()));
 	System.out.println(String.format("Command: %s", cliCommand));
 	System.out.println();
 
@@ -165,8 +149,7 @@ public class Main {
 
 	    if (cliCommand != CliCommands.Help && !validConfig) {
 
-		System.out
-			.println("ERROR: Missing one or more required parameters");
+		System.out.println("ERROR: Missing one or more required parameters");
 		if (null == config.getKey()) {
 		    System.out.println("\t--aws-key");
 		}
@@ -192,101 +175,67 @@ public class Main {
 		    break;
 
 		case ListJournal:
-		    new ListJournalCommand(config,
-			    (CommandListJournal) commands.get(cliCommand
-				    .ordinal())).run();
+		    new ListJournalCommand(config, (CommandListJournal) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case ListVaults:
-		    new ListVaultsCommand(config,
-			    (CommandListVaults) commands.get(cliCommand
-				    .ordinal())).run();
+		    new ListVaultsCommand(config, (CommandListVaults) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case CreateVault:
-		    new CreateVaultCommand(config,
-			    (CommandCreateVault) commands.get(cliCommand
-				    .ordinal())).run();
+		    new CreateVaultCommand(config, (CommandCreateVault) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case DeleteVault:
-		    new DeleteVaultCommand(config,
-			    (CommandDeleteVault) commands.get(cliCommand
-				    .ordinal())).run();
+		    new DeleteVaultCommand(config, (CommandDeleteVault) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case ListVaultJobs:
-		    new ListVaultJobsCommand(config,
-			    (CommandListVaultJobs) commands.get(cliCommand
-				    .ordinal())).run();
+		    new ListVaultJobsCommand(config, (CommandListVaultJobs) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case VaultJobInfo:
-		    new VaultJobInfoCommand(config,
-			    (CommandVaultJobInfo) commands.get(cliCommand
-				    .ordinal())).run();
+		    new VaultJobInfoCommand(config, (CommandVaultJobInfo) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case InventoryRetrieve:
-		    new InventoryRetrievalCommand(config,
-			    (CommandInventoryRetrieval) commands.get(cliCommand
-				    .ordinal())).run();
+		    new InventoryRetrievalCommand(config, (CommandInventoryRetrieval) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case InventoryDownload:
-		    new InventoryDownloadCommand(config,
-			    (CommandInventoryDownload) commands.get(cliCommand
-				    .ordinal())).run();
+		    new InventoryDownloadCommand(config, (CommandInventoryDownload) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case DeleteArchive:
-		    new DeleteArchiveCommand(config,
-			    (CommandDeleteArchive) commands.get(cliCommand
-				    .ordinal())).run();
+		    new DeleteArchiveCommand(config, (CommandDeleteArchive) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case UploadArchive:
-		    new UploadArchiveCommand(config,
-			    (CommandUploadArchive) commands.get(cliCommand
-				    .ordinal())).run();
+		    new UploadArchiveCommand(config, (CommandUploadArchive) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case ListMultipartUploads:
-		    new ListMultipartUploadsCommand(config,
-			    (CommandListMultipartUploads) commands
-				    .get(cliCommand.ordinal())).run();
+		    new ListMultipartUploadsCommand(config, (CommandListMultipartUploads) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case MultipartUploadInfo:
-		    new MultipartUploadInfoCommand(config,
-			    (CommandMultipartUploadInfo) commands
-				    .get(cliCommand.ordinal())).run();
+		    new MultipartUploadInfoCommand(config, (CommandMultipartUploadInfo) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case AbortMultipartUpload:
-		    new AbortMultipartUploadCommand(config,
-			    (CommandAbortMultipartUpload) commands
-				    .get(cliCommand.ordinal())).run();
+		    new AbortMultipartUploadCommand(config, (CommandAbortMultipartUpload) commands.get(cliCommand.ordinal())).run();
 		    break;
 		case DownloadArchive:
-		    new DownloadArchiveCommand(config,
-			    (CommandDownloadArchive) commands.get(cliCommand
-				    .ordinal())).run();
+		    new DownloadArchiveCommand(config, (CommandDownloadArchive) commands.get(cliCommand.ordinal())).run();
 		    break;
 		case InitDownload:
-		    new InitDownloadCommand(config,
-			    (CommandInitDownload) commands.get(cliCommand
-				    .ordinal())).run();
+		    new InitDownloadCommand(config, (CommandInitDownload) commands.get(cliCommand.ordinal())).run();
 		    break;
 		case Purge:
-		    new PurgeCommand(config,
-			    (CommandPurge) commands.get(cliCommand.ordinal()))
-			    .run();
+		    new PurgeCommand(config, (CommandPurge) commands.get(cliCommand.ordinal())).run();
 		    break;
 		case Sync:
-		    new SyncCommand(config,
-			    (CommandSync) commands.get(cliCommand.ordinal()))
-			    .run();
+		    new SyncCommand(config, (CommandSync) commands.get(cliCommand.ordinal())).run();
 		    break;
 		default:
 		    break;
@@ -295,12 +244,9 @@ public class Main {
 	    } catch (RuntimeException e) {
 		System.err.println(String.format("ERROR: %s", e.getMessage()));
 	    } catch (RegionNotSupportedException e) {
-		System.err.println(String.format(
-			"Service glacier not support in region: %s",
-			config.getRegion()));
+		System.err.println(String.format("Service glacier not support in region: %s", config.getRegion()));
 	    } catch (VaultNameNotPresentException e) {
-		System.err
-			.println("ERROR: Missing one or more required parameters");
+		System.err.println("ERROR: Missing one or more required parameters");
 		System.err.println("\t--aws-vault or --vault");
 	    } catch (Exception e) {
 		System.err.println(e);
@@ -311,9 +257,7 @@ public class Main {
 	if (null != arguments.createConfig) {
 	    try {
 		config.createConfigurationFile(arguments.createConfig);
-		System.out.println(String.format(
-			"Created a configuration file: %s",
-			arguments.createConfig));
+		System.out.println(String.format("Created a configuration file: %s", arguments.createConfig));
 	    } catch (IOException e) {
 		System.err.println("ERROR: Failed to write the configuration");
 		e.printStackTrace();

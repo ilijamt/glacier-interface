@@ -2,7 +2,6 @@ package com.matoski.glacier.commands;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
 
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandUploadArchive;
@@ -48,8 +47,8 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
      * @throws VaultNameNotPresentException
      * @throws RegionNotSupportedException
      */
-    public UploadArchiveCommand(Config config, CommandUploadArchive command)
-	    throws VaultNameNotPresentException, RegionNotSupportedException {
+    public UploadArchiveCommand(Config config, CommandUploadArchive command) throws VaultNameNotPresentException,
+	    RegionNotSupportedException {
 	super(config, command);
 
 	Boolean validVaultName = null != command.vaultName;
@@ -70,18 +69,15 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 	}
 
 	if (command.partSize % 2 != 0) {
-	    throw new IllegalArgumentException(
-		    "Part size has to be a multiple of 2");
+	    throw new IllegalArgumentException("Part size has to be a multiple of 2");
 	}
 
-	command.partSize = command.partSize
-		* (int) AmazonGlacierBaseUtil.MINIMUM_PART_SIZE;
+	command.partSize = command.partSize * (int) AmazonGlacierBaseUtil.MINIMUM_PART_SIZE;
 
 	try {
 	    this.journal = State.load(command.journal);
 	} catch (IOException e) {
-	    System.out.println(String.format("Creating a new journal: %s",
-		    command.journal));
+	    System.out.println(String.format("Creating a new journal: %s", command.journal));
 	    this.journal = new State();
 	    this.journal.setFile(command.journal);
 	}
@@ -104,71 +100,57 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 	} else {
 
 	    Archive archive = null;
+	    Boolean upload = true;
 
 	    for (String fileName : command.files) {
+
+		upload = true;
 
 		// check if this file exists in the journal
 		if (journal.isFileInArchive(fileName)) {
 
-		    System.out.println(String.format(
-			    "%s is already present in the journal", fileName));
+		    System.out.println(String.format("%s is already present in the journal", fileName));
 		    System.out.println(String.format("Verifying ..."));
 
 		    Archive testArchive = journal.getByName(fileName);
 
-		    GenericValidateEnum validSize = State
-			    .archiveValidateFileSize(testArchive);
-		    GenericValidateEnum validModifiedDate = State
-			    .archiveValidateLastModified(testArchive);
-		    GenericValidateEnum validTreeHash = GenericValidateEnum.INVALID;
+		    GenericValidateEnum validSize = State.archiveValidateFileSize(testArchive);
+		    GenericValidateEnum validModifiedDate = State.archiveValidateLastModified(testArchive);
 
-		    System.out.println(String.format("%s size is %s", fileName,
-			    validSize));
-		    System.out.println(String.format("%s modified date is %s",
-			    fileName, validModifiedDate));
+		    System.out.println(String.format("%s size is %s", fileName, validSize));
+		    System.out.println(String.format("%s modified date is %s", fileName, validModifiedDate));
+		    System.out.println(String.format("Verifying hash ..."));
 
-		    if (validSize == GenericValidateEnum.VALID
-			    && validModifiedDate == GenericValidateEnum.VALID) {
-			Scanner in = new Scanner(System.in);
-			System.out
-				.print("Do you want to check tree hash (yes/no/quit?)");
-			String response = in.nextLine().trim();
-			if (response.equalsIgnoreCase("yes")) {
-			    validTreeHash = State
-				    .archiveValidateTreeHash(testArchive);
-			    if (validTreeHash == GenericValidateEnum.VALID) {
-				System.out.println(String.format(
-					"%s hash is %s, skipping..", fileName,
-					validTreeHash));
-				continue;
-			    } else {
+		    GenericValidateEnum validTreeHash = State.archiveValidateTreeHash(testArchive);
 
-			    }
-			}
-			in.close();
-		    }
+		    System.out.println(String.format("Hash is: %s", validTreeHash));
+
+		    upload = command.forceUpload;
 
 		}
 
-		System.out.println(String.format("Processing: %s (size: %s)",
-			fileName, new File(Config.getInstance().getDirectory(),
-				fileName).length()));
+		if (upload) {
 
-		try {
-		    archive = this.upload.UploadMultipartFile(new File(Config
-			    .getInstance().getDirectory(), fileName),
-			    command.concurrent, command.retryFailedUpload,
-			    command.partSize, command.vaultName, metadata);
+		    System.out.println(String.format("Processing: %s (size: %s)", fileName, new File(Config.getInstance().getDirectory(),
+			    fileName).length()));
 
-		    this.journal.addArchive(archive);
-		    this.journal.save();
+		    try {
+			archive = this.upload.UploadMultipartFile(new File(Config.getInstance().getDirectory(), fileName),
+				command.concurrent, command.retryFailedUpload, command.partSize, command.vaultName, metadata);
 
-		} catch (UploadTooManyPartsException e) {
-		    e.printStackTrace();
-		} catch (IOException e) {
-		    e.printStackTrace();
-		} catch (RegionNotSupportedException e) {
-		    e.printStackTrace();
+			this.journal.addArchive(archive);
+			this.journal.save();
+
+		    } catch (UploadTooManyPartsException e) {
+			e.printStackTrace();
+		    } catch (IOException e) {
+			e.printStackTrace();
+		    } catch (RegionNotSupportedException e) {
+			e.printStackTrace();
+		    }
+
+		} else {
+		    System.out.println(String.format("Skipping upload for %s", fileName));
 		}
 
 	    }

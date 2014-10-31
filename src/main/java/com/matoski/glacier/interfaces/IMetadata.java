@@ -27,8 +27,7 @@ public interface IMetadata {
      * 
      * @throws InvalidMetadataException
      */
-    public IGlacierInterfaceMetadata parse(String data)
-	    throws InvalidMetadataException;
+    public IGlacierInterfaceMetadata parse(String data) throws InvalidMetadataException;
 
     /**
      * Verify if this is the correct metadata to use

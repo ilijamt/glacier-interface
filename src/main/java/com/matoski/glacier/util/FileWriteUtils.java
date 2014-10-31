@@ -17,8 +17,7 @@ public class FileWriteUtils {
 
 	FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
 	BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create()
-		.toJson(obj));
+	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create().toJson(obj));
 
 	bufferedWriter.close();
 	fileWriter.close();

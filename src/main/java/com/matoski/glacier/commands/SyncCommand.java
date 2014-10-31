@@ -8,8 +8,7 @@ import com.matoski.glacier.pojo.Config;
 
 public class SyncCommand extends AbstractCommand<CommandSync> {
 
-    public SyncCommand(Config config, CommandSync command)
-	    throws VaultNameNotPresentException, RegionNotSupportedException {
+    public SyncCommand(Config config, CommandSync command) throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
     }
 

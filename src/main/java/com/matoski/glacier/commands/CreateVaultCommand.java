@@ -14,12 +14,10 @@ import com.matoski.glacier.pojo.Config;
 
 public class CreateVaultCommand extends AbstractCommand<CommandCreateVault> {
 
-    public CreateVaultCommand(Config config, CommandCreateVault command)
-	    throws VaultNameNotPresentException, RegionNotSupportedException {
+    public CreateVaultCommand(Config config, CommandCreateVault command) throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
 
-	if ((null == command.vaultName || command.vaultName.isEmpty())
-		&& (null == config.getVault() || config.getVault().isEmpty())) {
+	if ((null == command.vaultName || command.vaultName.isEmpty()) && (null == config.getVault() || config.getVault().isEmpty())) {
 	    throw new VaultNameNotPresentException();
 	}
 
@@ -35,43 +33,29 @@ public class CreateVaultCommand extends AbstractCommand<CommandCreateVault> {
 
 	try {
 
-	    CreateVaultRequest createVaultRequest = new CreateVaultRequest()
-		    .withVaultName(command.vaultName);
-	    DescribeVaultRequest describeVaultRequest = new DescribeVaultRequest()
-		    .withVaultName(command.vaultName);
+	    CreateVaultRequest createVaultRequest = new CreateVaultRequest().withVaultName(command.vaultName);
+	    DescribeVaultRequest describeVaultRequest = new DescribeVaultRequest().withVaultName(command.vaultName);
 
-	    CreateVaultResult createVaultResult = client
-		    .createVault(createVaultRequest);
-	    DescribeVaultResult describeVaultResult = client
-		    .describeVault(describeVaultRequest);
+	    CreateVaultResult createVaultResult = client.createVault(createVaultRequest);
+	    DescribeVaultResult describeVaultResult = client.describeVault(describeVaultRequest);
 
-	    System.out.println(String.format("%1$12s: %2$s%3$s", "Location",
-		    this.region.getServiceEndpoint("glacier"),
+	    System.out.println(String.format("%1$12s: %2$s%3$s", "Location", this.region.getServiceEndpoint("glacier"),
 		    createVaultResult.getLocation()));
-	    System.out.println(String.format("%1$12s: %2$s", "ARN",
-		    describeVaultResult.getVaultARN()));
-	    System.out.println(String.format("%1$12s: %2$s", "Vault Name",
-		    describeVaultResult.getVaultName()));
-	    System.out.println(String.format("%1$12s: %2$s", "Created",
-		    describeVaultResult.getCreationDate()));
+	    System.out.println(String.format("%1$12s: %2$s", "ARN", describeVaultResult.getVaultARN()));
+	    System.out.println(String.format("%1$12s: %2$s", "Vault Name", describeVaultResult.getVaultName()));
+	    System.out.println(String.format("%1$12s: %2$s", "Created", describeVaultResult.getCreationDate()));
 
 	} catch (AmazonServiceException e) {
 	    switch (e.getErrorCode()) {
 	    case "InvalidSignatureException":
-		System.err
-			.println(String
-				.format("ERROR: Invalid credentials, check you key and secret key."));
+		System.err.println(String.format("ERROR: Invalid credentials, check you key and secret key."));
 		break;
 	    default:
-		System.err.println(String.format(
-			"ERROR: Failed to create a vault: %s\n\t%s",
-			command.vaultName, e.getMessage()));
+		System.err.println(String.format("ERROR: Failed to create a vault: %s\n\t%s", command.vaultName, e.getMessage()));
 		break;
 	    }
 	} catch (AmazonClientException e) {
-	    System.err.println(String.format(
-		    "ERROR: Cannot connect to the amazon web services.\n\t%s",
-		    e.getMessage()));
+	    System.err.println(String.format("ERROR: Cannot connect to the amazon web services.\n\t%s", e.getMessage()));
 	}
 
 	System.out.println("\nEND: create-vault");

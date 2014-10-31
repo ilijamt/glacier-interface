@@ -8,8 +8,7 @@ import com.matoski.glacier.pojo.Config;
 
 public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 
-    public InitDownloadCommand(Config config, CommandInitDownload command)
-	    throws VaultNameNotPresentException, RegionNotSupportedException {
+    public InitDownloadCommand(Config config, CommandInitDownload command) throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
     }
 

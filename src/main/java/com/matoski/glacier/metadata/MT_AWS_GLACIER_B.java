@@ -14,8 +14,7 @@ import com.matoski.glacier.pojo.Archive;
  * 
  * @author ilijamt
  */
-public class MT_AWS_GLACIER_B extends GenericParser implements
-	IGlacierInterfaceMetadata {
+public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterfaceMetadata {
 
     /**
      * Identifier
@@ -46,8 +45,7 @@ public class MT_AWS_GLACIER_B extends GenericParser implements
     public String encode(Archive archive) {
 	this.mtime = Long.toString(archive.getModifiedDate());
 	this.filename = archive.getName();
-	return IDENTIFIER
-		+ Base64.encodeBase64String(new Gson().toJson(this).getBytes());
+	return IDENTIFIER + Base64.encodeBase64String(new Gson().toJson(this).getBytes());
 
     }
 
@@ -95,8 +93,7 @@ public class MT_AWS_GLACIER_B extends GenericParser implements
      * {@inheritDoc}
      */
     @Override
-    public IGlacierInterfaceMetadata parse(String data)
-	    throws InvalidMetadataException {
+    public IGlacierInterfaceMetadata parse(String data) throws InvalidMetadataException {
 	if (!verify(data)) {
 	    throw new InvalidMetadataException();
 	}
@@ -104,8 +101,7 @@ public class MT_AWS_GLACIER_B extends GenericParser implements
 	String base64data = data.substring(IDENTIFIER.length(), data.length());
 
 	String json = new String(Base64.decodeBase64(base64data)).trim();
-	MT_AWS_GLACIER_B obj = new Gson()
-		.fromJson(json, MT_AWS_GLACIER_B.class);
+	MT_AWS_GLACIER_B obj = new Gson().fromJson(json, MT_AWS_GLACIER_B.class);
 
 	return (IGlacierInterfaceMetadata) obj;
 

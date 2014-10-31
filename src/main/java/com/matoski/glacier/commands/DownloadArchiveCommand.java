@@ -6,11 +6,10 @@ import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 
-public class DownloadArchiveCommand extends
-	AbstractCommand<CommandDownloadArchive> {
+public class DownloadArchiveCommand extends AbstractCommand<CommandDownloadArchive> {
 
-    public DownloadArchiveCommand(Config config, CommandDownloadArchive command)
-	    throws VaultNameNotPresentException, RegionNotSupportedException {
+    public DownloadArchiveCommand(Config config, CommandDownloadArchive command) throws VaultNameNotPresentException,
+	    RegionNotSupportedException {
 	super(config, command);
     }
 

@@ -11,12 +11,10 @@ import com.matoski.glacier.pojo.Config;
 
 public class DeleteVaultCommand extends AbstractCommand<CommandDeleteVault> {
 
-    public DeleteVaultCommand(Config config, CommandDeleteVault command)
-	    throws VaultNameNotPresentException, RegionNotSupportedException {
+    public DeleteVaultCommand(Config config, CommandDeleteVault command) throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
 
-	if ((null == command.vaultName || command.vaultName.isEmpty())
-		&& (null == config.getVault() || config.getVault().isEmpty())) {
+	if ((null == command.vaultName || command.vaultName.isEmpty()) && (null == config.getVault() || config.getVault().isEmpty())) {
 	    throw new VaultNameNotPresentException();
 	}
 
@@ -33,32 +31,23 @@ public class DeleteVaultCommand extends AbstractCommand<CommandDeleteVault> {
 
 	try {
 
-	    DeleteVaultRequest request = new DeleteVaultRequest()
-		    .withVaultName(command.vaultName);
+	    DeleteVaultRequest request = new DeleteVaultRequest().withVaultName(command.vaultName);
 	    client.deleteVault(request);
 
-	    System.out
-		    .println(String
-			    .format("%s deleted. (Currently Amazon Glacier does not return error if vault does not exists)",
-				    command.vaultName));
+	    System.out.println(String.format("%s deleted. (Currently Amazon Glacier does not return error if vault does not exists)",
+		    command.vaultName));
 
 	} catch (AmazonServiceException e) {
 	    switch (e.getErrorCode()) {
 	    case "InvalidSignatureException":
-		System.err
-			.println(String
-				.format("ERROR: Invalid credentials, check you key and secret key."));
+		System.err.println(String.format("ERROR: Invalid credentials, check you key and secret key."));
 		break;
 	    default:
-		System.err.println(String.format(
-			"ERROR: Failed to delete a vault: %s\n\t%s",
-			command.vaultName, e.getMessage()));
+		System.err.println(String.format("ERROR: Failed to delete a vault: %s\n\t%s", command.vaultName, e.getMessage()));
 		break;
 	    }
 	} catch (AmazonClientException e) {
-	    System.err.println(String.format(
-		    "ERROR: Cannot connect to the amazon web services.\n\t%s",
-		    e.getMessage()));
+	    System.err.println(String.format("ERROR: Cannot connect to the amazon web services.\n\t%s", e.getMessage()));
 	}
 
 	System.out.println("\nEND: delete-vault");

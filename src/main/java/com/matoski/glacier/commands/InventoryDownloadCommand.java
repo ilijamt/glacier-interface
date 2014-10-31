@@ -18,18 +18,15 @@ import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.FileWriteUtils;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
-public class InventoryDownloadCommand extends
-	AbstractCommand<CommandInventoryDownload> {
+public class InventoryDownloadCommand extends AbstractCommand<CommandInventoryDownload> {
 
     protected Metadata metadata;
 
-    public InventoryDownloadCommand(Config config,
-	    CommandInventoryDownload command)
-	    throws VaultNameNotPresentException, RegionNotSupportedException {
+    public InventoryDownloadCommand(Config config, CommandInventoryDownload command) throws VaultNameNotPresentException,
+	    RegionNotSupportedException {
 	super(config, command);
 
-	if ((null == command.vaultName || command.vaultName.isEmpty())
-		&& (null == config.getVault() || config.getVault().isEmpty())) {
+	if ((null == command.vaultName || command.vaultName.isEmpty()) && (null == config.getVault() || config.getVault().isEmpty())) {
 	    throw new VaultNameNotPresentException();
 	}
 
@@ -46,8 +43,7 @@ public class InventoryDownloadCommand extends
 
 	System.out.println("START: inventory-download\n");
 
-	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(
-		credentials, client, region);
+	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
 	String jobId = null;
 
@@ -55,11 +51,9 @@ public class InventoryDownloadCommand extends
 
 	    GlacierJobDescription job = null;
 
-	    for (GlacierJobDescription j : upload
-		    .ListVaultJobs(command.vaultName)) {
+	    for (GlacierJobDescription j : upload.ListVaultJobs(command.vaultName)) {
 
-		if (j.isCompleted()
-			&& j.getStatusCode().equalsIgnoreCase("Succeeded")) {
+		if (j.isCompleted() && j.getStatusCode().equalsIgnoreCase("Succeeded")) {
 		    job = j;
 		    jobId = job.getJobId();
 		}
@@ -78,14 +72,12 @@ public class InventoryDownloadCommand extends
 
 	} else {
 
-	    GetJobOutputResult result = upload.InventoryDownload(
-		    command.vaultName, jobId);
+	    GetJobOutputResult result = upload.InventoryDownload(command.vaultName, jobId);
 
 	    System.out.println("Inventory downloaded.\n");
 
 	    System.out.println(String.format("%1$10s: %2$s", "Job ID", jobId));
-	    System.out.println(String.format("%1$10s: %2$s", "Vault",
-		    command.vaultName));
+	    System.out.println(String.format("%1$10s: %2$s", "Vault", command.vaultName));
 
 	    System.out.println();
 	    GlacierInventory inventory = null;
@@ -97,8 +89,7 @@ public class InventoryDownloadCommand extends
 		if (command.raw) {
 		    FileWriteUtils.toJson(command.journal, inventory);
 		} else {
-		    State journal = State.parse(inventory, command.vaultName,
-			    metadata);
+		    State journal = State.parse(inventory, command.vaultName, metadata);
 		    journal.setFile(command.journal);
 		    journal.save();
 		}

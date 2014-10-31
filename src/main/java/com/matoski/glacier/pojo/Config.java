@@ -65,8 +65,7 @@ public class Config {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public static Config fromFile(String filename) throws JsonSyntaxException,
-	    FileNotFoundException, IOException {
+    public static Config fromFile(String filename) throws JsonSyntaxException, FileNotFoundException, IOException {
 
 	File f = new File(filename);
 
@@ -162,8 +161,7 @@ public class Config {
 
 	fileWriter = new FileWriter(file.getAbsoluteFile());
 	bufferedWriter = new BufferedWriter(fileWriter);
-	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create()
-		.toJson(this));
+	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create().toJson(this));
 
 	bufferedWriter.close();
 	fileWriter.close();
@@ -306,8 +304,7 @@ public class Config {
      * @return
      */
     public boolean valid(boolean vault) {
-	return (null != this.getKey()) && (null != this.getSecretKey())
-		&& (vault ? (null != this.getVault()) : true)
+	return (null != this.getKey()) && (null != this.getSecretKey()) && (vault ? (null != this.getVault()) : true)
 		&& (null != this.getRegion());
 
     }

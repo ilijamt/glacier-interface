@@ -67,15 +67,11 @@ public class Archive {
 
 	Archive archive = (Archive) obj;
 
-	return ((null != this.id) ? this.id.equals(archive.id) : true)
-		&& ((null != this.name) ? this.name.equals(archive.name) : true)
-		&& (this.size == archive.size)
-		&& ((null != this.hash) ? this.hash.equals(archive.hash) : true)
+	return ((null != this.id) ? this.id.equals(archive.id) : true) && ((null != this.name) ? this.name.equals(archive.name) : true)
+		&& (this.size == archive.size) && ((null != this.hash) ? this.hash.equals(archive.hash) : true)
 		&& ((null != this.uri) ? this.uri.equals(archive.uri) : true)
-		&& ((null != this.createdDate) ? (this.createdDate
-			.compareTo(archive.createdDate) == 0) : true)
-		&& (this.modifiedDate == archive.modifiedDate)
-		&& (this.state.equals(archive.state));
+		&& ((null != this.createdDate) ? (this.createdDate.compareTo(archive.createdDate) == 0) : true)
+		&& (this.modifiedDate == archive.modifiedDate) && (this.state.equals(archive.state));
 
     }
 

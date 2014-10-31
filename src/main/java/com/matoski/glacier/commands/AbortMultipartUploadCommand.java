@@ -7,16 +7,13 @@ import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
-public class AbortMultipartUploadCommand extends
-	AbstractCommand<CommandAbortMultipartUpload> {
+public class AbortMultipartUploadCommand extends AbstractCommand<CommandAbortMultipartUpload> {
 
-    public AbortMultipartUploadCommand(Config config,
-	    CommandAbortMultipartUpload command)
-	    throws VaultNameNotPresentException, RegionNotSupportedException {
+    public AbortMultipartUploadCommand(Config config, CommandAbortMultipartUpload command) throws VaultNameNotPresentException,
+	    RegionNotSupportedException {
 	super(config, command);
 
-	if ((null == command.vaultName || command.vaultName.isEmpty())
-		&& (null == config.getVault() || config.getVault().isEmpty())) {
+	if ((null == command.vaultName || command.vaultName.isEmpty()) && (null == config.getVault() || config.getVault().isEmpty())) {
 	    throw new VaultNameNotPresentException();
 	}
 
@@ -31,13 +28,10 @@ public class AbortMultipartUploadCommand extends
 
 	System.out.println("START: abort-multipart-upload\n");
 
-	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(
-		credentials, client, region);
+	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
-	Boolean canceled = upload.CancelMultipartUpload(command.multipartId,
-		command.vaultName);
-	System.out.println(String.format("Multipart upload canceled: %s\n",
-		canceled));
+	Boolean canceled = upload.CancelMultipartUpload(command.multipartId, command.vaultName);
+	System.out.println(String.format("Multipart upload canceled: %s\n", canceled));
 
 	System.out.println("END: abort-multipart-upload");
     }

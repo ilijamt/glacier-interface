@@ -58,8 +58,7 @@ public class Parser {
      * @throws InvalidMetadataException
      * @throws NullPointerException
      */
-    public static IGlacierInterfaceMetadata parse(Metadata metadata, String data)
-	    throws InvalidMetadataException, NullPointerException {
+    public static IGlacierInterfaceMetadata parse(Metadata metadata, String data) throws InvalidMetadataException, NullPointerException {
 	return getParser(metadata).parse(data);
     }
 

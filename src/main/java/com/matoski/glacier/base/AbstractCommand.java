@@ -57,13 +57,11 @@ public abstract class AbstractCommand<T> extends AbstractEmptyCommand<T> {
      * @throws RegionNotSupportedException
      */
     @SuppressWarnings("unused")
-    public AbstractCommand(Config config, T command)
-	    throws VaultNameNotPresentException, RegionNotSupportedException {
+    public AbstractCommand(Config config, T command) throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
 
 	this.region = Region.getRegion(Regions.fromName(config.getRegion()));
-	this.credentials = new BasicAWSCredentials(config.getKey(),
-		config.getSecretKey());
+	this.credentials = new BasicAWSCredentials(config.getKey(), config.getSecretKey());
 
 	ClientConfiguration configuration = new ClientConfiguration();
 	configuration.setConnectionTimeout(70 * 1000);

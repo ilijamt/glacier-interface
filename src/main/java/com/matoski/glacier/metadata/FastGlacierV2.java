@@ -10,8 +10,7 @@ import com.matoski.glacier.pojo.Archive;
  * 
  * @author ilijamt
  */
-public class FastGlacierV2 extends GenericParser implements
-	IGlacierInterfaceMetadata {
+public class FastGlacierV2 extends GenericParser implements IGlacierInterfaceMetadata {
 
     /**
      * The version of the metadata
@@ -84,8 +83,7 @@ public class FastGlacierV2 extends GenericParser implements
      * {@inheritDoc}
      */
     @Override
-    public IGlacierInterfaceMetadata parse(String data)
-	    throws InvalidMetadataException {
+    public IGlacierInterfaceMetadata parse(String data) throws InvalidMetadataException {
 	if (!verify(data)) {
 	    throw new InvalidMetadataException();
 	}

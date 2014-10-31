@@ -67,8 +67,7 @@ public class AmazonGlacierProgressBar {
 	}
 
 	// updates/redraws the progress bar
-	System.out.printf(format, percent, progress, workchars[done
-		% workchars.length]);
+	System.out.printf(format, percent, progress, workchars[done % workchars.length]);
 
 	/**
 	 * if the work have been completed it forces the output to be written,

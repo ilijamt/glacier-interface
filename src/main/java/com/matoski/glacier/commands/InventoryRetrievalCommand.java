@@ -8,16 +8,13 @@ import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
-public class InventoryRetrievalCommand extends
-	AbstractCommand<CommandInventoryRetrieval> {
+public class InventoryRetrievalCommand extends AbstractCommand<CommandInventoryRetrieval> {
 
-    public InventoryRetrievalCommand(Config config,
-	    CommandInventoryRetrieval command)
-	    throws VaultNameNotPresentException, RegionNotSupportedException {
+    public InventoryRetrievalCommand(Config config, CommandInventoryRetrieval command) throws VaultNameNotPresentException,
+	    RegionNotSupportedException {
 	super(config, command);
 
-	if ((null == command.vaultName || command.vaultName.isEmpty())
-		&& (null == config.getVault() || config.getVault().isEmpty())) {
+	if ((null == command.vaultName || command.vaultName.isEmpty()) && (null == config.getVault() || config.getVault().isEmpty())) {
 	    throw new VaultNameNotPresentException();
 	}
 
@@ -32,17 +29,14 @@ public class InventoryRetrievalCommand extends
 
 	System.out.println("START: inventory-retrieve\n");
 
-	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(
-		credentials, client, region);
+	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
 	InitiateJobResult job = upload.InventoryRetrieval(command.vaultName);
 
 	System.out.println("Inventory retrieved.\n");
 
-	System.out.println(String.format("%1$10s: %2$s", "Job ID",
-		job.getJobId()));
-	System.out.println(String.format("%1$10s: %2$s", "Vault",
-		command.vaultName));
+	System.out.println(String.format("%1$10s: %2$s", "Job ID", job.getJobId()));
+	System.out.println(String.format("%1$10s: %2$s", "Vault", command.vaultName));
 
 	System.out.println("\nEND: inventory-retrieve");
     }
