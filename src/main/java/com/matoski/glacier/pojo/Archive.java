@@ -106,7 +106,7 @@ public class Archive {
      * @return
      */
     public String getKeyId() {
-	return this.name;
+	return this.id;
     }
 
     /**
