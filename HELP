@@ -111,6 +111,9 @@ Usage: <main class> [options] [command] [command options]
         Options:
               --id
              The id of the archive
+              --ignore-journal
+             Ignore the journal when deleting, you should only use this with ID
+             Default: false
         *     --journal
              Journal
               --metadata
@@ -183,8 +186,14 @@ Usage: <main class> [options] [command] [command options]
              The name of the vault from which the multipart upload will be
              aborted, will be overwriten by --aws-vault if not specified
 
-    purge      Purge the data from the vault that is missing in the journal
-      Usage: purge [options]
+    purge-vault      Purge the data from the vault
+      Usage: purge-vault [options]
+        Options:
+        *     --journal
+             Journal
+              --vault
+             The name of the vault from where the archive will be purged, will
+             be overwriten by --aws-vault if not specified
 
     sync      Sync a folder contents to amazon glacier
       Usage: sync [options]
