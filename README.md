@@ -30,15 +30,15 @@ Commands
 * **inventory-retrieve**
 * **inventory-download**
 * **list-journal**
-* **init-download**
-* **download-archive**
+* **init-download** (TODO)
+* **download-archive** (TODO)
 * **delete-archive**
-* **upload-archive**
+* **upload-archive** (TODO)
 * **list-multipart-uploads**
 * **multipart-upload-info**
 * **abort-multipart-upload**
-* **purge**
-* **sync**
+* **purge** (TODO)
+* **sync** (TODO)
 
 Minimum Amazon Glacier permissions:
 -----------------------------------
