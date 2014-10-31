@@ -47,32 +47,41 @@ Something like this (including permissions to create/delete vaults):
 
 ```json
 {
-"Statement": [
+  "Statement": [
     {
-    "Effect": "Allow",
-    "Resource":["arn:aws:glacier:eu-west-1:*:vaults/test1",
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:glacier:eu-west-1:*:vaults/test1",
         "arn:aws:glacier:us-east-1:*:vaults/test1",
         "arn:aws:glacier:eu-west-1:*:vaults/test2",
-        "arn:aws:glacier:eu-west-1:*:vaults/test3"],
-        "Action":["glacier:UploadArchive",
-          "glacier:InitiateMultipartUpload",
-          "glacier:UploadMultipartPart",
-          "glacier:UploadPart",
-          "glacier:DeleteArchive",
-          "glacier:ListParts",
-          "glacier:InitiateJob",
-          "glacier:ListJobs",
-          "glacier:GetJobOutput",
-          "glacier:ListMultipartUploads",
-          "glacier:CompleteMultipartUpload"]
+        "arn:aws:glacier:eu-west-1:*:vaults/test3"
+      ],
+      "Action": [
+        "glacier:UploadArchive",
+        "glacier:InitiateMultipartUpload",
+        "glacier:UploadMultipartPart",
+        "glacier:UploadPart",
+        "glacier:DeleteArchive",
+        "glacier:ListParts",
+        "glacier:InitiateJob",
+        "glacier:ListJobs",
+        "glacier:GetJobOutput",
+        "glacier:ListMultipartUploads",
+        "glacier:CompleteMultipartUpload"
+      ]
     },
     {
-        "Effect": "Allow",
-        "Resource":["arn:aws:glacier:eu-west-1:*",
-          "arn:aws:glacier:us-east-1:*"],
-        "Action":["glacier:CreateVault",
-          "glacier:DeleteVault", "glacier:ListVaults"]
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:glacier:eu-west-1:*",
+        "arn:aws:glacier:us-east-1:*"
+      ],
+      "Action": [
+        "glacier:CreateVault",
+        "glacier:DeleteVault",
+        "glacier:ListVaults"
+      ]
     }
-    ]
+  ]
 }
 ```
