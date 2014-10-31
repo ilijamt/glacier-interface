@@ -14,9 +14,10 @@ import com.matoski.glacier.enums.ArchiveState;
 public class Archive {
 
     /**
-     * The state of the file in the journal
+     * The state of the file in the journal, default state is
+     * {@link ArchiveState#NOT_DEFINED}
      */
-    private ArchiveState state;
+    private ArchiveState state = ArchiveState.NOT_DEFINED;
 
     /**
      * The ID of the Archive
@@ -28,24 +29,6 @@ public class Archive {
      * glacier doesn't support names
      */
     private String name;
-
-    /**
-     * Get the state of the Archive
-     * 
-     * @return
-     */
-    public ArchiveState getState() {
-	return state;
-    }
-
-    /**
-     * Sets the archive status
-     * 
-     * @param state
-     */
-    public void setState(ArchiveState state) {
-	this.state = state;
-    }
 
     /**
      * The date when the archive was last modified, as a timestamp
@@ -73,127 +56,6 @@ public class Archive {
     private String uri;
 
     /**
-     * get the uploaded uri
-     * 
-     * @return
-     */
-    public String getUri() {
-	return uri;
-    }
-
-    /**
-     * Set the uploaded uri
-     * 
-     * @param uri
-     */
-    public void setUri(String uri) {
-	this.uri = uri;
-    }
-
-    /**
-     * @return the id
-     */
-    public String getId() {
-	return id;
-    }
-
-    /**
-     * @param id
-     *            the id to set
-     */
-    public void setId(String id) {
-	this.id = id;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-	return name;
-    }
-
-    /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-	this.name = name;
-    }
-
-    /**
-     * @return the mtime
-     */
-    public long getModifiedDate() {
-	return modifiedDate;
-    }
-
-    /**
-     * @param mtime
-     *            the mtime to set
-     */
-    public void setModifiedDate(long date) {
-	this.modifiedDate = date;
-    }
-
-    /**
-     * @return the created
-     */
-    public Date getCreatedDate() {
-	return createdDate;
-    }
-
-    public void setCreatedDate(String date) {
-	this.createdDate = ISO8601Utils.parse(date);
-    }
-
-    /**
-     * @param created
-     *            the created to set
-     */
-    public void setCreatedDate(Date created) {
-	this.createdDate = created;
-    }
-
-    /**
-     * @return the size
-     */
-    public long getSize() {
-	return size;
-    }
-
-    /**
-     * Get's the key used to store it in the Journal
-     * 
-     * @return
-     */
-    public String getKeyId() {
-	return this.name;
-    }
-
-    /**
-     * @param size
-     *            the size to set
-     */
-    public void setSize(long size) {
-	this.size = size;
-    }
-
-    /**
-     * @return the hash
-     */
-    public String getHash() {
-	return hash;
-    }
-
-    /**
-     * @param hash
-     *            the hash to set
-     */
-    public void setHash(String hash) {
-	this.hash = hash;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -212,8 +74,78 @@ public class Archive {
 		&& ((null != this.uri) ? this.uri.equals(archive.uri) : true)
 		&& ((null != this.createdDate) ? (this.createdDate
 			.compareTo(archive.createdDate) == 0) : true)
-		&& (this.modifiedDate == archive.modifiedDate);
+		&& (this.modifiedDate == archive.modifiedDate)
+		&& (this.state.equals(archive.state));
 
+    }
+
+    /**
+     * @return the created
+     */
+    public Date getCreatedDate() {
+	return createdDate;
+    }
+
+    /**
+     * @return the hash
+     */
+    public String getHash() {
+	return hash;
+    }
+
+    /**
+     * @return the id
+     */
+    public String getId() {
+	return id;
+    }
+
+    /**
+     * Get's the key used to store it in the Journal
+     * 
+     * @return
+     */
+    public String getKeyId() {
+	return this.name;
+    }
+
+    /**
+     * @return the mtime
+     */
+    public long getModifiedDate() {
+	return modifiedDate;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+	return name;
+    }
+
+    /**
+     * @return the size
+     */
+    public long getSize() {
+	return size;
+    }
+
+    /**
+     * Get the state of the Archive
+     * 
+     * @return
+     */
+    public ArchiveState getState() {
+	return state;
+    }
+
+    /**
+     * get the uploaded uri
+     * 
+     * @return
+     */
+    public String getUri() {
+	return uri;
     }
 
     /**
@@ -222,5 +154,75 @@ public class Archive {
     @Override
     public int hashCode() {
 	return this.id.hashCode();
+    }
+
+    /**
+     * @param created
+     *            the created to set
+     */
+    public void setCreatedDate(Date created) {
+	this.createdDate = created;
+    }
+
+    public void setCreatedDate(String date) {
+	this.createdDate = ISO8601Utils.parse(date);
+    }
+
+    /**
+     * @param hash
+     *            the hash to set
+     */
+    public void setHash(String hash) {
+	this.hash = hash;
+    }
+
+    /**
+     * @param id
+     *            the id to set
+     */
+    public void setId(String id) {
+	this.id = id;
+    }
+
+    /**
+     * @param mtime
+     *            the mtime to set
+     */
+    public void setModifiedDate(long date) {
+	this.modifiedDate = date;
+    }
+
+    /**
+     * @param name
+     *            the name to set
+     */
+    public void setName(String name) {
+	this.name = name;
+    }
+
+    /**
+     * @param size
+     *            the size to set
+     */
+    public void setSize(long size) {
+	this.size = size;
+    }
+
+    /**
+     * Sets the archive status
+     * 
+     * @param state
+     */
+    public void setState(ArchiveState state) {
+	this.state = state;
+    }
+
+    /**
+     * Set the uploaded uri
+     * 
+     * @param uri
+     */
+    public void setUri(String uri) {
+	this.uri = uri;
     }
 }
