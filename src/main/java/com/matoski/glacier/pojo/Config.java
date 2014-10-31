@@ -22,47 +22,6 @@ import com.matoski.glacier.cli.Arguments;
 public class Config {
 
     /**
-     * Static instance
-     */
-    private static Config instance;
-
-    /**
-     * Constructor
-     */
-    private Config() {
-
-    }
-
-    /**
-     * Get the current instance
-     * 
-     * @return
-     */
-    public static Config getInstance() {
-
-	if (null != instance) {
-	    return instance;
-	}
-
-	return null;
-
-    }
-
-    /**
-     * Create the config from the JSON data
-     * 
-     * @param json
-     * 
-     * @return
-     * 
-     * @throws JsonSyntaxException
-     */
-    public static Config fromJSON(String json) throws JsonSyntaxException {
-	instance = new Gson().fromJson(json, Config.class);
-	return instance;
-    }
-
-    /**
      * Create the config file from the arguments
      * 
      * @param arguments
@@ -121,30 +80,38 @@ public class Config {
     }
 
     /**
-     * Merge all the arguments into the configuration file, we use this so we
-     * can actually override from the command line.
+     * Create the config from the JSON data
      * 
-     * @param arguments
+     * @param json
+     * 
+     * @return
+     * 
+     * @throws JsonSyntaxException
      */
-    public void merge(Arguments arguments) {
+    public static Config fromJSON(String json) throws JsonSyntaxException {
+	instance = new Gson().fromJson(json, Config.class);
+	return instance;
+    }
 
-	if (null != arguments.amazonKey) {
-	    this.setKey(arguments.amazonKey);
+    /**
+     * Get the current instance
+     * 
+     * @return
+     */
+    public static Config getInstance() {
+
+	if (null != instance) {
+	    return instance;
 	}
 
-	if (null != arguments.amazonSecretKey) {
-	    this.setSecretKey(arguments.amazonSecretKey);
-	}
-
-	if (null != arguments.amazonRegion) {
-	    this.setRegion(arguments.amazonRegion);
-	}
-
-	if (null != arguments.amazonVault) {
-	    this.setVault(arguments.amazonVault);
-	}
+	return null;
 
     }
+
+    /**
+     * Static instance
+     */
+    private static Config instance;
 
     /**
      * Amazon region to use
@@ -170,6 +137,38 @@ public class Config {
      * Directory used
      */
     private String directory;
+
+    /**
+     * Constructor
+     */
+    private Config() {
+
+    }
+
+    /**
+     * Creates a configuration file based on the data in the configuration
+     * 
+     * @param filename
+     * @throws IOException
+     */
+    public void createConfigurationFile(String filename) throws IOException {
+	File file = new File(filename);
+	FileWriter fileWriter = null;
+	BufferedWriter bufferedWriter = null;
+
+	if (!file.exists()) {
+	    file.createNewFile();
+	}
+
+	fileWriter = new FileWriter(file.getAbsoluteFile());
+	bufferedWriter = new BufferedWriter(fileWriter);
+	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create()
+		.toJson(this));
+
+	bufferedWriter.close();
+	fileWriter.close();
+
+    }
 
     /**
      * @return the directory
@@ -207,6 +206,32 @@ public class Config {
      */
     public String getVault() {
 	return vault;
+    }
+
+    /**
+     * Merge all the arguments into the configuration file, we use this so we
+     * can actually override from the command line.
+     * 
+     * @param arguments
+     */
+    public void merge(Arguments arguments) {
+
+	if (null != arguments.amazonKey) {
+	    this.setKey(arguments.amazonKey);
+	}
+
+	if (null != arguments.amazonSecretKey) {
+	    this.setSecretKey(arguments.amazonSecretKey);
+	}
+
+	if (null != arguments.amazonRegion) {
+	    this.setRegion(arguments.amazonRegion);
+	}
+
+	if (null != arguments.amazonVault) {
+	    this.setVault(arguments.amazonVault);
+	}
+
     }
 
     /**
@@ -284,31 +309,6 @@ public class Config {
 	return (null != this.getKey()) && (null != this.getSecretKey())
 		&& (vault ? (null != this.getVault()) : true)
 		&& (null != this.getRegion());
-
-    }
-
-    /**
-     * Creates a configuration file based on the data in the configuration
-     * 
-     * @param filename
-     * @throws IOException
-     */
-    public void createConfigurationFile(String filename) throws IOException {
-	File file = new File(filename);
-	FileWriter fileWriter = null;
-	BufferedWriter bufferedWriter = null;
-
-	if (!file.exists()) {
-	    file.createNewFile();
-	}
-
-	fileWriter = new FileWriter(file.getAbsoluteFile());
-	bufferedWriter = new BufferedWriter(fileWriter);
-	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create()
-		.toJson(this));
-
-	bufferedWriter.close();
-	fileWriter.close();
 
     }
 

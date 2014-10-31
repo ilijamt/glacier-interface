@@ -29,6 +29,12 @@ public class AmazonGlacierProgressBar {
 	init();
     }
 
+    public void init() {
+	this.progress = new StringBuilder(60);
+	this.setTotal(0);
+	this.setTransferred(0);
+    }
+
     /**
      * called whenever the progress bar needs to be updated. that is whenever
      * progress was made.
@@ -76,6 +82,24 @@ public class AmazonGlacierProgressBar {
     }
 
     /**
+     * Set total progress
+     * 
+     * @param total
+     */
+    public void setTotal(long total) {
+	this.total = total;
+    }
+
+    /**
+     * Set transfered progress
+     * 
+     * @param transfered
+     */
+    public void setTransferred(long transfered) {
+	this.transferred = transfered;
+    }
+
+    /**
      * Update the console
      * 
      * @param transferred
@@ -94,29 +118,5 @@ public class AmazonGlacierProgressBar {
 
 	process(done, total);
 
-    }
-
-    /**
-     * Set transfered progress
-     * 
-     * @param transfered
-     */
-    public void setTransferred(long transfered) {
-	this.transferred = transfered;
-    }
-
-    /**
-     * Set total progress
-     * 
-     * @param total
-     */
-    public void setTotal(long total) {
-	this.total = total;
-    }
-
-    public void init() {
-	this.progress = new StringBuilder(60);
-	this.setTotal(0);
-	this.setTransferred(0);
     }
 }

@@ -69,6 +69,18 @@ public class UploadPiece {
     }
 
     /**
+     * Is the piece completed?
+     * 
+     * Compares the {@link #status} to
+     * {@link UploadMultipartStatus#PIECE_COMPLETE}
+     * 
+     * @return
+     */
+    public boolean isFinished() {
+	return this.status == UploadMultipartStatus.PIECE_COMPLETE;
+    }
+
+    /**
      * @param calculatedChecksum
      */
     public UploadPiece setCalculatedChecksum(String calculatedChecksum) {
@@ -107,18 +119,6 @@ public class UploadPiece {
     public UploadPiece setUploadedChecksum(String uploadedChecksum) {
 	this.uploadedChecksum = uploadedChecksum;
 	return this;
-    }
-
-    /**
-     * Is the piece completed?
-     * 
-     * Compares the {@link #status} to
-     * {@link UploadMultipartStatus#PIECE_COMPLETE}
-     * 
-     * @return
-     */
-    public boolean isFinished() {
-	return this.status == UploadMultipartStatus.PIECE_COMPLETE;
     }
 
 }

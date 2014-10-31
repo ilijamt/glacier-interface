@@ -15,19 +15,19 @@ import com.matoski.glacier.pojo.Archive;
 public interface IGlacierInterfaceMetadata {
 
     /**
-     * Get the name of the archive, this goes into
-     * {@link Archive#setName(String)}
-     * 
-     * @return
-     */
-    public String giGetName();
-
-    /**
      * Get the modified date, this goes into
      * {@link Archive#setModifiedDate(Date)}
      * 
      * @return
      */
     public long giGetModifiedDate();
+
+    /**
+     * Get the name of the archive, this goes into
+     * {@link Archive#setName(String)}
+     * 
+     * @return
+     */
+    public String giGetName();
 
 }

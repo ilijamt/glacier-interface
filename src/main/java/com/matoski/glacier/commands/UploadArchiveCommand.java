@@ -142,7 +142,7 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 					validTreeHash));
 				continue;
 			    } else {
-				
+
 			    }
 			}
 			in.close();

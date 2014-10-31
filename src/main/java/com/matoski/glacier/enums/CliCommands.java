@@ -11,16 +11,6 @@ public enum CliCommands {
 	    "multipart-upload-info"), AbortMultipartUpload(
 	    "abort-multipart-upload");
 
-    private String propertyName;
-
-    CliCommands(String propName) {
-	this.propertyName = propName;
-    }
-
-    public String getPropertyName() {
-	return propertyName;
-    }
-
     public static CliCommands from(String x) {
 	for (CliCommands currentType : CliCommands.values()) {
 	    if (x.equals(currentType.getPropertyName())) {
@@ -29,6 +19,16 @@ public enum CliCommands {
 	}
 	// default command
 	return CliCommands.Help;
+    }
+
+    private String propertyName;
+
+    CliCommands(String propName) {
+	this.propertyName = propName;
+    }
+
+    public String getPropertyName() {
+	return propertyName;
     }
 
 }

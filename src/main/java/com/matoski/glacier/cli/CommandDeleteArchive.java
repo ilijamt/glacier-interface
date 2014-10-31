@@ -8,10 +8,6 @@ import com.matoski.glacier.enums.CliCommands;
 @Parameters(commandNames = "delete-archive", commandDescription = "Initiate a deletion of archive")
 public class CommandDeleteArchive extends GenericCommand {
 
-    public CommandDeleteArchive() {
-	super(CliCommands.DeleteArchive);
-    }
-
     @Parameter(names = "--vault", description = "The name of the vault from where the archive will be deleted, will be overwriten by --aws-vault if not specified")
     public String vaultName;
 
@@ -26,5 +22,9 @@ public class CommandDeleteArchive extends GenericCommand {
 
     @Parameter(names = "--name", description = "The name of the archive")
     public String name;
+
+    public CommandDeleteArchive() {
+	super(CliCommands.DeleteArchive);
+    }
 
 }

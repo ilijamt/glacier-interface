@@ -39,6 +39,16 @@ public abstract class AbstractCommand<T> extends AbstractEmptyCommand<T> {
     public static String SERVICE_NAME = "glacier";
 
     /**
+     * Service name
+     */
+    public static String SERVICE_SNS_NAME = "sns";
+
+    /**
+     * Service name
+     */
+    public static String SERVICE_SQS_NAME = "sqs";
+
+    /**
      * Constructor
      * 
      * @param config
@@ -59,7 +69,7 @@ public abstract class AbstractCommand<T> extends AbstractEmptyCommand<T> {
 	configuration.setConnectionTimeout(70 * 1000);
 	this.client = new AmazonGlacierClient(this.credentials, configuration);
 
-	if (!this.region.isServiceSupported(AbstractCommand.SERVICE_NAME)) {
+	if (!this.region.isServiceSupported(SERVICE_NAME)) {
 	    throw new RegionNotSupportedException();
 	}
 

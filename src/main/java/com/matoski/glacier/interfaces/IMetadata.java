@@ -11,13 +11,13 @@ import com.matoski.glacier.pojo.Archive;
 public interface IMetadata {
 
     /**
-     * Verify if this is the correct metadata to use
+     * Encode the data into the correct format for the metadata in question
      * 
-     * @param data
+     * @param archive
      * 
      * @return
      */
-    public boolean verify(String data);
+    public String encode(Archive archive);
 
     /**
      * Process the data
@@ -31,12 +31,12 @@ public interface IMetadata {
 	    throws InvalidMetadataException;
 
     /**
-     * Encode the data into the correct format for the metadata in question
+     * Verify if this is the correct metadata to use
      * 
-     * @param archive
+     * @param data
      * 
      * @return
      */
-    public String encode(Archive archive);
+    public boolean verify(String data);
 
 }

@@ -11,10 +11,6 @@ import com.matoski.glacier.enums.CliCommands;
 @Parameters(commandNames = "upload-archive", commandDescription = "Initiate an upload of archive")
 public class CommandUploadArchive extends GenericCommand {
 
-    public CommandUploadArchive() {
-	super(CliCommands.UploadArchive);
-    }
-
     @Parameter(names = "--vault", description = "The name of the vault from where the archive will be deleted, will be overwriten by --aws-vault if not specified")
     public String vaultName;
 
@@ -38,5 +34,9 @@ public class CommandUploadArchive extends GenericCommand {
 
     @Parameter(names = "--force-upload", description = "Force upload if it exist in the journal, but it will still keep the old archive, you will have to delete the old one on your own")
     public Boolean forceUpload = false;
+
+    public CommandUploadArchive() {
+	super(CliCommands.UploadArchive);
+    }
 
 }

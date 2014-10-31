@@ -40,6 +40,18 @@ public class MT_AWS_GLACIER_B extends GenericParser implements
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String encode(Archive archive) {
+	this.mtime = Long.toString(archive.getModifiedDate());
+	this.filename = archive.getName();
+	return IDENTIFIER
+		+ Base64.encodeBase64String(new Gson().toJson(this).getBytes());
+
+    }
+
+    /**
      * @return the filename
      */
     public String getFilename() {
@@ -121,18 +133,6 @@ public class MT_AWS_GLACIER_B extends GenericParser implements
     @Override
     public boolean verify(String data) {
 	return data.startsWith(IDENTIFIER);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String encode(Archive archive) {
-	this.mtime = Long.toString(archive.getModifiedDate());
-	this.filename = archive.getName();
-	return IDENTIFIER
-		+ Base64.encodeBase64String(new Gson().toJson(this).getBytes());
-
     }
 
 }

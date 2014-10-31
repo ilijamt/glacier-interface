@@ -32,9 +32,14 @@ import com.amazonaws.services.glacier.model.AbortMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.CompleteMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.CompleteMultipartUploadResult;
 import com.amazonaws.services.glacier.model.DescribeVaultOutput;
+import com.amazonaws.services.glacier.model.GetJobOutputRequest;
+import com.amazonaws.services.glacier.model.GetJobOutputResult;
 import com.amazonaws.services.glacier.model.GlacierJobDescription;
+import com.amazonaws.services.glacier.model.InitiateJobRequest;
+import com.amazonaws.services.glacier.model.InitiateJobResult;
 import com.amazonaws.services.glacier.model.InitiateMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.InitiateMultipartUploadResult;
+import com.amazonaws.services.glacier.model.JobParameters;
 import com.amazonaws.services.glacier.model.ListJobsRequest;
 import com.amazonaws.services.glacier.model.ListJobsResult;
 import com.amazonaws.services.glacier.model.ListMultipartUploadsRequest;
@@ -103,34 +108,34 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     }
 
     /**
-     * Upload an archive in a single request
+     * Cancel the multipart upload
      * 
-     * @param file
+     * @param uploadId
      * @param vaultName
-     * @param archiveDescription
+     * 
+     * @return
+     */
+    public Boolean CancelMultipartUpload(String uploadId, String vaultName) {
+	return this.CancelMultipartUpload(uploadId, vaultName, null, null);
+    }
+
+    /**
+     * Cancel the multipart upload
+     * 
+     * @param uploadId
+     * @param vaultName
      * @param listener
      * @param collector
      * 
      * @return
-     * 
-     * @throws FileNotFoundException
-     * @throws AmazonServiceException
-     * @throws AmazonClientException
      */
-    public UploadArchiveResult SingleUpload(File file, String vaultName,
-	    String archiveDescription, ProgressListener listener,
-	    RequestMetricCollector collector) throws FileNotFoundException,
-	    AmazonServiceException, AmazonClientException {
+    public Boolean CancelMultipartUpload(String uploadId, String vaultName,
+	    ProgressListener listener, RequestMetricCollector collector) {
 
-	InputStream stream = new FileInputStream(file);
-	String checksum = TreeHashGenerator.calculateTreeHash(file);
-	long fileSize = file.length();
+	Boolean valid = false;
 
-	UploadArchiveRequest request = new UploadArchiveRequest()
-		.withVaultName(vaultName)
-		.withArchiveDescription(archiveDescription)
-		.withChecksum(checksum).withBody(stream)
-		.withContentLength(fileSize);
+	AbortMultipartUploadRequest request = new AbortMultipartUploadRequest()
+		.withUploadId(uploadId).withVaultName(vaultName);
 
 	if (null != listener) {
 	    request.withGeneralProgressListener(listener);
@@ -140,7 +145,111 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	    request.withRequestMetricCollector(collector);
 	}
 
-	return this.client.uploadArchive(request);
+	try {
+	    this.client.abortMultipartUpload(request);
+	    valid = true;
+	} catch (AmazonServiceException e) {
+	    valid = false;
+	}
+
+	return valid;
+
+    }
+
+    /**
+     * Complete a multipart upload
+     * 
+     * @param fileSize
+     * @param uploadId
+     * @param vaultName
+     * @param checksum
+     * 
+     * @return
+     * 
+     * @throws AmazonClientException
+     * @throws AmazonServiceException
+     */
+    public CompleteMultipartUploadResult CompleteMultipartUpload(long fileSize,
+	    String uploadId, String vaultName, String checksum)
+	    throws AmazonClientException, AmazonServiceException {
+	return this.CompleteMultipartUpload(fileSize, uploadId, vaultName,
+		checksum, null, null);
+    }
+
+    /**
+     * Complete a multipart upload
+     * 
+     * @param fileSize
+     * @param uploadId
+     * @param vaultName
+     * @param checksum
+     * @param listener
+     * 
+     * @return
+     * 
+     * @throws AmazonClientException
+     * @throws AmazonServiceException
+     */
+    public CompleteMultipartUploadResult CompleteMultipartUpload(long fileSize,
+	    String uploadId, String vaultName, String checksum,
+	    ProgressListener listener, RequestMetricCollector collector)
+	    throws AmazonClientException, AmazonServiceException {
+
+	CompleteMultipartUploadRequest request = new CompleteMultipartUploadRequest()
+		.withVaultName(vaultName).withUploadId(uploadId)
+		.withChecksum(checksum)
+		.withArchiveSize(String.valueOf(fileSize));
+
+	if (null != listener) {
+	    request.withGeneralProgressListener(listener);
+	}
+
+	if (null != collector) {
+	    request.withRequestMetricCollector(collector);
+	}
+
+	return this.client.completeMultipartUpload(request);
+
+    }
+
+    /**
+     * Get a list of the parts in the specified multipart upload id
+     * 
+     * @param vaultName
+     * @param uploadId
+     * @return
+     */
+    public ListPartsResult GetMultipartUploadInfo(String vaultName,
+	    String uploadId) {
+
+	String marker = null;
+	ListPartsResult response = new ListPartsResult();
+
+	do {
+
+	    ListPartsRequest request = new ListPartsRequest()
+		    .withVaultName(vaultName).withUploadId(uploadId)
+		    .withMarker(marker);
+
+	    ListPartsResult result = this.client.listParts(request);
+
+	    if (null == marker) {
+		response.setArchiveDescription(result.getArchiveDescription());
+		response.setCreationDate(result.getCreationDate());
+		response.setMultipartUploadId(result.getMultipartUploadId());
+		response.setVaultARN(result.getVaultARN());
+		response.setPartSizeInBytes(result.getPartSizeInBytes());
+		response.setParts(result.getParts());
+	    } else {
+		response.getParts().addAll(result.getParts());
+	    }
+
+	    marker = result.getMarker();
+
+	} while (marker != null);
+
+	return response;
+
     }
 
     /**
@@ -198,48 +307,31 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     }
 
     /**
-     * Complete a multipart upload
+     * Download the inventory
      * 
-     * @param fileSize
-     * @param uploadId
      * @param vaultName
-     * @param checksum
+     * @param jobId
      * 
      * @return
-     * 
-     * @throws AmazonClientException
-     * @throws AmazonServiceException
      */
-    public CompleteMultipartUploadResult CompleteMultipartUpload(long fileSize,
-	    String uploadId, String vaultName, String checksum)
-	    throws AmazonClientException, AmazonServiceException {
-	return this.CompleteMultipartUpload(fileSize, uploadId, vaultName,
-		checksum, null, null);
+    public GetJobOutputResult InventoryDownload(String vaultName, String jobId) {
+	return InventoryDownload(vaultName, jobId, null, null);
     }
 
     /**
-     * Complete a multipart upload
+     * Download the inventory
      * 
-     * @param fileSize
-     * @param uploadId
      * @param vaultName
-     * @param checksum
+     * @param jobId
      * @param listener
-     * 
+     * @param collector
      * @return
-     * 
-     * @throws AmazonClientException
-     * @throws AmazonServiceException
      */
-    public CompleteMultipartUploadResult CompleteMultipartUpload(long fileSize,
-	    String uploadId, String vaultName, String checksum,
-	    ProgressListener listener, RequestMetricCollector collector)
-	    throws AmazonClientException, AmazonServiceException {
+    public GetJobOutputResult InventoryDownload(String vaultName, String jobId,
+	    ProgressListener listener, RequestMetricCollector collector) {
 
-	CompleteMultipartUploadRequest request = new CompleteMultipartUploadRequest()
-		.withVaultName(vaultName).withUploadId(uploadId)
-		.withChecksum(checksum)
-		.withArchiveSize(String.valueOf(fileSize));
+	GetJobOutputRequest request = new GetJobOutputRequest().withVaultName(
+		vaultName).withJobId(jobId);
 
 	if (null != listener) {
 	    request.withGeneralProgressListener(listener);
@@ -249,8 +341,181 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	    request.withRequestMetricCollector(collector);
 	}
 
-	return this.client.completeMultipartUpload(request);
+	return client.getJobOutput(request);
 
+    }
+
+    /**
+     * Initiate an inventory retrieval job
+     * 
+     * @param vaultName
+     * @return
+     */
+    public InitiateJobResult InventoryRetrieval(String vaultName) {
+	return InventoryRetrieval(vaultName, null, null, null);
+    }
+
+    /**
+     * Initiate an inventory retrieval job with an SNS topic
+     * 
+     * @param vaultName
+     * @param topicSNS
+     * @param listener
+     * @param collector
+     * 
+     * @return
+     */
+    public InitiateJobResult InventoryRetrieval(String vaultName,
+	    String topicSNS, ProgressListener listener,
+	    RequestMetricCollector collector) {
+
+	JobParameters jobParameters = new JobParameters()
+		.withType("inventory-retrieval");
+
+	if (null != topicSNS) {
+	    jobParameters.withSNSTopic(topicSNS);
+	}
+
+	InitiateJobRequest request = new InitiateJobRequest().withVaultName(
+		vaultName).withJobParameters(jobParameters);
+
+	if (null != listener) {
+	    request.withGeneralProgressListener(listener);
+	}
+
+	if (null != collector) {
+	    request.withRequestMetricCollector(collector);
+	}
+
+	InitiateJobResult response = this.client.initiateJob(request);
+
+	return response;
+
+    }
+
+    /**
+     * List all multipart uploads for a vault
+     * 
+     * @param vaultName
+     * @return
+     */
+    public List<UploadListElement> ListMultipartUploads(String vaultName) {
+
+	String marker = null;
+	List<UploadListElement> list = new ArrayList<UploadListElement>();
+
+	do {
+
+	    ListMultipartUploadsRequest request = new ListMultipartUploadsRequest()
+		    .withVaultName(vaultName).withUploadIdMarker(marker);
+
+	    ListMultipartUploadsResult result = this.client
+		    .listMultipartUploads(request);
+
+	    list.addAll(result.getUploadsList());
+
+	    marker = result.getMarker();
+
+	} while (marker != null);
+
+	return list;
+
+    }
+
+    /**
+     * Get's a list of vault jobs
+     * 
+     * @param vaultName
+     * @return
+     */
+    public List<GlacierJobDescription> ListVaultJobs(String vaultName) {
+
+	String marker = null;
+	List<GlacierJobDescription> list = new ArrayList<GlacierJobDescription>();
+
+	do {
+
+	    ListJobsRequest request = new ListJobsRequest().withVaultName(
+		    vaultName).withMarker(marker);
+
+	    ListJobsResult result = this.client.listJobs(request);
+
+	    list.addAll(result.getJobList());
+
+	    marker = result.getMarker();
+
+	} while (marker != null);
+
+	return list;
+
+    }
+
+    /**
+     * Get a list of vaults available in the region
+     * 
+     * @return
+     */
+    public List<DescribeVaultOutput> ListVaults() {
+
+	String marker = null;
+	List<DescribeVaultOutput> list = new ArrayList<DescribeVaultOutput>();
+
+	do {
+
+	    ListVaultsRequest request = new ListVaultsRequest()
+		    .withMarker(marker);
+
+	    ListVaultsResult listVaultsResult = client.listVaults(request);
+
+	    list.addAll(listVaultsResult.getVaultList());
+
+	    marker = listVaultsResult.getMarker();
+
+	} while (marker != null);
+
+	return list;
+
+    }
+
+    /**
+     * Upload an archive in a single request
+     * 
+     * @param file
+     * @param vaultName
+     * @param archiveDescription
+     * @param listener
+     * @param collector
+     * 
+     * @return
+     * 
+     * @throws FileNotFoundException
+     * @throws AmazonServiceException
+     * @throws AmazonClientException
+     */
+    public UploadArchiveResult SingleUpload(File file, String vaultName,
+	    String archiveDescription, ProgressListener listener,
+	    RequestMetricCollector collector) throws FileNotFoundException,
+	    AmazonServiceException, AmazonClientException {
+
+	InputStream stream = new FileInputStream(file);
+	String checksum = TreeHashGenerator.calculateTreeHash(file);
+	long fileSize = file.length();
+
+	UploadArchiveRequest request = new UploadArchiveRequest()
+		.withVaultName(vaultName)
+		.withArchiveDescription(archiveDescription)
+		.withChecksum(checksum).withBody(stream)
+		.withContentLength(fileSize);
+
+	if (null != listener) {
+	    request.withGeneralProgressListener(listener);
+	}
+
+	if (null != collector) {
+	    request.withRequestMetricCollector(collector);
+	}
+
+	return this.client.uploadArchive(request);
     }
 
     public Archive UploadMultipartFile(File file, int threads, int retry,
@@ -554,178 +819,5 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	}
 
 	return ret;
-    }
-
-    /**
-     * Cancel the multipart upload
-     * 
-     * @param uploadId
-     * @param vaultName
-     * 
-     * @return
-     */
-    public Boolean CancelMultipartUpload(String uploadId, String vaultName) {
-	return this.CancelMultipartUpload(uploadId, vaultName, null, null);
-    }
-
-    /**
-     * Cancel the multipart upload
-     * 
-     * @param uploadId
-     * @param vaultName
-     * @param listener
-     * @param collector
-     * 
-     * @return
-     */
-    public Boolean CancelMultipartUpload(String uploadId, String vaultName,
-	    ProgressListener listener, RequestMetricCollector collector) {
-
-	Boolean valid = false;
-
-	AbortMultipartUploadRequest request = new AbortMultipartUploadRequest()
-		.withUploadId(uploadId).withVaultName(vaultName);
-
-	if (null != listener) {
-	    request.withGeneralProgressListener(listener);
-	}
-
-	if (null != collector) {
-	    request.withRequestMetricCollector(collector);
-	}
-
-	try {
-	    this.client.abortMultipartUpload(request);
-	    valid = true;
-	} catch (AmazonServiceException e) {
-	    valid = false;
-	}
-
-	return valid;
-
-    }
-
-    /**
-     * List all multipart uploads for a vault
-     * 
-     * @param vaultName
-     * @return
-     */
-    public List<UploadListElement> ListMultipartUploads(String vaultName) {
-
-	String marker = null;
-	List<UploadListElement> list = new ArrayList<UploadListElement>();
-
-	do {
-
-	    ListMultipartUploadsRequest request = new ListMultipartUploadsRequest()
-		    .withVaultName(vaultName).withUploadIdMarker(marker);
-
-	    ListMultipartUploadsResult result = this.client
-		    .listMultipartUploads(request);
-
-	    list.addAll(result.getUploadsList());
-
-	    marker = result.getMarker();
-
-	} while (marker != null);
-
-	return list;
-
-    }
-
-    /**
-     * Get a list of the parts in the specified multipart upload id
-     * 
-     * @param vaultName
-     * @param uploadId
-     * @return
-     */
-    public ListPartsResult GetMultipartUploadInfo(String vaultName,
-	    String uploadId) {
-
-	String marker = null;
-	ListPartsResult response = new ListPartsResult();
-
-	do {
-
-	    ListPartsRequest request = new ListPartsRequest()
-		    .withVaultName(vaultName).withUploadId(uploadId)
-		    .withMarker(marker);
-
-	    ListPartsResult result = this.client.listParts(request);
-
-	    if (null == marker) {
-		response.setArchiveDescription(result.getArchiveDescription());
-		response.setCreationDate(result.getCreationDate());
-		response.setMultipartUploadId(result.getMultipartUploadId());
-		response.setVaultARN(result.getVaultARN());
-		response.setPartSizeInBytes(result.getPartSizeInBytes());
-		response.setParts(result.getParts());
-	    } else {
-		response.getParts().addAll(result.getParts());
-	    }
-
-	    marker = result.getMarker();
-
-	} while (marker != null);
-
-	return response;
-
-    }
-
-    /**
-     * Get a list of vaults available in the region
-     * 
-     * @return
-     */
-    public List<DescribeVaultOutput> ListVaults() {
-
-	String marker = null;
-	List<DescribeVaultOutput> list = new ArrayList<DescribeVaultOutput>();
-
-	do {
-
-	    ListVaultsRequest request = new ListVaultsRequest()
-		    .withMarker(marker);
-
-	    ListVaultsResult listVaultsResult = client.listVaults(request);
-
-	    list.addAll(listVaultsResult.getVaultList());
-
-	    marker = listVaultsResult.getMarker();
-
-	} while (marker != null);
-
-	return list;
-
-    }
-
-    /**
-     * Get's a list of vault jobs
-     * 
-     * @param vaultName
-     * @return
-     */
-    public List<GlacierJobDescription> ListVaultJobs(String vaultName) {
-
-	String marker = null;
-	List<GlacierJobDescription> list = new ArrayList<GlacierJobDescription>();
-
-	do {
-
-	    ListJobsRequest request = new ListJobsRequest().withVaultName(
-		    vaultName).withMarker(marker);
-
-	    ListJobsResult result = this.client.listJobs(request);
-
-	    list.addAll(result.getJobList());
-
-	    marker = result.getMarker();
-
-	} while (marker != null);
-
-	return list;
-
     }
 }

@@ -17,22 +17,6 @@ import com.matoski.glacier.pojo.Archive;
 public class Parser {
 
     /**
-     * Parse
-     * 
-     * @param metadata
-     * @param data
-     * 
-     * @return
-     * 
-     * @throws InvalidMetadataException
-     * @throws NullPointerException
-     */
-    public static IGlacierInterfaceMetadata parse(Metadata metadata, String data)
-	    throws InvalidMetadataException, NullPointerException {
-	return getParser(metadata).parse(data);
-    }
-
-    /**
      * Encode
      * 
      * @param metadata
@@ -61,6 +45,22 @@ public class Parser {
 	}
 
 	return null;
+    }
+
+    /**
+     * Parse
+     * 
+     * @param metadata
+     * @param data
+     * 
+     * @return
+     * 
+     * @throws InvalidMetadataException
+     * @throws NullPointerException
+     */
+    public static IGlacierInterfaceMetadata parse(Metadata metadata, String data)
+	    throws InvalidMetadataException, NullPointerException {
+	return getParser(metadata).parse(data);
     }
 
 }

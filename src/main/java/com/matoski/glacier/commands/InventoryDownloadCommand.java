@@ -1,15 +1,11 @@
 package com.matoski.glacier.commands;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
-import com.amazonaws.services.glacier.model.GetJobOutputRequest;
 import com.amazonaws.services.glacier.model.GetJobOutputResult;
 import com.amazonaws.services.glacier.model.GlacierJobDescription;
-import com.amazonaws.services.glacier.model.ListJobsRequest;
-import com.amazonaws.services.glacier.model.ListJobsResult;
 import com.google.gson.Gson;
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandInventoryDownload;
@@ -20,6 +16,7 @@ import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.pojo.GlacierInventory;
 import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.FileWriteUtils;
+import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
 public class InventoryDownloadCommand extends
 	AbstractCommand<CommandInventoryDownload> {
@@ -49,19 +46,17 @@ public class InventoryDownloadCommand extends
 
 	System.out.println("START: inventory-download\n");
 
+	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(
+		credentials, client, region);
+
 	String jobId = null;
 
 	if (null == command.id || command.id.isEmpty()) {
 
-	    // get a list of jobs and get the last successful one
-	    ListJobsRequest request = new ListJobsRequest()
-		    .withVaultName(command.vaultName);
-	    ListJobsResult result = this.client.listJobs(request);
-
-	    List<GlacierJobDescription> jobs = result.getJobList();
 	    GlacierJobDescription job = null;
 
-	    for (GlacierJobDescription j : jobs) {
+	    for (GlacierJobDescription j : upload
+		    .ListVaultJobs(command.vaultName)) {
 
 		if (j.isCompleted()
 			&& j.getStatusCode().equalsIgnoreCase("Succeeded")) {
@@ -83,11 +78,8 @@ public class InventoryDownloadCommand extends
 
 	} else {
 
-	    GetJobOutputRequest jobOutputRequest = new GetJobOutputRequest()
-		    .withVaultName(command.vaultName).withJobId(jobId);
-
-	    GetJobOutputResult jobOutputResult = client
-		    .getJobOutput(jobOutputRequest);
+	    GetJobOutputResult result = upload.InventoryDownload(
+		    command.vaultName, jobId);
 
 	    System.out.println("Inventory downloaded.\n");
 
@@ -99,14 +91,14 @@ public class InventoryDownloadCommand extends
 	    GlacierInventory inventory = null;
 
 	    try {
-		String json = IOUtils.toString(jobOutputResult.getBody());
+		String json = IOUtils.toString(result.getBody());
 		inventory = new Gson().fromJson(json, GlacierInventory.class);
 
 		if (command.raw) {
 		    FileWriteUtils.toJson(command.journal, inventory);
 		} else {
-		    State journal = State.parse(inventory,
-			    command.vaultName, metadata);
+		    State journal = State.parse(inventory, command.vaultName,
+			    metadata);
 		    journal.setFile(command.journal);
 		    journal.save();
 		}

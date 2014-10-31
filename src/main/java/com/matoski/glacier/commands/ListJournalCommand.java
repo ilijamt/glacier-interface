@@ -14,6 +14,8 @@ import com.matoski.glacier.pojo.journal.State;
 public class ListJournalCommand extends
 	AbstractEmptyCommand<CommandListJournal> {
 
+    private State journal;
+
     public ListJournalCommand(Config config, CommandListJournal command)
 	    throws IOException {
 	super(config, command);
@@ -23,8 +25,6 @@ public class ListJournalCommand extends
 	}
 	this.journal = State.load(command.journal);
     }
-
-    private State journal;
 
     @Override
     public void run() {

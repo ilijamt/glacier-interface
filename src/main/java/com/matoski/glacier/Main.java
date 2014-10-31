@@ -42,8 +42,6 @@ import com.matoski.glacier.pojo.Config;
 
 public class Main {
 
-    final private static HashMap<Integer, Object> commands = new HashMap<Integer, Object>();
-
     public static void init() {
 
 	commands.put(CliCommands.Help.ordinal(), new CommandHelp());
@@ -293,5 +291,7 @@ public class Main {
 	System.out.println("Finished");
 
     }
+
+    final private static HashMap<Integer, Object> commands = new HashMap<Integer, Object>();
 
 }

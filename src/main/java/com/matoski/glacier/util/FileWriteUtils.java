@@ -9,10 +9,6 @@ import com.google.gson.GsonBuilder;
 
 public class FileWriteUtils {
 
-    public static void toJson(String file, Object obj) throws IOException {
-	toJson(new File(file), obj);
-    }
-
     public static void toJson(File file, Object obj) throws IOException {
 
 	if (!file.exists()) {
@@ -27,6 +23,10 @@ public class FileWriteUtils {
 	bufferedWriter.close();
 	fileWriter.close();
 
+    }
+
+    public static void toJson(String file, Object obj) throws IOException {
+	toJson(new File(file), obj);
     }
 
 }

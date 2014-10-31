@@ -291,6 +291,15 @@ public class State {
     }
 
     /**
+     * Gets the journal
+     * 
+     * @return
+     */
+    public FileJournal getJournal() {
+	return journal;
+    }
+
+    /**
      * @return the metadata
      */
     public Metadata getMetadata() {
@@ -443,14 +452,5 @@ public class State {
      */
     public void setName(String name) {
 	journal.setName(name);
-    }
-
-    /**
-     * Gets the journal
-     * 
-     * @return
-     */
-    public FileJournal getJournal() {
-	return journal;
     }
 }

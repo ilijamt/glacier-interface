@@ -83,41 +83,6 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
      * @param accessKey
      * @param secretKey
      * @param region
-     * @param listener
-     * @param collector
-     * 
-     * @throws RegionNotSupportedException
-     */
-    public ThreadAmazonGlacierUploadUtil(int retryFailedUploads, File file,
-	    int pieces, int part, int partSize, String vaultName,
-	    String uploadId, String accessKey, String secretKey, String region,
-	    ProgressListener listener, RequestMetricCollector collector)
-	    throws RegionNotSupportedException {
-	super(accessKey, secretKey, region);
-	this.requestRetryFailedUploads = retryFailedUploads;
-	this.requestFile = file;
-	this.requestPieces = pieces;
-	this.requestPart = part;
-	this.requestPartSize = partSize;
-	this.requestVaultName = vaultName;
-	this.requestUploadId = uploadId;
-	this.requestListener = listener;
-	this.requestCollector = collector;
-    }
-
-    /**
-     * Constructor
-     * 
-     * @param retryFailedUploads
-     * @param file
-     * @param pieces
-     * @param part
-     * @param partSize
-     * @param vaultName
-     * @param uploadId
-     * @param accessKey
-     * @param secretKey
-     * @param region
      * 
      * @throws RegionNotSupportedException
      */
@@ -138,27 +103,38 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
     }
 
     /**
-     * Upload
+     * Constructor
      * 
-     * @param time
+     * @param retryFailedUploads
+     * @param file
+     * @param pieces
+     * @param part
+     * @param partSize
+     * @param vaultName
+     * @param uploadId
+     * @param accessKey
+     * @param secretKey
+     * @param region
+     * @param listener
+     * @param collector
      * 
-     * @throws AmazonServiceException
-     * @throws NoSuchAlgorithmException
-     * @throws AmazonClientException
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws RequestTimeoutException
-     * 
-     * @return
+     * @throws RegionNotSupportedException
      */
-    private UploadPiece upload(int time) throws AmazonServiceException,
-	    NoSuchAlgorithmException, AmazonClientException,
-	    FileNotFoundException, IOException, RequestTimeoutException {
-
-	return this.UploadMultipartPiece(requestFile, requestPieces,
-		requestPart, requestPartSize, requestVaultName,
-		requestUploadId, requestListener, requestCollector);
-
+    public ThreadAmazonGlacierUploadUtil(int retryFailedUploads, File file,
+	    int pieces, int part, int partSize, String vaultName,
+	    String uploadId, String accessKey, String secretKey, String region,
+	    ProgressListener listener, RequestMetricCollector collector)
+	    throws RegionNotSupportedException {
+	super(accessKey, secretKey, region);
+	this.requestRetryFailedUploads = retryFailedUploads;
+	this.requestFile = file;
+	this.requestPieces = pieces;
+	this.requestPart = part;
+	this.requestPartSize = partSize;
+	this.requestVaultName = vaultName;
+	this.requestUploadId = uploadId;
+	this.requestListener = listener;
+	this.requestCollector = collector;
     }
 
     /**
@@ -200,6 +176,30 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil
 	}
 
 	return piece;
+    }
+
+    /**
+     * Upload
+     * 
+     * @param time
+     * 
+     * @throws AmazonServiceException
+     * @throws NoSuchAlgorithmException
+     * @throws AmazonClientException
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws RequestTimeoutException
+     * 
+     * @return
+     */
+    private UploadPiece upload(int time) throws AmazonServiceException,
+	    NoSuchAlgorithmException, AmazonClientException,
+	    FileNotFoundException, IOException, RequestTimeoutException {
+
+	return this.UploadMultipartPiece(requestFile, requestPieces,
+		requestPart, requestPartSize, requestVaultName,
+		requestUploadId, requestListener, requestCollector);
+
     }
 
 }

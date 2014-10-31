@@ -6,6 +6,22 @@ import com.matoski.glacier.pojo.UploadPiece;
 public interface IUploadPieceHandler {
 
     /**
+     * We have finished uploading the piece
+     * 
+     * @param part
+     * @param piece
+     */
+    void end(int part, UploadPiece piece);
+
+    /**
+     * We have an exception, this will show use which exception happend and to
+     * decide if we need to do something, or just cancel the thread
+     * 
+     * @param e
+     */
+    void exception(Exception e);
+
+    /**
      * The thread has started, this happens when {@link Runnable#run()} is
      * executed
      */
@@ -18,20 +34,4 @@ public interface IUploadPieceHandler {
      * @param time
      */
     void upload(int time);
-
-    /**
-     * We have an exception, this will show use which exception happend and to
-     * decide if we need to do something, or just cancel the thread
-     * 
-     * @param e
-     */
-    void exception(Exception e);
-
-    /**
-     * We have finished uploading the piece
-     * 
-     * @param part
-     * @param piece
-     */
-    void end(int part, UploadPiece piece);
 }
