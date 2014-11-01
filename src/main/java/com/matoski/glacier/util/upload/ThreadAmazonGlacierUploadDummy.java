@@ -10,7 +10,7 @@ import com.matoski.glacier.util.ThreadAmazonGlacierDummy;
  * 
  * @author ilijamt
  */
-public class ThreadAmazonGlacierUploadDummy extends ThreadAmazonGlacierDummy {
+public class ThreadAmazonGlacierUploadDummy extends ThreadAmazonGlacierDummy<UploadPiece> {
 
     public ThreadAmazonGlacierUploadDummy(int pieces, File file, UploadPiece piece) {
 	super(pieces, file, piece);

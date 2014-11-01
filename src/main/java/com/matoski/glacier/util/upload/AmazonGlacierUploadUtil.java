@@ -7,10 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -31,33 +29,11 @@ import com.amazonaws.services.glacier.TreeHashGenerator;
 import com.amazonaws.services.glacier.model.AbortMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.CompleteMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.CompleteMultipartUploadResult;
-import com.amazonaws.services.glacier.model.CreateVaultRequest;
-import com.amazonaws.services.glacier.model.CreateVaultResult;
-import com.amazonaws.services.glacier.model.DeleteArchiveRequest;
-import com.amazonaws.services.glacier.model.DeleteVaultRequest;
-import com.amazonaws.services.glacier.model.DescribeVaultOutput;
-import com.amazonaws.services.glacier.model.DescribeVaultRequest;
-import com.amazonaws.services.glacier.model.DescribeVaultResult;
-import com.amazonaws.services.glacier.model.GetJobOutputRequest;
-import com.amazonaws.services.glacier.model.GetJobOutputResult;
-import com.amazonaws.services.glacier.model.GlacierJobDescription;
-import com.amazonaws.services.glacier.model.InitiateJobRequest;
-import com.amazonaws.services.glacier.model.InitiateJobResult;
 import com.amazonaws.services.glacier.model.InitiateMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.InitiateMultipartUploadResult;
-import com.amazonaws.services.glacier.model.JobParameters;
-import com.amazonaws.services.glacier.model.ListJobsRequest;
-import com.amazonaws.services.glacier.model.ListJobsResult;
-import com.amazonaws.services.glacier.model.ListMultipartUploadsRequest;
-import com.amazonaws.services.glacier.model.ListMultipartUploadsResult;
-import com.amazonaws.services.glacier.model.ListPartsRequest;
-import com.amazonaws.services.glacier.model.ListPartsResult;
-import com.amazonaws.services.glacier.model.ListVaultsRequest;
-import com.amazonaws.services.glacier.model.ListVaultsResult;
 import com.amazonaws.services.glacier.model.RequestTimeoutException;
 import com.amazonaws.services.glacier.model.UploadArchiveRequest;
 import com.amazonaws.services.glacier.model.UploadArchiveResult;
-import com.amazonaws.services.glacier.model.UploadListElement;
 import com.amazonaws.services.glacier.model.UploadMultipartPartRequest;
 import com.amazonaws.services.glacier.model.UploadMultipartPartResult;
 import com.matoski.glacier.Constants;
@@ -85,11 +61,6 @@ import com.matoski.glacier.util.Parser;
  * @author ilijamt
  */
 public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
-
-    /**
-     * Generic string format
-     */
-    final public static String FORMAT = "[#%1$05d/#%2$05d] %3$-15s | (%4$s) %5$s";
 
     /**
      * Constructor
@@ -213,77 +184,6 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     }
 
     /**
-     * Delete an archive
-     * 
-     * @param vaultName
-     * @param archiveId
-     */
-    public void DeleteArchive(String vaultName, String archiveId) {
-	DeleteArchive(vaultName, archiveId, null, null);
-    }
-
-    /**
-     * Delete an archive
-     * 
-     * @param vaultName
-     * @param archiveId
-     * @param listener
-     * @param collector
-     */
-    public void DeleteArchive(String vaultName, String archiveId, ProgressListener listener, RequestMetricCollector collector) {
-
-	DeleteArchiveRequest request = new DeleteArchiveRequest().withVaultName(vaultName).withArchiveId(archiveId);
-
-	if (null != listener) {
-	    request.withGeneralProgressListener(listener);
-	}
-
-	if (null != collector) {
-	    request.withRequestMetricCollector(collector);
-	}
-
-	client.deleteArchive(request);
-
-    }
-
-    /**
-     * Get a list of the parts in the specified multipart upload id
-     * 
-     * @param vaultName
-     * @param uploadId
-     * @return
-     */
-    public ListPartsResult GetMultipartUploadInfo(String vaultName, String uploadId) {
-
-	String marker = null;
-	ListPartsResult response = new ListPartsResult();
-
-	do {
-
-	    ListPartsRequest request = new ListPartsRequest().withVaultName(vaultName).withUploadId(uploadId).withMarker(marker);
-
-	    ListPartsResult result = this.client.listParts(request);
-
-	    if (null == marker) {
-		response.setArchiveDescription(result.getArchiveDescription());
-		response.setCreationDate(result.getCreationDate());
-		response.setMultipartUploadId(result.getMultipartUploadId());
-		response.setVaultARN(result.getVaultARN());
-		response.setPartSizeInBytes(result.getPartSizeInBytes());
-		response.setParts(result.getParts());
-	    } else {
-		response.getParts().addAll(result.getParts());
-	    }
-
-	    marker = result.getMarker();
-
-	} while (marker != null);
-
-	return response;
-
-    }
-
-    /**
      * Initiate a multipart upload
      * 
      * @param vaultName
@@ -332,168 +232,6 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     }
 
     /**
-     * Download the inventory
-     * 
-     * @param vaultName
-     * @param jobId
-     * 
-     * @return
-     */
-    public GetJobOutputResult InventoryDownload(String vaultName, String jobId) {
-	return InventoryDownload(vaultName, jobId, null, null);
-    }
-
-    /**
-     * Download the inventory
-     * 
-     * @param vaultName
-     * @param jobId
-     * @param listener
-     * @param collector
-     * @return
-     */
-    public GetJobOutputResult InventoryDownload(String vaultName, String jobId, ProgressListener listener, RequestMetricCollector collector) {
-
-	GetJobOutputRequest request = new GetJobOutputRequest().withVaultName(vaultName).withJobId(jobId);
-
-	if (null != listener) {
-	    request.withGeneralProgressListener(listener);
-	}
-
-	if (null != collector) {
-	    request.withRequestMetricCollector(collector);
-	}
-
-	return client.getJobOutput(request);
-
-    }
-
-    /**
-     * Initiate an inventory retrieval job
-     * 
-     * @param vaultName
-     * @return
-     */
-    public InitiateJobResult InventoryRetrieval(String vaultName) {
-	return InventoryRetrieval(vaultName, null, null, null);
-    }
-
-    /**
-     * Initiate an inventory retrieval job with an SNS topic
-     * 
-     * @param vaultName
-     * @param topicSNS
-     * @param listener
-     * @param collector
-     * 
-     * @return
-     */
-    public InitiateJobResult InventoryRetrieval(String vaultName, String topicSNS, ProgressListener listener,
-	    RequestMetricCollector collector) {
-
-	JobParameters jobParameters = new JobParameters().withType("inventory-retrieval");
-
-	if (null != topicSNS) {
-	    jobParameters.withSNSTopic(topicSNS);
-	}
-
-	InitiateJobRequest request = new InitiateJobRequest().withVaultName(vaultName).withJobParameters(jobParameters);
-
-	if (null != listener) {
-	    request.withGeneralProgressListener(listener);
-	}
-
-	if (null != collector) {
-	    request.withRequestMetricCollector(collector);
-	}
-
-	InitiateJobResult response = this.client.initiateJob(request);
-
-	return response;
-
-    }
-
-    /**
-     * List all multipart uploads for a vault
-     * 
-     * @param vaultName
-     * @return
-     */
-    public List<UploadListElement> ListMultipartUploads(String vaultName) {
-
-	String marker = null;
-	List<UploadListElement> list = new ArrayList<UploadListElement>();
-
-	do {
-
-	    ListMultipartUploadsRequest request = new ListMultipartUploadsRequest().withVaultName(vaultName).withUploadIdMarker(marker);
-
-	    ListMultipartUploadsResult result = this.client.listMultipartUploads(request);
-
-	    list.addAll(result.getUploadsList());
-
-	    marker = result.getMarker();
-
-	} while (marker != null);
-
-	return list;
-
-    }
-
-    /**
-     * Get's a list of vault jobs
-     * 
-     * @param vaultName
-     * @return
-     */
-    public List<GlacierJobDescription> ListVaultJobs(String vaultName) {
-
-	String marker = null;
-	List<GlacierJobDescription> list = new ArrayList<GlacierJobDescription>();
-
-	do {
-
-	    ListJobsRequest request = new ListJobsRequest().withVaultName(vaultName).withMarker(marker);
-
-	    ListJobsResult result = this.client.listJobs(request);
-
-	    list.addAll(result.getJobList());
-
-	    marker = result.getMarker();
-
-	} while (marker != null);
-
-	return list;
-
-    }
-
-    /**
-     * Get a list of vaults available in the region
-     * 
-     * @return
-     */
-    public List<DescribeVaultOutput> ListVaults() {
-
-	String marker = null;
-	List<DescribeVaultOutput> list = new ArrayList<DescribeVaultOutput>();
-
-	do {
-
-	    ListVaultsRequest request = new ListVaultsRequest().withMarker(marker);
-
-	    ListVaultsResult listVaultsResult = client.listVaults(request);
-
-	    list.addAll(listVaultsResult.getVaultList());
-
-	    marker = listVaultsResult.getMarker();
-
-	} while (marker != null);
-
-	return list;
-
-    }
-
-    /**
      * Upload an archive in a single request
      * 
      * @param file
@@ -527,6 +265,79 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	}
 
 	return this.client.uploadArchive(request);
+    }
+
+    /**
+     * Uploads the archive to Glacier
+     * 
+     * @param journal
+     * @param vaultName
+     * @param fileName
+     * @param forceUpload
+     * @param concurrent
+     * @param retryFailedUpload
+     * @param partSize
+     * 
+     * @return
+     */
+    public Archive UploadArchive(State journal, String vaultName, String fileName, Boolean forceUpload, int concurrent,
+	    int retryFailedUpload, int partSize) {
+
+	Archive archive = null;
+	Metadata metadata = journal.getMetadata();
+	boolean upload = true;
+	Boolean exists = journal.isFileInArchive(fileName);
+
+	// check if this file exists in the journal
+	if (exists) {
+
+	    System.out.println(String.format("%s is already present in the journal", fileName));
+	    System.out.println(String.format("Verifying ..."));
+
+	    Archive testArchive = journal.getByName(fileName);
+
+	    GenericValidateEnum validSize = State.archiveValidateFileSize(testArchive);
+	    GenericValidateEnum validModifiedDate = State.archiveValidateLastModified(testArchive);
+
+	    System.out.println(String.format("%s size is %s", fileName, validSize));
+	    System.out.println(String.format("%s modified date is %s", fileName, validModifiedDate));
+	    System.out.println(String.format("Verifying hash ..."));
+
+	    GenericValidateEnum validTreeHash = State.archiveValidateTreeHash(testArchive);
+
+	    System.out.println(String.format("Hash is: %s", validTreeHash));
+	    System.out.println();
+
+	    upload = forceUpload;
+
+	}
+
+	if (upload) {
+
+	    System.out.println(String.format("Processing: %s (size: %s)", fileName,
+		    new File(Config.getInstance().getDirectory(), fileName).length()));
+
+	    try {
+		archive = UploadMultipartFile(fileName, new File(Config.getInstance().getDirectory(), fileName), concurrent,
+			retryFailedUpload, partSize, vaultName, metadata);
+
+		journal.addArchive(archive);
+		journal.save();
+
+	    } catch (UploadTooManyPartsException e) {
+		e.printStackTrace();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    } catch (RegionNotSupportedException e) {
+		e.printStackTrace();
+	    }
+
+	} else {
+	    System.out.println(String.format("Skipping upload for %s", fileName));
+	}
+
+	return archive;
+
     }
 
     public Archive UploadMultipartFile(String fileName, File file, int threads, int retry, int partSize, String vaultName, Metadata metadata)
@@ -802,121 +613,5 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	}
 
 	return ret;
-    }
-
-    /**
-     * Uploads the archive to Glacier
-     * 
-     * @param journal
-     * @param vaultName
-     * @param fileName
-     * @param forceUpload
-     * @param concurrent
-     * @param retryFailedUpload
-     * @param partSize
-     * 
-     * @return
-     */
-    public Archive UploadArchive(State journal, String vaultName, String fileName, Boolean forceUpload, int concurrent,
-	    int retryFailedUpload, int partSize) {
-
-	Archive archive = null;
-	Metadata metadata = journal.getMetadata();
-	boolean upload = true;
-	Boolean exists = journal.isFileInArchive(fileName);
-
-	// check if this file exists in the journal
-	if (exists) {
-
-	    System.out.println(String.format("%s is already present in the journal", fileName));
-	    System.out.println(String.format("Verifying ..."));
-
-	    Archive testArchive = journal.getByName(fileName);
-
-	    GenericValidateEnum validSize = State.archiveValidateFileSize(testArchive);
-	    GenericValidateEnum validModifiedDate = State.archiveValidateLastModified(testArchive);
-
-	    System.out.println(String.format("%s size is %s", fileName, validSize));
-	    System.out.println(String.format("%s modified date is %s", fileName, validModifiedDate));
-	    System.out.println(String.format("Verifying hash ..."));
-
-	    GenericValidateEnum validTreeHash = State.archiveValidateTreeHash(testArchive);
-
-	    System.out.println(String.format("Hash is: %s", validTreeHash));
-	    System.out.println();
-
-	    upload = forceUpload;
-
-	}
-
-	if (upload) {
-
-	    System.out.println(String.format("Processing: %s (size: %s)", fileName,
-		    new File(Config.getInstance().getDirectory(), fileName).length()));
-
-	    try {
-		archive = UploadMultipartFile(fileName, new File(Config.getInstance().getDirectory(), fileName), concurrent,
-			retryFailedUpload, partSize, vaultName, metadata);
-
-		journal.addArchive(archive);
-		journal.save();
-
-	    } catch (UploadTooManyPartsException e) {
-		e.printStackTrace();
-	    } catch (IOException e) {
-		e.printStackTrace();
-	    } catch (RegionNotSupportedException e) {
-		e.printStackTrace();
-	    }
-
-	} else {
-	    System.out.println(String.format("Skipping upload for %s", fileName));
-	}
-
-	return archive;
-
-    }
-
-    /**
-     * Create a vault
-     * 
-     * @param vaultName
-     * 
-     * @return
-     * 
-     * @throws AmazonClientException
-     * @throws AmazonServiceException
-     */
-    public CreateVaultResult CreateVault(String vaultName) throws AmazonServiceException, AmazonClientException {
-	CreateVaultRequest createVaultRequest = new CreateVaultRequest().withVaultName(vaultName);
-	return client.createVault(createVaultRequest);
-    }
-
-    /**
-     * Describe the vault
-     * 
-     * @param vaultName
-     * 
-     * @return
-     * 
-     * @throws AmazonClientException
-     * @throws AmazonServiceException
-     */
-    public DescribeVaultResult DescribeVault(String vaultName) throws AmazonServiceException, AmazonClientException {
-	DescribeVaultRequest describeVaultRequest = new DescribeVaultRequest().withVaultName(vaultName);
-	return client.describeVault(describeVaultRequest);
-    }
-
-    /**
-     * Delete a vault
-     * 
-     * @param vaultName
-     * 
-     * @throws AmazonClientException
-     * @throws AmazonServiceException
-     */
-    public void DeleteVault(String vaultName) throws AmazonServiceException, AmazonClientException {
-	DeleteVaultRequest request = new DeleteVaultRequest().withVaultName(vaultName);
-	client.deleteVault(request);
     }
 }

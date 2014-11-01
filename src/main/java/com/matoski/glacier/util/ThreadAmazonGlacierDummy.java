@@ -3,20 +3,19 @@ package com.matoski.glacier.util;
 import java.io.File;
 import java.util.concurrent.Callable;
 
-import com.matoski.glacier.pojo.UploadPiece;
-
 /**
  * A threaded dummy, used for completion
  * 
  * @author ilijamt
+ * @param <T>
  */
-public abstract class ThreadAmazonGlacierDummy implements Callable<UploadPiece> {
+public abstract class ThreadAmazonGlacierDummy<T> implements Callable<T> {
 
-    protected UploadPiece piece;
+    protected T piece;
     protected int pieces;
     protected File file;
 
-    public ThreadAmazonGlacierDummy(int pieces, File file, UploadPiece piece) {
+    public ThreadAmazonGlacierDummy(int pieces, File file, T piece) {
 	this.piece = piece;
 	this.file = file;
 	this.pieces = pieces;
@@ -28,7 +27,7 @@ public abstract class ThreadAmazonGlacierDummy implements Callable<UploadPiece> 
      * {@inheritDoc}
      */
     @Override
-    public UploadPiece call() throws Exception {
+    public T call() throws Exception {
 	__call();
 	return piece;
     }
