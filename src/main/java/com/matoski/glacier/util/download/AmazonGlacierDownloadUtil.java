@@ -1,6 +1,7 @@
 package com.matoski.glacier.util.download;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
 import java.nio.file.FileAlreadyExistsException;
 
@@ -113,15 +114,32 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
 
     }
 
-    public boolean DownloadAndWriteChunk(File file, String vaultName, String jobId, int part, long partSize) {
+    public void DownloadArchive(File file, String vaultName, String jobId) {}
 
-	String startRange = "";
-	String endRange = "";
+    public void DownloadChunks(File file, String vaultName, String jobId) {}
+
+    public boolean DownloadAndWriteChunk(File file, String vaultName, String jobId, long startRange, long endRange)
+	    throws FileNotFoundException {
+
+	if (!file.exists() || !file.isFile()) {
+	    throw new FileNotFoundException(file.getName());
+	}
+
 	GetJobOutputRequest getJobOutputRequest = new GetJobOutputRequest().withVaultName(vaultName)
 		.withRange(String.format("bytes=%s-%s", startRange, endRange)).withJobId(jobId);
 
 	GetJobOutputResult getJobOutputResult = client.getJobOutput(getJobOutputRequest);
 
-	return false;
+	RandomAccessFile accessFile = null;
+	Boolean valid = false;
+
+	try {
+	    accessFile = new RandomAccessFile(file, "rw");
+	    accessFile.seek(startRange);
+	    accessFile.close();
+	    valid = true;
+	} catch (Exception e) {}
+
+	return valid;
     }
 }

@@ -1,6 +1,7 @@
 package com.matoski.glacier.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +56,14 @@ import com.amazonaws.services.sqs.model.CreateQueueResult;
 import com.amazonaws.services.sqs.model.DeleteQueueRequest;
 import com.amazonaws.services.sqs.model.GetQueueAttributesRequest;
 import com.amazonaws.services.sqs.model.GetQueueAttributesResult;
+import com.amazonaws.services.sqs.model.Message;
+import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.SetQueueAttributesRequest;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 
 /**
@@ -64,11 +72,6 @@ import com.matoski.glacier.errors.RegionNotSupportedException;
  * @author ilijamt
  */
 public abstract class AmazonGlacierBaseUtil {
-
-    /**
-     * Generic string format
-     */
-    final public static String FORMAT = "[#%1$05d/#%2$05d] %3$-15s | (%4$s) %5$s";
 
     /**
      * Can we split the file in the specified parts, without hitting the limit
@@ -85,6 +88,11 @@ public abstract class AmazonGlacierBaseUtil {
 
 	return (file.length() / partSize) < MAXIMUM_UPLOAD_PARTS;
     }
+
+    /**
+     * Generic string format
+     */
+    final public static String FORMAT = "[#%1$05d/#%2$05d] %3$-15s | (%4$s) %5$s";
 
     /**
      * The maximum part size, in bytes, for a Glacier multipart upload.
@@ -178,29 +186,29 @@ public abstract class AmazonGlacierBaseUtil {
     final private static String SQS_QUEUE_NAME = "gi-sqs-queue-job";
 
     /**
-     * SNS Queue ARN
-     */
-    private String snsQueueArn;
-
-    /**
      * SQS Queue ARN
      */
-    private String sqsQueueArn;
+    private String sqsQueueARN;
 
     /**
      * SQS Queue URL
      */
-    private String sqsQueueUrl;
+    private String sqsQueueURL;
 
     /**
      * SNS Topic ARN
      */
-    private String snsTopicArn;
+    private String snsTopicARN;
 
     /**
      * SNS Subscription ARN
      */
-    private String snsSubscriptionArn;
+    private String snsSubscriptionARN;
+
+    /**
+     * How long to wait for a job to finish
+     */
+    public static long WAIT_FOR_JOB_SLEEP_TIME = 600;
 
     /**
      * Constructor
@@ -269,59 +277,10 @@ public abstract class AmazonGlacierBaseUtil {
     /**
      * Cleanup
      */
-    protected void cleanup() {
-	snsClient.unsubscribe(snsSubscriptionArn);
-	snsClient.deleteTopic(new DeleteTopicRequest(snsTopicArn));
-	sqsClient.deleteQueue(new DeleteQueueRequest(sqsQueueUrl));
-    }
-
-    /**
-     * Initialize SQS and SNS
-     */
-    protected void init() {
-
-	initSQS();
-	initSNS();
-
-    }
-
-    /**
-     * Initialize SNS
-     */
-    final protected void initSNS() {
-
-	CreateTopicRequest request = new CreateTopicRequest().withName(SNS_TOPIC_NAME);
-	CreateTopicResult result = snsClient.createTopic(request);
-	snsTopicArn = result.getTopicArn();
-
-	SubscribeRequest subscribeRequest = new SubscribeRequest().withTopicArn(snsTopicArn).withEndpoint(sqsQueueArn).withProtocol("sqs");
-
-	SubscribeResult subscribeResult = snsClient.subscribe(subscribeRequest);
-
-	snsSubscriptionArn = subscribeResult.getSubscriptionArn();
-
-    }
-
-    /**
-     * Initialize SQS
-     */
-    final protected void initSQS() {
-
-	CreateQueueRequest request = new CreateQueueRequest().withQueueName(SQS_QUEUE_NAME);
-	CreateQueueResult result = sqsClient.createQueue(request);
-	sqsQueueUrl = result.getQueueUrl();
-
-	GetQueueAttributesRequest qRequest = new GetQueueAttributesRequest().withQueueUrl(sqsQueueUrl).withAttributeNames("QueueArn");
-
-	GetQueueAttributesResult qResult = sqsClient.getQueueAttributes(qRequest);
-	sqsQueueArn = qResult.getAttributes().get("QueueArn");
-
-	Policy sqsPolicy = new Policy().withStatements(new Statement(Effect.Allow).withPrincipals(Principal.AllUsers)
-		.withActions(SQSActions.SendMessage).withResources(new Resource(sqsQueueArn)));
-	Map<String, String> queueAttributes = new HashMap<String, String>();
-	queueAttributes.put("Policy", sqsPolicy.toJson());
-	sqsClient.setQueueAttributes(new SetQueueAttributesRequest(sqsQueueUrl, queueAttributes));
-
+    public void cleanup() {
+	snsClient.unsubscribe(snsSubscriptionARN);
+	snsClient.deleteTopic(new DeleteTopicRequest(snsTopicARN));
+	sqsClient.deleteQueue(new DeleteQueueRequest(sqsQueueURL));
     }
 
     /**
@@ -435,6 +394,54 @@ public abstract class AmazonGlacierBaseUtil {
 	} while (marker != null);
 
 	return response;
+
+    }
+
+    /**
+     * Initialize SQS and SNS
+     */
+    public void init() {
+
+	initSQS();
+	initSNS();
+
+    }
+
+    /**
+     * Initialize SNS
+     */
+    final public void initSNS() {
+
+	CreateTopicRequest request = new CreateTopicRequest().withName(SNS_TOPIC_NAME);
+	CreateTopicResult result = snsClient.createTopic(request);
+	snsTopicARN = result.getTopicArn();
+
+	SubscribeRequest request2 = new SubscribeRequest().withTopicArn(snsTopicARN).withEndpoint(sqsQueueARN).withProtocol("sqs");
+	SubscribeResult result2 = snsClient.subscribe(request2);
+
+	snsSubscriptionARN = result2.getSubscriptionArn();
+
+    }
+
+    /**
+     * Initialize SQS
+     */
+    final public void initSQS() {
+
+	CreateQueueRequest request = new CreateQueueRequest().withQueueName(SQS_QUEUE_NAME);
+	CreateQueueResult result = sqsClient.createQueue(request);
+	sqsQueueURL = result.getQueueUrl();
+
+	GetQueueAttributesRequest qRequest = new GetQueueAttributesRequest().withQueueUrl(sqsQueueURL).withAttributeNames("QueueArn");
+
+	GetQueueAttributesResult qResult = sqsClient.getQueueAttributes(qRequest);
+	sqsQueueARN = qResult.getAttributes().get("QueueArn");
+
+	Policy sqsPolicy = new Policy().withStatements(new Statement(Effect.Allow).withPrincipals(Principal.AllUsers)
+		.withActions(SQSActions.SendMessage).withResources(new Resource(sqsQueueARN)));
+	Map<String, String> queueAttributes = new HashMap<String, String>();
+	queueAttributes.put("Policy", sqsPolicy.toJson());
+	sqsClient.setQueueAttributes(new SetQueueAttributesRequest(sqsQueueURL, queueAttributes));
 
     }
 
@@ -597,6 +604,55 @@ public abstract class AmazonGlacierBaseUtil {
 	} while (marker != null);
 
 	return list;
+
+    }
+
+    /**
+     * Wait for the job to complete
+     * 
+     * @param jobId
+     * @param sqsQueueUrl
+     * 
+     * @return
+     * 
+     * @throws InterruptedException
+     * @throws JsonParseException
+     * @throws IOException
+     */
+    final public Boolean WaitForJobToComplete(String jobId, String sqsQueueUrl) throws InterruptedException, JsonParseException,
+	    IOException {
+
+	Boolean messageFound = false;
+	Boolean jobSuccessful = false;
+	ObjectMapper mapper = new ObjectMapper();
+	JsonFactory factory = mapper.getFactory();
+
+	while (!messageFound) {
+	    List<Message> msgs = sqsClient.receiveMessage(new ReceiveMessageRequest(sqsQueueUrl).withMaxNumberOfMessages(10)).getMessages();
+
+	    if (msgs.size() > 0) {
+		for (Message m : msgs) {
+		    JsonParser jpMessage = factory.createParser(m.getBody());
+		    JsonNode jobMessageNode = mapper.readTree(jpMessage);
+		    String jobMessage = jobMessageNode.get("Message").textValue();
+
+		    JsonParser jpDesc = factory.createParser(jobMessage);
+		    JsonNode jobDescNode = mapper.readTree(jpDesc);
+		    String retrievedJobId = jobDescNode.get("JobId").textValue();
+		    String statusCode = jobDescNode.get("StatusCode").textValue();
+		    if (retrievedJobId.equals(jobId)) {
+			messageFound = true;
+			if (statusCode.equals("Succeeded")) {
+			    jobSuccessful = true;
+			}
+		    }
+		}
+
+	    } else {
+		Thread.sleep(WAIT_FOR_JOB_SLEEP_TIME * 1000);
+	    }
+	}
+	return (messageFound && jobSuccessful);
 
     }
 }
