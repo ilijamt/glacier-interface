@@ -1,6 +1,6 @@
 package com.matoski.glacier.pojo;
 
-import com.matoski.glacier.enums.DownloadMultipartStatus;
+import com.matoski.glacier.enums.MultipartStatus;
 
 /**
  * @author ilijamt
@@ -26,7 +26,7 @@ public class DownloadPiece {
     /**
      * 
      */
-    private DownloadMultipartStatus status;
+    private MultipartStatus status;
 
     /**
      * @return
@@ -52,7 +52,7 @@ public class DownloadPiece {
     /**
      * @return
      */
-    public DownloadMultipartStatus getStatus() {
+    public MultipartStatus getStatus() {
 	return status;
     }
 
@@ -60,12 +60,12 @@ public class DownloadPiece {
      * Is the piece completed?
      * 
      * Compares the {@link #status} to
-     * {@link DownloadMultipartStatus#PIECE_COMPLETE}
+     * {@link MultipartStatus#PIECE_COMPLETE}
      * 
      * @return
      */
     public boolean isFinished() {
-	return this.status == DownloadMultipartStatus.PIECE_COMPLETE;
+	return this.status == MultipartStatus.PIECE_COMPLETE;
     }
 
     /**
@@ -96,7 +96,7 @@ public class DownloadPiece {
     /**
      * @param status
      */
-    public DownloadPiece setStatus(DownloadMultipartStatus status) {
+    public DownloadPiece setStatus(MultipartStatus status) {
 	this.status = status;
 	return this;
     }

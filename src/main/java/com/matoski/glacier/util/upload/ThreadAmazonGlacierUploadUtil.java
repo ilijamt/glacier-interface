@@ -11,7 +11,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.event.ProgressListener;
 import com.amazonaws.metrics.RequestMetricCollector;
 import com.amazonaws.services.glacier.model.RequestTimeoutException;
-import com.matoski.glacier.enums.UploadMultipartStatus;
+import com.matoski.glacier.enums.MultipartStatus;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.pojo.UploadPiece;
 
@@ -64,7 +64,7 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
 
     /**
      * How many times to retry uploading a failed upload, either it is an error,
-     * or a {@link UploadMultipartStatus#PIECE_CHECKSUM_MISMATCH} is present in
+     * or a {@link MultipartStatus#PIECE_CHECKSUM_MISMATCH} is present in
      * the result
      */
     private final int requestRetryFailedUploads;
@@ -140,7 +140,7 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
 	UploadPiece piece = null;
 	int count = 0;
 
-	System.out.println(String.format(FORMAT, requestPart + 1, requestPieces, UploadMultipartStatus.PIECE_START, requestFile,
+	System.out.println(String.format(FORMAT, requestPart + 1, requestPieces, MultipartStatus.PIECE_START, requestFile,
 		"Upload started"));
 
 	for (int i = 0; i < requestRetryFailedUploads; i++) {
@@ -149,7 +149,7 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
 
 		piece = this.upload(count);
 
-		if (piece.getStatus() == UploadMultipartStatus.PIECE_COMPLETE) {
+		if (piece.getStatus() == MultipartStatus.PIECE_COMPLETE) {
 		    // we have successfully uploaded the file, so we break now,
 		    // no need to continue trying to re-upload the part again
 		    System.out.println(String.format(FORMAT, requestPart + 1, requestPieces, piece.getStatus(), requestFile, "Uploaded"));
