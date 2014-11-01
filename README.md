@@ -38,11 +38,10 @@ Commands
 * **multipart-upload-info**
 * **abort-multipart-upload**
 * **purge-vault**
-* **sync** (TODO)
+* **sync**
 
 Priorities
 -----------
-* **sync**
 * **init-download**
 * **download-archive**
 

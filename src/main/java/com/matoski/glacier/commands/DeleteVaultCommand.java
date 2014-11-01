@@ -8,6 +8,7 @@ import com.matoski.glacier.cli.CommandDeleteVault;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
+import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
 public class DeleteVaultCommand extends AbstractCommand<CommandDeleteVault> {
 
@@ -31,9 +32,9 @@ public class DeleteVaultCommand extends AbstractCommand<CommandDeleteVault> {
 
 	try {
 
-	    DeleteVaultRequest request = new DeleteVaultRequest().withVaultName(command.vaultName);
-	    client.deleteVault(request);
+	    AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
+	    upload.DeleteVault(command.vaultName);
 	    System.out.println(String.format("%s deleted. (Currently Amazon Glacier does not return error if vault does not exists)",
 		    command.vaultName));
 

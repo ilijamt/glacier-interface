@@ -31,8 +31,13 @@ import com.amazonaws.services.glacier.TreeHashGenerator;
 import com.amazonaws.services.glacier.model.AbortMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.CompleteMultipartUploadRequest;
 import com.amazonaws.services.glacier.model.CompleteMultipartUploadResult;
+import com.amazonaws.services.glacier.model.CreateVaultRequest;
+import com.amazonaws.services.glacier.model.CreateVaultResult;
 import com.amazonaws.services.glacier.model.DeleteArchiveRequest;
+import com.amazonaws.services.glacier.model.DeleteVaultRequest;
 import com.amazonaws.services.glacier.model.DescribeVaultOutput;
+import com.amazonaws.services.glacier.model.DescribeVaultRequest;
+import com.amazonaws.services.glacier.model.DescribeVaultResult;
 import com.amazonaws.services.glacier.model.GetJobOutputRequest;
 import com.amazonaws.services.glacier.model.GetJobOutputResult;
 import com.amazonaws.services.glacier.model.GlacierJobDescription;
@@ -870,5 +875,48 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
 	return archive;
 
+    }
+
+    /**
+     * Create a vault
+     * 
+     * @param vaultName
+     * 
+     * @return
+     * 
+     * @throws AmazonClientException
+     * @throws AmazonServiceException
+     */
+    public CreateVaultResult CreateVault(String vaultName) throws AmazonServiceException, AmazonClientException {
+	CreateVaultRequest createVaultRequest = new CreateVaultRequest().withVaultName(vaultName);
+	return client.createVault(createVaultRequest);
+    }
+
+    /**
+     * Describe the vault
+     * 
+     * @param vaultName
+     * 
+     * @return
+     * 
+     * @throws AmazonClientException
+     * @throws AmazonServiceException
+     */
+    public DescribeVaultResult DescribeVault(String vaultName) throws AmazonServiceException, AmazonClientException {
+	DescribeVaultRequest describeVaultRequest = new DescribeVaultRequest().withVaultName(vaultName);
+	return client.describeVault(describeVaultRequest);
+    }
+
+    /**
+     * Delete a vault
+     * 
+     * @param vaultName
+     * 
+     * @throws AmazonClientException
+     * @throws AmazonServiceException
+     */
+    public void DeleteVault(String vaultName) throws AmazonServiceException, AmazonClientException {
+	DeleteVaultRequest request = new DeleteVaultRequest().withVaultName(vaultName);
+	client.deleteVault(request);
     }
 }

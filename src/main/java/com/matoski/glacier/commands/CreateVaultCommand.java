@@ -11,6 +11,7 @@ import com.matoski.glacier.cli.CommandCreateVault;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
+import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
 public class CreateVaultCommand extends AbstractCommand<CommandCreateVault> {
 
@@ -33,11 +34,10 @@ public class CreateVaultCommand extends AbstractCommand<CommandCreateVault> {
 
 	try {
 
-	    CreateVaultRequest createVaultRequest = new CreateVaultRequest().withVaultName(command.vaultName);
-	    DescribeVaultRequest describeVaultRequest = new DescribeVaultRequest().withVaultName(command.vaultName);
+	    AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
-	    CreateVaultResult createVaultResult = client.createVault(createVaultRequest);
-	    DescribeVaultResult describeVaultResult = client.describeVault(describeVaultRequest);
+	    CreateVaultResult createVaultResult = upload.CreateVault(command.vaultName);
+	    DescribeVaultResult describeVaultResult = upload.DescribeVault(command.vaultName);
 
 	    System.out.println(String.format("%1$12s: %2$s%3$s", "Location", this.region.getServiceEndpoint("glacier"),
 		    createVaultResult.getLocation()));
