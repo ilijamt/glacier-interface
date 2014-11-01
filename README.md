@@ -2,6 +2,11 @@ Glacier Interface
 =================
 
 A command line tool to interface with glacier.
+It's a multithreaded application, that supports multipart uploads to Amazon Glacier servers, you can specify concurrency, to speed up the upload.  
+
+Intro
+-----
+Amazon Glacier is an archive/backup service with very low storage price. However with some caveats in usage and archive retrieval prices. [Read more about Amazon Glacier](http://aws.amazon.com/glacier/)
 
 Usage
 -----
@@ -22,7 +27,7 @@ Commands
 --------
 
 * [help](#help)
-* [list-vault](#list-vault)
+* [list-vaults](#list-vaults)
 * [create-vault](#create-vault)
 * [delete-vault](#delete-vault)
 * [list-vault-jobs](#list-vault-jobs)
@@ -47,43 +52,66 @@ Priorities
 
 Commands Description
 -------------------
-## `help`
+### `help`
 Shows all the available command in the system, you can take a look at [Help](HELP)
 
-## `list-vault`
-Lists all available vaults present on Amazon Glacier servers specified by the region
+### `list-vaults`
+Lists all available vaults present on Amazon Glacier servers specified by the region.
 
-## `create-vault` 
+### `create-vault` 
+Creates a new vault on Amazon Glacier
 
-## `delete-vault`
+### `delete-vault`
+Deletes a vault on Amazon Glacier, just a not that you cannot delete a non empty vault, you will have to delete all the archives first and then you can delete the vault after 24 hours.
 
-## `list-vault-jobs`
+You can use [purge-vault)(#purge-vault) to empty the vault from all the archives.
+  
+### `list-vault-jobs`
+Gives you a list of all available vault jobs
 
-## `vault-job-info`
+### `vault-job-info`
+Gives a detailed information about a vault job
 
-## `inventory-retrieve`
+### `inventory-retrieve`
+If you lose your journal you will need to request and **inventory-retrieve** from Glacier and wait for about 4 hours until you can download it.
 
-## `inventory-download`
+This gives you a list of all available archives in the system
 
-## `list-journal`
+### `inventory-download`
+You can use this to download the inventory after **inventory-retrieve** has been completed. You will also need to specify the metadata used to store the archives, so we can parse it correctly.
 
-## `init-download`
+You can also use this to download the raw data and use it to create a new metadata parser.
 
-## `download-archive`
+### `list-journal`
+It's used to list the files in a journal, it can give you a detailed information for what is in the journal.
 
-## `delete-archive`
+### `init-download`
+TODO
 
-## `upload-archive`
+### `download-archive`
+TODO 
 
-## `list-multipart-uploads`
+### `delete-archive`
+Delete an archive from Glacier, it can be either done by archive ID or by an archive Name, in which case you will need to supply a valid journal 
 
-## `multipart-upload-info`
+### `upload-archive`
+Uploads an archive to Glacier server 
 
-## `abort-multipart-upload`
+### `list-multipart-uploads`
+Lists all the multipart uploads, and they can be canceled.
+Useful for cleaning up.
 
-## `purge-vault`
+### `multipart-upload-info`
+Information about the multipart upload
 
-## `sync`
+### `abort-multipart-upload`
+Aborts a multipart upload, you need to specify the correct ID to abort
+
+### `purge-vault`
+Purges the vault of all files present in the journal, it can be used to empty a vault of all archives
+
+### `sync`
+Synchronizes a directory to Glacier
 
 Minimum Amazon Glacier permissions:
 -----------------------------------
