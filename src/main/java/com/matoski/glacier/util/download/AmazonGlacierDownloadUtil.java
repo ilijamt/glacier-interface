@@ -51,39 +51,6 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
     }
 
     /**
-     * Initiate a download request for an archive
-     * 
-     * @param vaultName
-     * @param archiveId
-     * @return
-     */
-    public InitiateJobResult InitiateDownloadRequest(String vaultName, String archiveId) {
-	return InitiateDownloadRequest(vaultName, archiveId, null);
-    }
-
-    /**
-     * Initiate a download request for an archive
-     * 
-     * @param vaultName
-     * @param archiveId
-     * @param snsTopicARN
-     * @return
-     */
-    public InitiateJobResult InitiateDownloadRequest(String vaultName, String archiveId, String snsTopicARN) {
-
-	JobParameters job = new JobParameters().withType("archive-retrieval").withArchiveId(archiveId);
-
-	if (null != snsTopicARN) {
-	    job.withSNSTopic(snsTopicARN);
-	}
-
-	InitiateJobRequest request = new InitiateJobRequest().withVaultName(vaultName).withJobParameters(job);
-
-	return client.initiateJob(request);
-
-    }
-
-    /**
      * Create an empty file, it's used so we can write the chunks to the file at
      * the correct positions
      * 
@@ -114,10 +81,6 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
 
     }
 
-    public void DownloadArchive(File file, String vaultName, String jobId) {}
-
-    public void DownloadChunks(File file, String vaultName, String jobId) {}
-
     public boolean DownloadAndWriteChunk(File file, String vaultName, String jobId, long startRange, long endRange)
 	    throws FileNotFoundException {
 
@@ -141,5 +104,42 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
 	} catch (Exception e) {}
 
 	return valid;
+    }
+
+    public void DownloadArchive(File file, String vaultName, String jobId) {}
+
+    public void DownloadChunks(File file, String vaultName, String jobId) {}
+
+    /**
+     * Initiate a download request for an archive
+     * 
+     * @param vaultName
+     * @param archiveId
+     * @return
+     */
+    public InitiateJobResult InitiateDownloadRequest(String vaultName, String archiveId) {
+	return InitiateDownloadRequest(vaultName, archiveId, null);
+    }
+
+    /**
+     * Initiate a download request for an archive
+     * 
+     * @param vaultName
+     * @param archiveId
+     * @param snsTopicARN
+     * @return
+     */
+    public InitiateJobResult InitiateDownloadRequest(String vaultName, String archiveId, String snsTopicARN) {
+
+	JobParameters job = new JobParameters().withType("archive-retrieval").withArchiveId(archiveId);
+
+	if (null != snsTopicARN) {
+	    job.withSNSTopic(snsTopicARN);
+	}
+
+	InitiateJobRequest request = new InitiateJobRequest().withVaultName(vaultName).withJobParameters(job);
+
+	return client.initiateJob(request);
+
     }
 }

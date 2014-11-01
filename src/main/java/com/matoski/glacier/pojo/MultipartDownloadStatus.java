@@ -87,6 +87,22 @@ public class MultipartDownloadStatus extends AbstractWritablePojo<MultipartDownl
     /**
      * Add a piece that has been processed
      * 
+     * @param piece
+     * @throws IOException
+     */
+    public void addPiece(DownloadPiece piece) throws IOException {
+	setDirty();
+	if (!this.pieces.containsKey(piece.getPart())) {
+	    this.pieces.put(piece.getPart(), piece);
+	    this.lastUpdate = new Date();
+	    update();
+	    this.write();
+	}
+    }
+
+    /**
+     * Add a piece that has been processed
+     * 
      * @param part
      * @param piece
      * @throws IOException
@@ -99,22 +115,6 @@ public class MultipartDownloadStatus extends AbstractWritablePojo<MultipartDownl
 	    this.lastUpdate = new Date();
 	    this.write();
 	    update();
-	}
-    }
-
-    /**
-     * Add a piece that has been processed
-     * 
-     * @param piece
-     * @throws IOException
-     */
-    public void addPiece(DownloadPiece piece) throws IOException {
-	setDirty();
-	if (!this.pieces.containsKey(piece.getPart())) {
-	    this.pieces.put(piece.getPart(), piece);
-	    this.lastUpdate = new Date();
-	    update();
-	    this.write();
 	}
     }
 

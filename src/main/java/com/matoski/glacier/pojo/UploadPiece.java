@@ -71,8 +71,7 @@ public class UploadPiece {
     /**
      * Is the piece completed?
      * 
-     * Compares the {@link #status} to
-     * {@link MultipartStatus#PIECE_COMPLETE}
+     * Compares the {@link #status} to {@link MultipartStatus#PIECE_COMPLETE}
      * 
      * @return
      */

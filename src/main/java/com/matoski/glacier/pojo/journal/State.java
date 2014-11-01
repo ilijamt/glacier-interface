@@ -426,6 +426,16 @@ public class State {
     }
 
     /**
+     * @param metadata
+     *            the metadata to set
+     * @return
+     */
+    public State setMetadata(Metadata metadata) {
+	journal.setMetadata(metadata);
+	return this;
+    }
+
+    /**
      * Set the metadata
      * 
      * @param metadata
@@ -433,16 +443,6 @@ public class State {
      */
     public State setMetadata(String metadata) {
 	journal.setMetadata(Metadata.from(metadata));
-	return this;
-    }
-
-    /**
-     * @param metadata
-     *            the metadata to set
-     * @return
-     */
-    public State setMetadata(Metadata metadata) {
-	journal.setMetadata(metadata);
 	return this;
     }
 

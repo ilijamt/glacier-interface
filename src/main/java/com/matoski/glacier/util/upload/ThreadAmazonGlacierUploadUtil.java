@@ -64,8 +64,8 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
 
     /**
      * How many times to retry uploading a failed upload, either it is an error,
-     * or a {@link MultipartStatus#PIECE_CHECKSUM_MISMATCH} is present in
-     * the result
+     * or a {@link MultipartStatus#PIECE_CHECKSUM_MISMATCH} is present in the
+     * result
      */
     private final int requestRetryFailedUploads;
 
@@ -140,8 +140,8 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
 	UploadPiece piece = null;
 	int count = 0;
 
-	System.out.println(String.format(FORMAT, requestPart + 1, requestPieces, MultipartStatus.PIECE_START, requestFile,
-		"Upload started"));
+	System.out.println(String
+		.format(FORMAT, requestPart + 1, requestPieces, MultipartStatus.PIECE_START, requestFile, "Upload started"));
 
 	for (int i = 0; i < requestRetryFailedUploads; i++) {
 

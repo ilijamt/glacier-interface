@@ -26,32 +26,32 @@ public class DownloadJob extends AbstractWritablePojo<DownloadJob> {
 	return archiveId;
     }
 
-    public void setArchiveId(String archiveId) {
-	this.archiveId = archiveId;
+    public String getArchiveName() {
+	return archiveName;
     }
 
     public String getJobId() {
 	return jobId;
     }
 
-    public void setJobId(String jobId) {
-	this.jobId = jobId;
-    }
-
     public String getVaultName() {
 	return vaultName;
     }
 
-    public void setVaultName(String vaultName) {
-	this.vaultName = vaultName;
-    }
-
-    public String getArchiveName() {
-	return archiveName;
+    public void setArchiveId(String archiveId) {
+	this.archiveId = archiveId;
     }
 
     public void setArchiveName(String archiveName) {
 	this.archiveName = archiveName;
+    }
+
+    public void setJobId(String jobId) {
+	this.jobId = jobId;
+    }
+
+    public void setVaultName(String vaultName) {
+	this.vaultName = vaultName;
     }
 
 }

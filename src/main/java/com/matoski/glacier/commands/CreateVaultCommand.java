@@ -2,9 +2,7 @@ package com.matoski.glacier.commands;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.glacier.model.CreateVaultRequest;
 import com.amazonaws.services.glacier.model.CreateVaultResult;
-import com.amazonaws.services.glacier.model.DescribeVaultRequest;
 import com.amazonaws.services.glacier.model.DescribeVaultResult;
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandCreateVault;
