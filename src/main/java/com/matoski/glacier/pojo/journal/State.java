@@ -199,7 +199,6 @@ public class State {
 	    break;
 	case CREATED:
 	case MODIFIED:
-	case FORCE_UPLOAD:
 	case NOT_DEFINED:
 	    archives.put(archive.getKeyId(), archive);
 	    break;
