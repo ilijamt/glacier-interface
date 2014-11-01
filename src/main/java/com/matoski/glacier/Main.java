@@ -139,7 +139,7 @@ public class Main {
 	    }
 	}
 
-	System.out.println(String.format("Current working dir: %s", config.getDirectory()));
+	System.out.println(String.format("Current working directory: %s", config.getDirectory()));
 	System.out.println(String.format("Command: %s", cliCommand));
 	System.out.println();
 

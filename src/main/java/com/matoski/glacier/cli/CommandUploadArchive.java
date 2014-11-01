@@ -11,10 +11,10 @@ import com.matoski.glacier.enums.CliCommands;
 @Parameters(commandNames = "upload-archive", commandDescription = "Initiate an upload of archive")
 public class CommandUploadArchive extends GenericCommand {
 
-    @Parameter(names = "--vault", description = "The name of the vault from where the archive will be deleted, will be overwriten by --aws-vault if not specified")
+    @Parameter(names = "--vault", description = "The name of the vault from where the archive will be deleted, will be overwritten by --aws-vault if not specified")
     public String vaultName;
 
-    @Parameter(required = true, names = "--file", description = "The file(s) to be uploaded, you can specifiy this parameter multiple times")
+    @Parameter(required = true, names = "--file", description = "The file(s) to be uploaded, you can specify this parameter multiple times")
     public List<String> files = new ArrayList<String>();
 
     @Parameter(names = "--metadata", description = "Available: mt2, fgv2")

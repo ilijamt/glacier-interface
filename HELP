@@ -1,22 +1,22 @@
 Glacier Interface, Copyright 2014, Ilija Matoski
 
-Current working dir: /home/ilijamt/workspace/java/glacier-interface
+Current working directory: 
 Command: Help
 
 Usage: <main class> [options] [command] [command options]
   Options:
         --aws-key
-       Sets the amazon key, if specified it will overide the data loaded from
+       Sets the amazon key, if specified it will override the data loaded from
        the configuration file
         --aws-region
-       Sets the amazon region, if specified it will overide the data loaded from
-       the configuration file
+       Sets the amazon region, if specified it will override the data loaded
+       from the configuration file
        Default: eu-west-1
         --aws-secret-key
-       Sets the amazon secret key, if specified it will overide the data loaded
+       Sets the amazon secret key, if specified it will override the data loaded
        from the configuration file
         --aws-vault
-       Sets the amazon vault, if specified it will overide the data loaded from
+       Sets the amazon vault, if specified it will override the data loaded from
        the configuration file
         --config
        Location to the configuration file to load
@@ -37,14 +37,14 @@ Usage: <main class> [options] [command] [command options]
       Usage: create-vault [options]
         Options:
               --vault
-             The name of the vault to be created, will be overwriten by
+             The name of the vault to be created, will be overwritten by
              --aws-vault if not specified
 
     delete-vault      Deletes the vault from Amazon Glacier, this will not work if the vault is not empty, so you will have to delete everything in the vault before you can delete the vault
       Usage: delete-vault [options]
         Options:
               --vault
-             The name of the vault to be deleted, will be overwriten by
+             The name of the vault to be deleted, will be overwritten by
              --aws-vault if not specified
 
     list-vault-jobs      List all the present jobs in the system
@@ -55,7 +55,7 @@ Usage: <main class> [options] [command] [command options]
              Default: false
               --vault
              The name of the vault from which the jobs will be retrieved, will
-             be overwriten by --aws-vault if not specified
+             be overwritten by --aws-vault if not specified
 
     vault-job-info      Gets the information about the job in question
       Usage: vault-job-info [options]
@@ -64,16 +64,16 @@ Usage: <main class> [options] [command] [command options]
              The ID of the Job
               --vault
              The name of the vault from which the jobs will be retrieved, will
-             be overwriten by --aws-vault if not specified
+             be overwritten by --aws-vault if not specified
 
     inventory-retrieve      Initiate an inventory retrieval
       Usage: inventory-retrieve [options]
         Options:
               --vault
              The name of the vault for whom the inventory needs to be retrieved,
-             will be overwriten by --aws-vault if not specified
+             will be overwritten by --aws-vault if not specified
 
-    inventory-download      Initiate an inventory download, and it will download the last succesfull InventoryRetrieval
+    inventory-download      Initiate an inventory download, and it will download the last successful InventoryRetrieval
       Usage: inventory-download [options]
         Options:
               --id
@@ -84,12 +84,12 @@ Usage: <main class> [options] [command] [command options]
              Available: mt2, fgv2
              Default: mt2
               --raw
-             Store the glacier full data instead of the parsed one, usefull for
+             Store the glacier full data instead of the parsed one, useful for
              creating new metadata parsers
              Default: false
               --vault
              The name of the vault for whom the inventory needs to be retrieved,
-             will be overwriten by --aws-vault if not specified
+             will be overwritten by --aws-vault if not specified
 
     list-journal      List the data in the journal
       Usage: list-journal [options]
@@ -123,7 +123,7 @@ Usage: <main class> [options] [command] [command options]
              The name of the archive
               --vault
              The name of the vault from where the archive will be deleted, will
-             be overwriten by --aws-vault if not specified
+             be overwritten by --aws-vault if not specified
 
     upload-archive      Initiate an upload of archive
       Usage: upload-archive [options]
@@ -134,8 +134,8 @@ Usage: <main class> [options] [command] [command options]
              requirements will be partSize * concurrent
              Default: 1
         *     --file
-             The file(s) to be uploaded, you can specifiy this parameter
-             multiple times
+             The file(s) to be uploaded, you can specify this parameter multiple
+             times
              Default: []
               --force-upload
              Force upload if it exist in the journal, but it will still keep the
@@ -156,7 +156,7 @@ Usage: <main class> [options] [command] [command options]
              Default: 2
               --vault
              The name of the vault from where the archive will be deleted, will
-             be overwriten by --aws-vault if not specified
+             be overwritten by --aws-vault if not specified
 
     list-multipart-uploads      List all the present multipart uploads for the vault
       Usage: list-multipart-uploads [options]
@@ -166,7 +166,7 @@ Usage: <main class> [options] [command] [command options]
              Default: false
               --vault
              The name of the vault from which the multipart uploads will be
-             retrieved, will be overwriten by --aws-vault if not specified
+             retrieved, will be overwritten by --aws-vault if not specified
 
     multipart-upload-info      Gets detailed info about a multipart upload
       Usage: multipart-upload-info [options]
@@ -175,7 +175,7 @@ Usage: <main class> [options] [command] [command options]
              The multipart Id for whom we need to retrieve the details
               --vault
              The name of the vault from which the multipart upload info will be
-             retrieved, will be overwriten by --aws-vault if not specified
+             retrieved, will be overwritten by --aws-vault if not specified
 
     abort-multipart-upload      Aborts a multipart upload
       Usage: abort-multipart-upload [options]
@@ -184,7 +184,7 @@ Usage: <main class> [options] [command] [command options]
              The multipart id we need to abort
               --vault
              The name of the vault from which the multipart upload will be
-             aborted, will be overwriten by --aws-vault if not specified
+             aborted, will be overwritten by --aws-vault if not specified
 
     purge-vault      Purge the data from the vault
       Usage: purge-vault [options]
@@ -193,11 +193,16 @@ Usage: <main class> [options] [command] [command options]
              Journal
               --vault
              The name of the vault from where the archive will be purged, will
-             be overwriten by --aws-vault if not specified
+             be overwritten by --aws-vault if not specified
 
     sync      Sync a folder contents to amazon glacier
       Usage: sync [options]
         Options:
+              --concurrent
+             How many threads to open to use when uploading the data to amazon
+             glacier, the more threads you have the more memory it will eat. The memory
+             requirements will be partSize * concurrent
+             Default: 1
         *     --journal
              Journal
               --metadata
@@ -205,9 +210,17 @@ Usage: <main class> [options] [command] [command options]
              journal, also if a journal is specified, the metadata will be read from the
              journal and not from the command line
              Default: mt2
+              --part-size
+             How big chunks of data to upload to amazon glacier during one
+             request, the part size has to be multiple of 2, like 1MB, 2MB, 4MB, 8MB, ...
+             Default: 1
+              --retry-failed-upload
+             How many times should it retry to upload a failed piece before
+             giving up.
+             Default: 2
               --vault
              The name of the vault to where the archives will be synced, will be
-             overwriten by --aws-vault if not specified
+             overwritten by --aws-vault if not specified
 
 
 

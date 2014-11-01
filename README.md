@@ -51,6 +51,7 @@ Commands Description
 Shows all the available command in the system, you can take a look at [Help](HELP)
 
 ## `list-vault`
+Lists all available vaults present on Amazon Glacier servers
 
 Minimum Amazon Glacier permissions:
 -----------------------------------

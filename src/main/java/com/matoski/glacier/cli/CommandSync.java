@@ -8,7 +8,7 @@ import com.matoski.glacier.enums.CliCommands;
 @Parameters(commandNames = "sync", commandDescription = "Sync a folder contents to amazon glacier")
 public class CommandSync extends GenericCommand {
 
-    @Parameter(names = "--vault", description = "The name of the vault to where the archives will be synced, will be overwriten by --aws-vault if not specified")
+    @Parameter(names = "--vault", description = "The name of the vault to where the archives will be synced, will be overwritten by --aws-vault if not specified")
     public String vaultName;
 
     @Parameter(required = true, names = "--journal", description = "Journal")
