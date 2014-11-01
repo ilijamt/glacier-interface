@@ -21,8 +21,8 @@ Options
 Commands
 --------
 
-* [help](#help)
-* list-vault
+* [help](#Help)
+* list-vault(#list-vault)
 * create-vault
 * delete-vault
 * list-vault-jobs
@@ -45,8 +45,11 @@ Priorities
 * init-download
 * download-archive
 
-### help
-### Purge vault
+Commands Description
+-------------------
+### Help
+
+### List vault
 
 Minimum Amazon Glacier permissions:
 -----------------------------------
