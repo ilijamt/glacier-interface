@@ -544,7 +544,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	}
 
 	archive.setCreatedDate(new Date());
-	archive.setState(ArchiveState.CREATED);
+	archive.setState(ArchiveState.CREATE);
 
 	// 0. Get the upload state file, check if we have a state already
 	final MultipartUploadStatus uploadStatus;

@@ -53,7 +53,7 @@ public class State {
     }
 
     /**
-     * Checks if the hash is correct between the archvie and the file on the
+     * Checks if the hash is correct between the archive and the file on the
      * disk
      * 
      * @param archive
@@ -128,7 +128,7 @@ public class State {
 
 	    Archive archive = new Archive();
 
-	    archive.setState(ArchiveState.CREATED);
+	    archive.setState(ArchiveState.CREATE);
 	    archive.setId(archiveItem.getArchiveId());
 	    archive.setCreatedDate(archiveItem.getCreationDate());
 	    archive.setSize(archiveItem.getSize());
@@ -194,13 +194,15 @@ public class State {
 	journal.addArchive(archive);
 
 	switch (archive.getState()) {
-	case DELETED:
+	case DELETE:
 	    archives.remove(archive.getKeyId());
 	    break;
-	case CREATED:
-	case MODIFIED:
+	case CREATE:
+	case DOWNLOAD:
 	case NOT_DEFINED:
 	    archives.put(archive.getKeyId(), archive);
+	    break;
+	default:
 	    break;
 	}
     }
@@ -216,7 +218,7 @@ public class State {
 
 	if (null != archive) {
 	    archive = (Archive) archive.clone();
-	    archive.setState(ArchiveState.DELETED);
+	    archive.setState(ArchiveState.DELETE);
 	    addArchive(archive);
 	}
 
