@@ -21,8 +21,8 @@ Options
 Commands
 --------
 
-* [help](#Help)
-* list-vault(#list-vault)
+* [help](#help)
+* [list-vault](#list-vault)
 * create-vault
 * delete-vault
 * list-vault-jobs
@@ -47,9 +47,9 @@ Priorities
 
 Commands Description
 -------------------
-### Help
+### `help`
 
-### List vault
+### `list-vault`
 
 Minimum Amazon Glacier permissions:
 -----------------------------------
