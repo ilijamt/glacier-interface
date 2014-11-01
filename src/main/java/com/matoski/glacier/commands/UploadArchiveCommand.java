@@ -98,67 +98,11 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 	    System.out.println("ERROR: No files specified");
 	} else {
 
-	    Archive archive = null;
-	    Boolean upload = true;
-	    Boolean exists = false;
+	    AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
 	    for (String fileName : command.files) {
-
-		upload = true;
-		exists = journal.isFileInArchive(fileName);
-
-		// check if this file exists in the journal
-		if (exists) {
-
-		    System.out.println(String.format("%s is already present in the journal", fileName));
-		    System.out.println(String.format("Verifying ..."));
-
-		    Archive testArchive = journal.getByName(fileName);
-
-		    GenericValidateEnum validSize = State.archiveValidateFileSize(testArchive);
-		    GenericValidateEnum validModifiedDate = State.archiveValidateLastModified(testArchive);
-
-		    System.out.println(String.format("%s size is %s", fileName, validSize));
-		    System.out.println(String.format("%s modified date is %s", fileName, validModifiedDate));
-		    System.out.println(String.format("Verifying hash ..."));
-
-		    GenericValidateEnum validTreeHash = State.archiveValidateTreeHash(testArchive);
-
-		    System.out.println(String.format("Hash is: %s", validTreeHash));
-		    System.out.println();
-
-		    upload = command.forceUpload;
-
-		}
-
-		if (upload) {
-
-		    System.out.println(String.format("Processing: %s (size: %s)", fileName, new File(Config.getInstance().getDirectory(),
-			    fileName).length()));
-
-		    try {
-			archive = this.upload.UploadMultipartFile(fileName, new File(Config.getInstance().getDirectory(), fileName),
-				command.concurrent, command.retryFailedUpload, command.partSize, command.vaultName, metadata);
-
-			if (command.forceUpload && exists) {
-			    archive.setState(ArchiveState.FORCE_UPLOAD);
-			}
-
-			this.journal.addArchive(archive);
-			this.journal.save();
-
-		    } catch (UploadTooManyPartsException e) {
-			e.printStackTrace();
-		    } catch (IOException e) {
-			e.printStackTrace();
-		    } catch (RegionNotSupportedException e) {
-			e.printStackTrace();
-		    }
-
-		} else {
-		    System.out.println(String.format("Skipping upload for %s", fileName));
-		}
-
+		upload.UploadArchive(journal, command.vaultName, fileName, command.forceUpload, command.concurrent,
+			command.retryFailedUpload, command.partSize);
 	    }
 
 	}

@@ -36,6 +36,12 @@ public class ArchiveTest {
 
     }
 
+    public final void testCreatedConversion() {
+	String date = "2014-10-12T07:45:10Z";
+	archive.setCreatedDate(date);
+	assertEquals(archive.getCreatedDate(), ISO8601Utils.parse(date));
+    }
+
     @Test
     public final void testSetGet() {
 	assertEquals(archive.getId(), Id);
@@ -45,11 +51,5 @@ public class ArchiveTest {
 	assertEquals(archive.getSize(), Size);
 	assertEquals(archive.getHash(), Hash);
 	assertEquals(archive.getUri(), Uri);
-    }
-
-    public final void testCreatedConversion() {
-	String date = "2014-10-12T07:45:10Z";
-	archive.setCreatedDate(date);
-	assertEquals(archive.getCreatedDate(), ISO8601Utils.parse(date));
     }
 }

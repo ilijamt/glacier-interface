@@ -230,6 +230,10 @@ public class Config {
 	    this.setVault(arguments.amazonVault);
 	}
 
+	if (null != arguments.directory) {
+	    this.setDirectory(arguments.directory);
+	}
+
     }
 
     /**

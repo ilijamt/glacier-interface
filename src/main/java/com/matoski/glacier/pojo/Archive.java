@@ -56,6 +56,45 @@ public class Archive implements Cloneable {
     private String uri;
 
     /**
+     * Constructor
+     */
+    public Archive() {
+	super();
+    }
+
+    /**
+     * Constructor
+     * 
+     * @param state
+     * @param id
+     * @param name
+     * @param modifiedDate
+     * @param createdDate
+     * @param size
+     * @param hash
+     * @param uri
+     */
+    public Archive(ArchiveState state, String id, String name, long modifiedDate, Date createdDate, long size, String hash, String uri) {
+	super();
+	this.state = state;
+	this.id = id;
+	this.name = name;
+	this.modifiedDate = modifiedDate;
+	this.createdDate = createdDate;
+	this.size = size;
+	this.hash = hash;
+	this.uri = uri;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Object clone() {
+	return new Archive(getState(), getId(), getName(), getModifiedDate(), getCreatedDate(), getSize(), getHash(), getUri());
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -220,44 +259,5 @@ public class Archive implements Cloneable {
      */
     public void setUri(String uri) {
 	this.uri = uri;
-    }
-
-    /**
-     * Constructor
-     */
-    public Archive() {
-	super();
-    }
-
-    /**
-     * Constructor
-     * 
-     * @param state
-     * @param id
-     * @param name
-     * @param modifiedDate
-     * @param createdDate
-     * @param size
-     * @param hash
-     * @param uri
-     */
-    public Archive(ArchiveState state, String id, String name, long modifiedDate, Date createdDate, long size, String hash, String uri) {
-	super();
-	this.state = state;
-	this.id = id;
-	this.name = name;
-	this.modifiedDate = modifiedDate;
-	this.createdDate = createdDate;
-	this.size = size;
-	this.hash = hash;
-	this.uri = uri;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object clone() {
-	return new Archive(getState(), getId(), getName(), getModifiedDate(), getCreatedDate(), getSize(), getHash(), getUri());
     }
 }

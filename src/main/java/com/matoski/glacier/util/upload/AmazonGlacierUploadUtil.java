@@ -57,14 +57,17 @@ import com.amazonaws.services.glacier.model.UploadMultipartPartRequest;
 import com.amazonaws.services.glacier.model.UploadMultipartPartResult;
 import com.matoski.glacier.Constants;
 import com.matoski.glacier.enums.ArchiveState;
+import com.matoski.glacier.enums.GenericValidateEnum;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.enums.UploadMultipartStatus;
 import com.matoski.glacier.errors.InvalidUploadedChecksumException;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.UploadTooManyPartsException;
 import com.matoski.glacier.pojo.Archive;
+import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.pojo.MultipartUploadStatus;
 import com.matoski.glacier.pojo.UploadPiece;
+import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.AmazonGlacierBaseUtil;
 import com.matoski.glacier.util.Parser;
 
@@ -794,5 +797,78 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	}
 
 	return ret;
+    }
+
+    /**
+     * Uploads the archive to Glacier
+     * 
+     * @param journal
+     * @param vaultName
+     * @param fileName
+     * @param forceUpload
+     * @param concurrent
+     * @param retryFailedUpload
+     * @param partSize
+     * 
+     * @return
+     */
+    public Archive UploadArchive(State journal, String vaultName, String fileName, Boolean forceUpload, int concurrent,
+	    int retryFailedUpload, int partSize) {
+
+	Archive archive = null;
+	Metadata metadata = journal.getMetadata();
+	boolean upload = true;
+	Boolean exists = journal.isFileInArchive(fileName);
+
+	// check if this file exists in the journal
+	if (exists) {
+
+	    System.out.println(String.format("%s is already present in the journal", fileName));
+	    System.out.println(String.format("Verifying ..."));
+
+	    Archive testArchive = journal.getByName(fileName);
+
+	    GenericValidateEnum validSize = State.archiveValidateFileSize(testArchive);
+	    GenericValidateEnum validModifiedDate = State.archiveValidateLastModified(testArchive);
+
+	    System.out.println(String.format("%s size is %s", fileName, validSize));
+	    System.out.println(String.format("%s modified date is %s", fileName, validModifiedDate));
+	    System.out.println(String.format("Verifying hash ..."));
+
+	    GenericValidateEnum validTreeHash = State.archiveValidateTreeHash(testArchive);
+
+	    System.out.println(String.format("Hash is: %s", validTreeHash));
+	    System.out.println();
+
+	    upload = forceUpload;
+
+	}
+
+	if (upload) {
+
+	    System.out.println(String.format("Processing: %s (size: %s)", fileName,
+		    new File(Config.getInstance().getDirectory(), fileName).length()));
+
+	    try {
+		archive = UploadMultipartFile(fileName, new File(Config.getInstance().getDirectory(), fileName), concurrent,
+			retryFailedUpload, partSize, vaultName, metadata);
+
+		journal.addArchive(archive);
+		journal.save();
+
+	    } catch (UploadTooManyPartsException e) {
+		e.printStackTrace();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    } catch (RegionNotSupportedException e) {
+		e.printStackTrace();
+	    }
+
+	} else {
+	    System.out.println(String.format("Skipping upload for %s", fileName));
+	}
+
+	return archive;
+
     }
 }
