@@ -197,6 +197,17 @@ Usage: <main class> [options] [command] [command options]
 
     sync      Sync a folder contents to amazon glacier
       Usage: sync [options]
+        Options:
+        *     --journal
+             Journal
+              --metadata
+             Available: mt2, fgv2, if not specified it will be read from the
+             journal, also if a journal is specified, the metadata will be read from the
+             journal and not from the command line
+             Default: mt2
+              --vault
+             The name of the vault to where the archives will be synced, will be
+             overwriten by --aws-vault if not specified
 
 
 

@@ -47,9 +47,10 @@ Priorities
 
 Commands Description
 -------------------
-### `help`
+## `help`
+Shows all the available command in the system, you can take a look at [Help](Help)
 
-### `list-vault`
+## `list-vault`
 
 Minimum Amazon Glacier permissions:
 -----------------------------------
