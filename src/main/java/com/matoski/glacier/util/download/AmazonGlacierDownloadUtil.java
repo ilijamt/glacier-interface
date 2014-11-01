@@ -64,13 +64,13 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
      */
     public InitiateJobResult InitiateDownloadRequest(String vaultName, String archiveId, String snsTopicARN) {
 
-	JobParameters jobParameters = new JobParameters().withType("archive-retrieval").withArchiveId(archiveId);
+	JobParameters job = new JobParameters().withType("archive-retrieval").withArchiveId(archiveId);
 
 	if (null != snsTopicARN) {
-	    jobParameters.withSNSTopic(snsTopicARN);
+	    job.withSNSTopic(snsTopicARN);
 	}
 
-	InitiateJobRequest request = new InitiateJobRequest().withVaultName(vaultName).withJobParameters(jobParameters);
+	InitiateJobRequest request = new InitiateJobRequest().withVaultName(vaultName).withJobParameters(job);
 
 	return client.initiateJob(request);
 
