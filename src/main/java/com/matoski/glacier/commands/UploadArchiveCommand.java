@@ -1,18 +1,13 @@
 package com.matoski.glacier.commands;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandUploadArchive;
-import com.matoski.glacier.enums.ArchiveState;
-import com.matoski.glacier.enums.GenericValidateEnum;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.RegionNotSupportedException;
-import com.matoski.glacier.errors.UploadTooManyPartsException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
-import com.matoski.glacier.pojo.Archive;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.AmazonGlacierBaseUtil;

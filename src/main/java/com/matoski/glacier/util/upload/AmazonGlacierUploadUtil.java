@@ -330,6 +330,10 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 		e.printStackTrace();
 	    } catch (RegionNotSupportedException e) {
 		e.printStackTrace();
+	    } catch (InstantiationException e) {
+		e.printStackTrace();
+	    } catch (IllegalAccessException e) {
+		e.printStackTrace();
 	    }
 
 	} else {
@@ -341,7 +345,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     }
 
     public Archive UploadMultipartFile(String fileName, File file, int threads, int retry, int partSize, String vaultName, Metadata metadata)
-	    throws UploadTooManyPartsException, IOException, RegionNotSupportedException {
+	    throws UploadTooManyPartsException, IOException, RegionNotSupportedException, InstantiationException, IllegalAccessException {
 
 	ExecutorService pool = Executors.newFixedThreadPool(threads);
 	HashMap<Integer, Future<UploadPiece>> map = new HashMap<Integer, Future<UploadPiece>>();
@@ -362,7 +366,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
 	if (MultipartUploadStatus.has(file)) {
 	    System.out.println(String.format("Upload state found for %s, loading", file.getName()));
-	    uploadStatus = MultipartUploadStatus.load(file);
+	    uploadStatus = MultipartUploadStatus.load(file, MultipartUploadStatus.class);
 	} else {
 	    uploadStatus = new MultipartUploadStatus();
 	}
@@ -401,6 +405,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	    try {
 		uploadStatus.write();
 	    } catch (NullPointerException | IOException e) {
+		uploadStatus.write();
 		System.err.println(String.format("ERROR: %s", e.getMessage()));
 	    }
 
@@ -450,10 +455,11 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 			    uploadStatus.addPiece(piece);
 			}
 		    } catch (InterruptedException e) {
-
+			uploadStatus.write();
 		    } catch (ExecutionException e) {
-
+			uploadStatus.write();
 		    } catch (IOException e) {
+			uploadStatus.write();
 			System.err.println(String.format("ERROR: %s", e.getMessage()));
 		    } catch (TimeoutException e) {
 			// we skip this item as it has not finished yet we don't
@@ -483,6 +489,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 		}
 
 	    } catch (InterruptedException | ExecutionException e) {
+		uploadStatus.write();
 		System.err.println(String.format("ERROR: %s", e.getMessage()));
 	    }
 

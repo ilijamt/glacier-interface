@@ -1,6 +1,6 @@
 Glacier Interface, Copyright 2014, Ilija Matoski
 
-Current working directory: 
+Current working directory: /tmp
 Command: Help
 
 Usage: <main class> [options] [command] [command options]
@@ -102,6 +102,20 @@ Usage: <main class> [options] [command] [command options]
 
     init-download      Initiate a download job
       Usage: init-download [options]
+        Options:
+              --id
+             The id of the archive
+              --ignore-journal
+             Ignore the journal when downloading, you should only use this with
+             ID
+             Default: false
+        *     --journal
+             Journal location
+              --name
+             The name of the archive
+              --vault
+             The name of the vault for whom the inventory needs to be retrieved,
+             will be overwritten by --aws-vault if not specified
 
     download-archive      Download an archive
       Usage: download-archive [options]

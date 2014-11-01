@@ -1,11 +1,7 @@
 package com.matoski.glacier.pojo;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,8 +10,6 @@ import java.util.TreeMap;
 
 import com.amazonaws.services.glacier.TreeHashGenerator;
 import com.amazonaws.util.BinaryUtils;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.matoski.glacier.enums.UploadMultipartStatus;
 
 /**
@@ -25,68 +19,7 @@ import com.matoski.glacier.enums.UploadMultipartStatus;
  * @author ilijamt
  *
  */
-public class MultipartUploadStatus {
-
-    /**
-     * Create a file based on the file, we use this to keep the state upload
-     * 
-     * @param file
-     * @return
-     */
-    public static File generateFile(File file) {
-
-	File status = new File(file.getAbsolutePath() + ".state");
-
-	return status;
-
-    };
-
-    /**
-     * Do we have an upload status or not ?
-     * 
-     * @param file
-     * @return
-     */
-    public static Boolean has(File file) {
-	file = generateFile(file);
-
-	return file.exists() && file.isFile();
-    }
-
-    /**
-     * Load the status from file
-     * 
-     * @param file
-     * @return
-     * @throws IOException
-     */
-    public static MultipartUploadStatus load(File file) throws IOException {
-
-	file = generateFile(file);
-
-	if (!file.exists()) {
-	    // no journal, it's an empty one so we just return an empty Journal
-	    return new MultipartUploadStatus();
-	}
-
-	String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-
-	MultipartUploadStatus status = new Gson().fromJson(json, MultipartUploadStatus.class);
-	status.setFile(file, true);
-	return status;
-
-    }
-
-    /**
-     * Write the status to file
-     * 
-     * @param file
-     * @return
-     * @throws IOException
-     */
-    public static MultipartUploadStatus load(String file) throws IOException {
-	return load(new File(Config.getInstance().getDirectory(), file));
-    }
+public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadStatus> {
 
     /**
      * The checksums
@@ -97,11 +30,6 @@ public class MultipartUploadStatus {
      * The final checksum
      */
     private String finalChecksum;
-
-    /**
-     * A dirty flag, used to know if we should write it or not?
-     */
-    private transient boolean dirty = false;
 
     /**
      * The original location for the upload
@@ -117,11 +45,6 @@ public class MultipartUploadStatus {
      * The generic status
      */
     UploadMultipartStatus status = UploadMultipartStatus.NOP;
-
-    /**
-     * The file for the upload state
-     */
-    private transient File file;
 
     /**
      * The ID of the upload process
@@ -157,7 +80,7 @@ public class MultipartUploadStatus {
      * Constructor
      */
     public MultipartUploadStatus() {
-	dirty = true;
+	setDirty();
 	this.pieces = new TreeMap<Integer, UploadPiece>();
     }
 
@@ -170,7 +93,7 @@ public class MultipartUploadStatus {
      * @throws NullPointerException
      */
     public void addPiece(int part, UploadPiece piece) throws NullPointerException, IOException {
-	dirty = true;
+	setDirty();
 	if (!this.pieces.containsKey(part)) {
 	    this.pieces.put(part, piece);
 	    this.lastUpdate = new Date();
@@ -186,7 +109,7 @@ public class MultipartUploadStatus {
      * @throws IOException
      */
     public void addPiece(UploadPiece piece) throws IOException {
-	dirty = true;
+	setDirty();
 	if (!this.pieces.containsKey(piece.getPart())) {
 	    this.pieces.put(piece.getPart(), piece);
 	    this.lastUpdate = new Date();
@@ -212,15 +135,6 @@ public class MultipartUploadStatus {
      */
     public List<byte[]> getChecksums() {
 	return this.checksums;
-    }
-
-    /**
-     * Get the file
-     * 
-     * @return
-     */
-    public File getFile() {
-	return file;
     }
 
     /**
@@ -290,13 +204,6 @@ public class MultipartUploadStatus {
      */
     public UploadMultipartStatus getStatus() {
 	return status;
-    }
-
-    /**
-     * @return the dirty
-     */
-    public boolean isDirty() {
-	return dirty;
     }
 
     /**
@@ -383,27 +290,6 @@ public class MultipartUploadStatus {
     }
 
     /**
-     * @param dirty
-     *            the dirty to set
-     */
-    public void setDirty(boolean dirty) {
-	this.dirty = dirty;
-    }
-
-    /**
-     * Set the file
-     * 
-     * @param file
-     */
-    public void setFile(File file) {
-	setFile(file, false);
-    }
-
-    public void setFile(File file, Boolean doNotGenerate) {
-	this.file = doNotGenerate ? file : generateFile(file);
-    }
-
-    /**
      * @param finalChecksum
      *            the finalChecksum to set
      */
@@ -416,7 +302,7 @@ public class MultipartUploadStatus {
      *            the id to set
      */
     public void setId(String id) {
-	dirty = true;
+	setDirty();
 	this.id = id;
     }
 
@@ -425,7 +311,7 @@ public class MultipartUploadStatus {
      *            the initiated to set
      */
     public void setInitiated(boolean initiated) {
-	dirty = true;
+	setDirty();
 	this.initiated = initiated;
     }
 
@@ -442,7 +328,7 @@ public class MultipartUploadStatus {
      *            the location to set
      */
     public void setLocation(String location) {
-	dirty = true;
+	setDirty();
 	this.location = location;
     }
 
@@ -451,7 +337,7 @@ public class MultipartUploadStatus {
      *            the parts to set
      */
     public void setParts(int parts) {
-	dirty = true;
+	setDirty();
 	this.parts = parts;
     }
 
@@ -460,7 +346,7 @@ public class MultipartUploadStatus {
      *            the partSize to set
      */
     public void setPartSize(int partSize) {
-	dirty = true;
+	setDirty();
 	this.partSize = partSize;
     }
 
@@ -469,7 +355,7 @@ public class MultipartUploadStatus {
      *            the pieces to set
      */
     public void setPieces(TreeMap<Integer, UploadPiece> pieces) {
-	dirty = true;
+	setDirty();
 	this.pieces = pieces;
     }
 
@@ -478,7 +364,7 @@ public class MultipartUploadStatus {
      *            the started to set
      */
     public void setStarted(Date started) {
-	dirty = true;
+	setDirty();
 	this.started = started;
     }
 
@@ -487,7 +373,7 @@ public class MultipartUploadStatus {
      *            the status to set
      */
     public void setStatus(UploadMultipartStatus status) {
-	dirty = true;
+	setDirty();
 	this.status = status;
     }
 
@@ -501,52 +387,6 @@ public class MultipartUploadStatus {
 	}
 
 	this.finalChecksum = TreeHashGenerator.calculateTreeHash(checksums);
-    }
-
-    /**
-     * Write the status to file
-     * 
-     * @return
-     * @throws IOException
-     * @throws NullPointerException
-     */
-    public boolean write() throws NullPointerException, IOException {
-	return write(getFile());
-    }
-
-    /**
-     * Write the status to file
-     * 
-     * @param file
-     * @return
-     * @throws IOException
-     * @throws NullPointerException
-     */
-    protected boolean write(File file) throws NullPointerException, IOException {
-
-	if (!dirty) {
-	    // no need to write the file as the data has not been updated
-	    return true;
-	}
-
-	if (null == file) {
-	    throw new NullPointerException();
-	}
-
-	if (!file.exists()) {
-	    file.createNewFile();
-	}
-
-	FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
-	BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create().toJson(this));
-
-	bufferedWriter.close();
-	fileWriter.close();
-
-	dirty = false;
-
-	return true;
     }
 
 }
