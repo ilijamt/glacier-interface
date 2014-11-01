@@ -48,7 +48,7 @@ Priorities
 Commands Description
 -------------------
 ## `help`
-Shows all the available command in the system, you can take a look at [Help](Help)
+Shows all the available command in the system, you can take a look at [Help](HELP)
 
 ## `list-vault`
 
