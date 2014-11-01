@@ -23,22 +23,22 @@ Commands
 
 * [help](#help)
 * [list-vault](#list-vault)
-* create-vault
-* delete-vault
-* list-vault-jobs
-* vault-job-info
-* inventory-retrieve
-* inventory-download
-* list-journal
-* init-download (TODO)
-* download-archive (TODO)
-* delete-archive
-* upload-archive
-* list-multipart-uploads
-* multipart-upload-info
-* abort-multipart-upload
-* purge-vault
-* sync
+* [create-vault](#create-vault)
+* [delete-vault](#delete-vault)
+* [list-vault-jobs](#list-vault-jobs)
+* [vault-job-info](#vault-job-info)
+* [inventory-retrieve](#inventory-retrieve)
+* [inventory-download](#inventory-download)
+* [list-journal](#list-journal)
+* [init-download](#init-download) (TODO)
+* [download-archive](#download-archive) (TODO)
+* [delete-archive](#delete-archive)
+* [upload-archive](#upload-archive)
+* [list-multipart-uploads](#list-multipart-uploads)
+* [multipart-upload-info](#multipart-upload-info)
+* [abort-multipart-upload](#abort-multipart-upload)
+* [purge-vault](#purge-vault)
+* [sync](#sync)
 
 Priorities
 -----------
@@ -51,7 +51,39 @@ Commands Description
 Shows all the available command in the system, you can take a look at [Help](HELP)
 
 ## `list-vault`
-Lists all available vaults present on Amazon Glacier servers
+Lists all available vaults present on Amazon Glacier servers specified by the region
+
+## `create-vault` 
+
+## `delete-vault`
+
+## `list-vault-jobs`
+
+## `vault-job-info`
+
+## `inventory-retrieve`
+
+## `inventory-download`
+
+## `list-journal`
+
+## `init-download`
+
+## `download-archive`
+
+## `delete-archive`
+
+## `upload-archive`
+
+## `list-multipart-uploads`
+
+## `multipart-upload-info`
+
+## `abort-multipart-upload`
+
+## `purge-vault`
+
+## `sync`
 
 Minimum Amazon Glacier permissions:
 -----------------------------------
