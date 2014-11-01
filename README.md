@@ -98,9 +98,11 @@ Delete an archive from Glacier, it can be either done by archive ID or by an arc
 Uploads an archive to Glacier server.
 
 * partSize
+
 How big of chunks should be uploaded at a time
 
 * concurrent
+
 You can specify how many threads to open to use when uploading the data to amazon glacier, the more threads you have the more memory it will eat.
 
 ### `list-multipart-uploads`
