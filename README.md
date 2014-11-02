@@ -36,7 +36,7 @@ Commands
 * [inventory-download](#inventory-download)
 * [list-journal](#list-journal)
 * [init-download](#init-download) (TODO)
-* [download-archive](#download-archive) (TODO)
+* [download-job](#download-job) (TODO)
 * [delete-archive](#delete-archive)
 * [upload-archive](#upload-archive)
 * [list-multipart-uploads](#list-multipart-uploads)
@@ -88,7 +88,7 @@ It's used to list the files in a journal, it can give you a detailed information
 ### `init-download`
 TODO
 
-### `download-archive`
+### `download-job`
 TODO 
 
 ### `delete-archive`

@@ -42,17 +42,11 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 	Boolean validId = (null != command.id);
 	Boolean validName = (null != command.name);
 
-	if (command.ignoreJournal) {
+	if (!command.ignoreJournal) {
 	    try {
 		this.journal = State.load(command.journal);
 	    } catch (IOException e) {
 		throw new RuntimeException("Journal doesn't exist");
-	    }
-
-	    try {
-		this.journal.save();
-	    } catch (IOException e) {
-		System.out.println("Journal failed to save");
 	    }
 	}
 
@@ -62,6 +56,10 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 
 	if (validVaultNameConfig) {
 	    command.vaultName = config.getVault();
+	}
+
+	if (command.ignoreJournal && !validId) {
+	    throw new IllegalArgumentException("ID is required, when --ignore-journal is supplied");
 	}
 
 	if (!validId && !validName) {
@@ -74,7 +72,7 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 
 	if (validId && !validName) {
 	    archiveId = command.id;
-	} else {
+	} else if (!command.ignoreJournal) {
 	    Archive archive = journal.getByName(command.name);
 	    if (null == archive) {
 		throw new IllegalArgumentException("The archive is not present in the journal");

@@ -1,6 +1,9 @@
 package com.matoski.glacier.commands;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.amazonaws.services.glacier.model.InitiateJobResult;
 import com.matoski.glacier.base.AbstractCommand;
@@ -9,24 +12,47 @@ import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Archive;
 import com.matoski.glacier.pojo.Config;
+import com.matoski.glacier.pojo.DownloadJob;
+import com.matoski.glacier.pojo.DownloadJobInfo;
 import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.download.AmazonGlacierDownloadUtil;
 
+/**
+ * Init Download command
+ * 
+ * @author ilijamt
+ */
 public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 
-    protected String archiveId;
+    /**
+     * List of archive ids to download
+     */
+    protected List<String> archiveId = new ArrayList<String>();
+
+    /**
+     * Journal
+     */
     private State journal;
 
+    /**
+     * Constructor
+     * 
+     * @param config
+     * @param command
+     * @throws VaultNameNotPresentException
+     * @throws RegionNotSupportedException
+     */
     public InitDownloadCommand(Config config, CommandInitDownload command) throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
 	archiveId = command.id;
 
 	Boolean validVaultName = null != command.vaultName;
 	Boolean validVaultNameConfig = null != config.getVault();
-	Boolean validId = (null != command.id);
-	Boolean validName = (null != command.name);
 
-	if (command.ignoreJournal) {
+	Boolean validId = (command.id.size() > 0);
+	Boolean validName = (command.name.size() > 0);
+
+	if (!command.ignoreJournal) {
 	    try {
 		this.journal = State.load(command.journal);
 	    } catch (IOException e) {
@@ -42,8 +68,18 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 	    command.vaultName = config.getVault();
 	}
 
+	if (command.ignoreJournal && !validId) {
+	    throw new IllegalArgumentException("ID is required, when --ignore-journal is supplied");
+	}
+
+	// no ID and no NAME
 	if (!validId && !validName) {
 	    throw new IllegalArgumentException("ID or NAME are required");
+	}
+
+	// ID and NAME
+	if (validId && validName) {
+	    throw new IllegalArgumentException("ID or NAME are required, not both");
 	}
 
 	if (command.ignoreJournal && !validId) {
@@ -54,18 +90,30 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 
 	if (validId && !validName) {
 	    archiveId = command.id;
-	} else {
-	    Archive archive = journal.getByName(command.name);
-	    if (null == archive) {
-		throw new IllegalArgumentException("The archive is not present in the journal");
+	    for (String id : command.id) {
+		System.out.println(String.format("Queue download job for %s", id));
 	    }
-	    archiveName = archive.getName();
-	    archiveId = archive.getId();
+	    System.out.println();
+	} else if (!command.ignoreJournal) {
+	    Archive archive = null;
+	    for (String item : command.name) {
+		archive = this.journal.getByName(item);
+		if (null == archive) {
+		    System.out.println(String.format("%s is not present in the journal, skipping ...", item));
+		} else {
+		    archiveName = archive.getName();
+		    archiveId.add(archive.getId());
+		    System.out.println(String.format("Queue download job for %s [%s]", archiveName, archive.getId()));
+		}
+	    }
+	    System.out.println();
 	}
-	System.out.println(String.format("Initiating download for %s[%s]", archiveName, archiveId));
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
 
@@ -73,7 +121,27 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 
 	AmazonGlacierDownloadUtil download = new AmazonGlacierDownloadUtil(credentials, client, region);
 
-	InitiateJobResult request = download.InitiateDownloadRequest(command.vaultName, archiveId);
+	DownloadJobInfo jobs = new DownloadJobInfo();
+	jobs.setFile(new File(command.jobFile), true);
+	jobs.setDirectory(config.getDirectory());
+
+	for (String id : archiveId) {
+
+	    DownloadJob job = new DownloadJob();
+
+	    InitiateJobResult request = download.InitiateDownloadRequest(command.vaultName, id);
+
+	    job.setJobId(request.getJobId());
+	    job.setVaultName(command.vaultName);
+	    jobs.addJob(job);
+
+	    try {
+		jobs.write();
+	    } catch (NullPointerException | IOException e) {
+		e.printStackTrace();
+	    }
+
+	}
 
 	System.out.println("\nEND: init-download");
     }

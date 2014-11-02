@@ -1,11 +1,19 @@
 package com.matoski.glacier.pojo;
 
-public class DownloadJob extends AbstractWritablePojo<DownloadJob> {
+import java.util.Date;
+
+/**
+ * Download job
+ * 
+ * @author ilijamt
+ *
+ */
+public class DownloadJob {
 
     /**
-     * The archive ID of the download
+     * When was this created
      */
-    private String archiveId;
+    private Date created;
 
     /**
      * The ID of the job.
@@ -18,38 +26,53 @@ public class DownloadJob extends AbstractWritablePojo<DownloadJob> {
     private String vaultName;
 
     /**
-     * The name of the archive, relative to the working directory
+     * Constructor
      */
-    private String archiveName;
-
-    public String getArchiveId() {
-	return archiveId;
+    public DownloadJob() {
+	created = new Date();
     }
 
-    public String getArchiveName() {
-	return archiveName;
+    /**
+     * When was this created
+     * 
+     * @return
+     */
+    public Date getCreated() {
+	return created;
     }
 
+    /**
+     * Get the job Id
+     * 
+     * @return
+     */
     public String getJobId() {
 	return jobId;
     }
 
+    /**
+     * Get the vault name where the job is
+     * 
+     * @return
+     */
     public String getVaultName() {
 	return vaultName;
     }
 
-    public void setArchiveId(String archiveId) {
-	this.archiveId = archiveId;
-    }
-
-    public void setArchiveName(String archiveName) {
-	this.archiveName = archiveName;
-    }
-
+    /**
+     * Sets the jobId
+     * 
+     * @param jobId
+     */
     public void setJobId(String jobId) {
 	this.jobId = jobId;
     }
 
+    /**
+     * Sets the vault name for the jobId
+     * 
+     * @param vaultName
+     */
     public void setVaultName(String vaultName) {
 	this.vaultName = vaultName;
     }
