@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
+import com.matoski.glacier.pojo.archive.Archive;
 
 public class ArchiveTest {
 

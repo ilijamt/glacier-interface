@@ -104,21 +104,32 @@ Usage: <main class> [options] [command] [command options]
       Usage: init-download [options]
         Options:
               --id
-             The id of the archive
+             The id(s) of the archive, you can supply multiple ids
+             Default: []
               --ignore-journal
              Ignore the journal when downloading, you should only use this with
-             ID
+             ID, the journal will still be loaded to get the names of the archives
+             in the journal, the other names will be named as the archive id
              Default: false
+        *     --job-file
+             Where to store the job, this is used for downloading the archives
         *     --journal
              Journal location
               --name
-             The name of the archive
+             The name of the archive, you can supply multiple names
+             Default: []
               --vault
              The name of the vault for whom the inventory needs to be retrieved,
              will be overwritten by --aws-vault if not specified
+              --wait
+             Should we wait to process the download job, or not
+             Default: false
 
-    download-archive      Download an archive
-      Usage: download-archive [options]
+    download-job      Download the job
+      Usage: download-job [options]
+        Options:
+        *     --job-file
+             Uses this file to download all the archives in the file
 
     delete-archive      Initiate a deletion of archive
       Usage: delete-archive [options]

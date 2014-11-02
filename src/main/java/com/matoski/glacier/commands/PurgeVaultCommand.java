@@ -7,8 +7,8 @@ import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandPurgeVault;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
-import com.matoski.glacier.pojo.Archive;
 import com.matoski.glacier.pojo.Config;
+import com.matoski.glacier.pojo.archive.Archive;
 import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 

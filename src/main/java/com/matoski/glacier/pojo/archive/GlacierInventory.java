@@ -1,4 +1,4 @@
-package com.matoski.glacier.pojo;
+package com.matoski.glacier.pojo.archive;
 
 import java.util.List;
 

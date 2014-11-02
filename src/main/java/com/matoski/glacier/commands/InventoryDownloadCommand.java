@@ -13,7 +13,7 @@ import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
-import com.matoski.glacier.pojo.GlacierInventory;
+import com.matoski.glacier.pojo.archive.GlacierInventory;
 import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.FileWriteUtils;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;

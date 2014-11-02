@@ -3,7 +3,7 @@ package com.matoski.glacier.metadata;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.InvalidMetadataException;
 import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
-import com.matoski.glacier.pojo.Archive;
+import com.matoski.glacier.pojo.archive.Archive;
 
 /**
  * mt-aws-glacier type B metadata

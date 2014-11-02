@@ -2,7 +2,7 @@ package com.matoski.glacier.util.upload;
 
 import java.io.File;
 
-import com.matoski.glacier.pojo.UploadPiece;
+import com.matoski.glacier.pojo.upload.UploadPiece;
 import com.matoski.glacier.util.ThreadAmazonGlacierDummy;
 
 /**

@@ -1,7 +1,9 @@
-package com.matoski.glacier.pojo;
+package com.matoski.glacier.pojo.job;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.matoski.glacier.base.AbstractWritablePojo;
 
 /**
  * Download job info

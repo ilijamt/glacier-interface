@@ -1,7 +1,7 @@
 package com.matoski.glacier.interfaces;
 
 import com.matoski.glacier.errors.InvalidMetadataException;
-import com.matoski.glacier.pojo.Archive;
+import com.matoski.glacier.pojo.archive.Archive;
 
 /**
  * Metadata definition

@@ -1,4 +1,4 @@
-package com.matoski.glacier.pojo;
+package com.matoski.glacier.pojo.job;
 
 import java.util.Date;
 
@@ -26,6 +26,11 @@ public class DownloadJob {
     private String vaultName;
 
     /**
+     * The name of the archive
+     */
+    private String name;
+
+    /**
      * Constructor
      */
     public DownloadJob() {
@@ -51,6 +56,13 @@ public class DownloadJob {
     }
 
     /**
+     * @return the name
+     */
+    public String getName() {
+	return name;
+    }
+
+    /**
      * Get the vault name where the job is
      * 
      * @return
@@ -60,12 +72,28 @@ public class DownloadJob {
     }
 
     /**
+     * @param created
+     *            the created to set
+     */
+    public void setCreated(Date created) {
+	this.created = created;
+    }
+
+    /**
      * Sets the jobId
      * 
      * @param jobId
      */
     public void setJobId(String jobId) {
 	this.jobId = jobId;
+    }
+
+    /**
+     * @param name
+     *            the name to set
+     */
+    public void setName(String name) {
+	this.name = name;
     }
 
     /**

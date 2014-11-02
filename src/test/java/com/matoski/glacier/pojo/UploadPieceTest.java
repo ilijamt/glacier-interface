@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import com.matoski.glacier.enums.MultipartStatus;
+import com.matoski.glacier.pojo.upload.UploadPiece;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UploadPieceTest {

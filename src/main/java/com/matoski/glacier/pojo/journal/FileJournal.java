@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.matoski.glacier.enums.Metadata;
-import com.matoski.glacier.pojo.Archive;
+import com.matoski.glacier.pojo.archive.Archive;
 
 public class FileJournal {
 

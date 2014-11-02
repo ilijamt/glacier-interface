@@ -10,10 +10,10 @@ import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandInitDownload;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
-import com.matoski.glacier.pojo.Archive;
 import com.matoski.glacier.pojo.Config;
-import com.matoski.glacier.pojo.DownloadJob;
-import com.matoski.glacier.pojo.DownloadJobInfo;
+import com.matoski.glacier.pojo.archive.Archive;
+import com.matoski.glacier.pojo.job.DownloadJob;
+import com.matoski.glacier.pojo.job.DownloadJobInfo;
 import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.download.AmazonGlacierDownloadUtil;
 
@@ -52,10 +52,12 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 	Boolean validId = (command.id.size() > 0);
 	Boolean validName = (command.name.size() > 0);
 
-	if (!command.ignoreJournal) {
-	    try {
-		this.journal = State.load(command.journal);
-	    } catch (IOException e) {
+	try {
+	    this.journal = State.load(command.journal);
+	} catch (IOException e) {
+	    if (command.ignoreJournal) {
+		this.journal = new State();
+	    } else {
 		throw new RuntimeException("Journal doesn't exist");
 	    }
 	}
@@ -122,6 +124,8 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 	AmazonGlacierDownloadUtil download = new AmazonGlacierDownloadUtil(credentials, client, region);
 
 	DownloadJobInfo jobs = new DownloadJobInfo();
+	Archive archive = null;
+
 	jobs.setFile(new File(command.jobFile), true);
 	jobs.setDirectory(config.getDirectory());
 
@@ -133,6 +137,14 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 
 	    job.setJobId(request.getJobId());
 	    job.setVaultName(command.vaultName);
+
+	    archive = journal.getById(id);
+	    if (null == archive) {
+		job.setName(id);
+	    } else {
+		job.setName(archive.getName());
+	    }
+
 	    jobs.addJob(job);
 
 	    try {

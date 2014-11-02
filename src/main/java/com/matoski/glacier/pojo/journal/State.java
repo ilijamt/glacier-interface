@@ -2,6 +2,7 @@ package com.matoski.glacier.pojo.journal;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -19,9 +20,9 @@ import com.matoski.glacier.enums.GenericValidateEnum;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.InvalidMetadataException;
 import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
-import com.matoski.glacier.pojo.Archive;
-import com.matoski.glacier.pojo.GlacierInventory;
-import com.matoski.glacier.pojo.GlacierInventory.ArchiveItem;
+import com.matoski.glacier.pojo.archive.Archive;
+import com.matoski.glacier.pojo.archive.GlacierInventory;
+import com.matoski.glacier.pojo.archive.GlacierInventory.ArchiveItem;
 import com.matoski.glacier.util.Parser;
 
 /**
@@ -73,12 +74,13 @@ public class State {
      * 
      * @return
      * 
+     * @throws FileNotFoundException
      * @throws IOException
      */
-    public static State load(File file) throws IOException {
+    public static State load(File file) throws FileNotFoundException, IOException {
 
 	if (!file.exists()) {
-	    throw new IOException();
+	    throw new FileNotFoundException();
 	}
 
 	State journal = new State();
@@ -101,9 +103,10 @@ public class State {
      * 
      * @return
      * 
+     * @throws FileNotFoundExceptioneclipse 
      * @throws IOException
      */
-    public static State load(String file) throws IOException {
+    public static State load(String file) throws FileNotFoundException, IOException {
 	return load(new File(file));
     }
 

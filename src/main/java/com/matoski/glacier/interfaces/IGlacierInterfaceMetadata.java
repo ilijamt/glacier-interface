@@ -2,7 +2,7 @@ package com.matoski.glacier.interfaces;
 
 import java.util.Date;
 
-import com.matoski.glacier.pojo.Archive;
+import com.matoski.glacier.pojo.archive.Archive;
 
 /**
  * Generic interface to the metadata, all the metadata definitions have to

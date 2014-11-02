@@ -13,7 +13,7 @@ import com.amazonaws.metrics.RequestMetricCollector;
 import com.amazonaws.services.glacier.model.RequestTimeoutException;
 import com.matoski.glacier.enums.MultipartStatus;
 import com.matoski.glacier.errors.RegionNotSupportedException;
-import com.matoski.glacier.pojo.UploadPiece;
+import com.matoski.glacier.pojo.upload.UploadPiece;
 
 /**
  * A threaded upload manager

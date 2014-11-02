@@ -1,4 +1,4 @@
-package com.matoski.glacier.pojo;
+package com.matoski.glacier.pojo.download;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,7 @@ import java.util.TreeMap;
 
 import com.amazonaws.services.glacier.TreeHashGenerator;
 import com.amazonaws.util.BinaryUtils;
+import com.matoski.glacier.base.AbstractWritablePojo;
 import com.matoski.glacier.enums.MultipartStatus;
 
 /**
@@ -19,7 +20,7 @@ import com.matoski.glacier.enums.MultipartStatus;
  * @author ilijamt
  *
  */
-public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadStatus> {
+public class MultipartDownloadStatus extends AbstractWritablePojo<MultipartDownloadStatus> {
 
     /**
      * The checksums
@@ -64,7 +65,7 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
     /**
      * The pieces
      */
-    private TreeMap<Integer, UploadPiece> pieces;
+    private TreeMap<Integer, DownloadPiece> pieces;
 
     /**
      * When did this upload start?
@@ -79,27 +80,9 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
     /**
      * Constructor
      */
-    public MultipartUploadStatus() {
+    public MultipartDownloadStatus() {
 	setDirty();
-	this.pieces = new TreeMap<Integer, UploadPiece>();
-    }
-
-    /**
-     * Add a piece that has been processed
-     * 
-     * @param part
-     * @param piece
-     * @throws IOException
-     * @throws NullPointerException
-     */
-    public void addPiece(int part, UploadPiece piece) throws NullPointerException, IOException {
-	setDirty();
-	if (!this.pieces.containsKey(part)) {
-	    this.pieces.put(part, piece);
-	    this.lastUpdate = new Date();
-	    this.write();
-	    update();
-	}
+	this.pieces = new TreeMap<Integer, DownloadPiece>();
     }
 
     /**
@@ -108,7 +91,7 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
      * @param piece
      * @throws IOException
      */
-    public void addPiece(UploadPiece piece) throws IOException {
+    public void addPiece(DownloadPiece piece) throws IOException {
 	setDirty();
 	if (!this.pieces.containsKey(piece.getPart())) {
 	    this.pieces.put(piece.getPart(), piece);
@@ -119,12 +102,30 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
     }
 
     /**
-     * Do we actually have the {@link UploadPiece} already in {@link #pieces}
+     * Add a piece that has been processed
+     * 
+     * @param part
+     * @param piece
+     * @throws IOException
+     * @throws NullPointerException
+     */
+    public void addPiece(int part, DownloadPiece piece) throws NullPointerException, IOException {
+	setDirty();
+	if (!this.pieces.containsKey(part)) {
+	    this.pieces.put(part, piece);
+	    this.lastUpdate = new Date();
+	    this.write();
+	    update();
+	}
+    }
+
+    /**
+     * Do we actually have the {@link DownloadPiece} already in {@link #pieces}
      * 
      * @param piece
      * @return
      */
-    public Boolean exists(UploadPiece piece) {
+    public Boolean exists(DownloadPiece piece) {
 	return this.pieces.containsValue(piece);
     }
 
@@ -181,14 +182,14 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
 	return partSize;
     }
 
-    public UploadPiece getPiece(int part) {
+    public DownloadPiece getPiece(int part) {
 	return this.pieces.get(part);
     }
 
     /**
      * @return the pieces
      */
-    public TreeMap<Integer, UploadPiece> getPieces() {
+    public TreeMap<Integer, DownloadPiece> getPieces() {
 	return pieces;
     }
 
@@ -209,10 +210,10 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
     /**
      * Is everything finished?
      * 
-     * It will iterate over {@link MultipartUploadStatus#pieces} and compare the
-     * status with {@link MultipartStatus#PIECE_COMPLETE}
+     * It will iterate over {@link MultipartDownloadStatus#pieces} and compare
+     * the status with {@link MultipartStatus#PIECE_COMPLETE}
      * 
-     * If the state is finished, {@link MultipartUploadStatus#remove()} is
+     * If the state is finished, {@link MultipartDownloadStatus#remove()} is
      * called.
      * 
      * @return
@@ -228,7 +229,7 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
 	Boolean valid = parts == this.pieces.size();
 
 	// go over the elements, and compare if all the pieces are complete
-	for (Entry<Integer, UploadPiece> piece : this.pieces.entrySet()) {
+	for (Entry<Integer, DownloadPiece> piece : this.pieces.entrySet()) {
 	    valid &= (piece.getValue().getStatus() == MultipartStatus.PIECE_COMPLETE);
 	}
 
@@ -251,7 +252,7 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
     /**
      * Is the piece completed?
      * 
-     * Compares the {@link UploadPiece#getStatus()} to
+     * Compares the {@link DownloadPiece#getStatus()} to
      * {@link MultipartStatus#PIECE_COMPLETE}
      * 
      * @param piece
@@ -354,7 +355,7 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
      * @param pieces
      *            the pieces to set
      */
-    public void setPieces(TreeMap<Integer, UploadPiece> pieces) {
+    public void setPieces(TreeMap<Integer, DownloadPiece> pieces) {
 	setDirty();
 	this.pieces = pieces;
     }
@@ -382,7 +383,7 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
      */
     public void update() {
 	this.checksums.clear();
-	for (Entry<Integer, UploadPiece> entry : this.pieces.entrySet()) {
+	for (Entry<Integer, DownloadPiece> entry : this.pieces.entrySet()) {
 	    this.checksums.add(BinaryUtils.fromHex(entry.getValue().getCalculatedChecksum()));
 	}
 

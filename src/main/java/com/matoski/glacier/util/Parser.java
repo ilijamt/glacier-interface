@@ -6,7 +6,7 @@ import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
 import com.matoski.glacier.metadata.FastGlacierV2;
 import com.matoski.glacier.metadata.GenericParser;
 import com.matoski.glacier.metadata.MT_AWS_GLACIER_B;
-import com.matoski.glacier.pojo.Archive;
+import com.matoski.glacier.pojo.archive.Archive;
 
 /**
  * Generic parser

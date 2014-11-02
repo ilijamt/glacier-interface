@@ -7,8 +7,8 @@ import org.apache.commons.io.FileUtils;
 
 import com.matoski.glacier.base.AbstractEmptyCommand;
 import com.matoski.glacier.cli.CommandListJournal;
-import com.matoski.glacier.pojo.Archive;
 import com.matoski.glacier.pojo.Config;
+import com.matoski.glacier.pojo.archive.Archive;
 import com.matoski.glacier.pojo.journal.State;
 
 public class ListJournalCommand extends AbstractEmptyCommand<CommandListJournal> {

@@ -2,7 +2,7 @@ package com.matoski.glacier.util.download;
 
 import java.io.File;
 
-import com.matoski.glacier.pojo.DownloadPiece;
+import com.matoski.glacier.pojo.download.DownloadPiece;
 import com.matoski.glacier.util.ThreadAmazonGlacierDummy;
 
 /**

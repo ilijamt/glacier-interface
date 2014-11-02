@@ -1,4 +1,4 @@
-package com.matoski.glacier.pojo;
+package com.matoski.glacier.base;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,6 +9,7 @@ import java.nio.file.Files;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.matoski.glacier.pojo.Config;
 
 /**
  * Abstract writable pojo

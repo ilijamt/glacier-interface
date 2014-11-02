@@ -23,7 +23,7 @@ public class CommandInitDownload extends GenericCommand {
     @Parameter(required = true, names = "--journal", description = "Journal location")
     public String journal;
 
-    @Parameter(names = "--ignore-journal", description = "Ignore the journal when downloading, you should only use this with ID")
+    @Parameter(names = "--ignore-journal", description = "Ignore the journal when downloading, you should only use this with ID, the journal will still be loaded to get the names of the archives in the journal, the other names will be named as the archive id")
     public Boolean ignoreJournal = false;
 
     @Parameter(required = true, names = "--job-file", description = "Where to store the job, this is used for downloading the archives")

@@ -1,7 +1,7 @@
 package com.matoski.glacier.interfaces;
 
 import com.matoski.glacier.cli.CommandUploadArchive;
-import com.matoski.glacier.pojo.UploadPiece;
+import com.matoski.glacier.pojo.upload.UploadPiece;
 
 public interface IUploadPieceHandler {
 
