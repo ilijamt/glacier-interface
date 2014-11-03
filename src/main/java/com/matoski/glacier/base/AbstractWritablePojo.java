@@ -9,7 +9,6 @@ import java.nio.file.Files;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.matoski.glacier.pojo.Config;
 
 /**
  * Abstract writable pojo
@@ -21,28 +20,13 @@ import com.matoski.glacier.pojo.Config;
 public abstract class AbstractWritablePojo<T> {
 
     /**
-     * Create a file based on the file, we use this to keep the state upload
-     * 
-     * @param file
-     * @return
-     */
-    public static File generateFile(File file) {
-
-	File status = new File(file.getAbsolutePath() + ".state");
-
-	return status;
-
-    }
-
-    /**
      * Do we have an upload status or not ?
      * 
      * @param file
+     * 
      * @return
      */
     public static Boolean has(File file) {
-	file = generateFile(file);
-
 	return file.exists() && file.isFile();
     }
 
@@ -60,8 +44,6 @@ public abstract class AbstractWritablePojo<T> {
     @SuppressWarnings("unchecked")
     public static <T> T load(File file, Class<T> cls) throws IOException, InstantiationException, IllegalAccessException {
 
-	file = generateFile(file);
-
 	if (!file.exists()) {
 	    // no journal, it's an empty one so we just return an empty Journal
 	    return cls.newInstance();
@@ -70,7 +52,7 @@ public abstract class AbstractWritablePojo<T> {
 	String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
 
 	T status = new Gson().fromJson(json, cls);
-	((AbstractWritablePojo<T>) status).setFile(file, true);
+	((AbstractWritablePojo<T>) status).setFile(file);
 
 	return status;
 
@@ -84,12 +66,13 @@ public abstract class AbstractWritablePojo<T> {
      * @param file
      * 
      * @return
+     * 
      * @throws IOException
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
     public static <T> T load(String file, Class<T> cls) throws IOException, InstantiationException, IllegalAccessException {
-	return load(new File(Config.getInstance().getDirectory(), file), cls);
+	return load(new File(file), cls);
     }
 
     /**
@@ -107,6 +90,15 @@ public abstract class AbstractWritablePojo<T> {
      */
     public void clearDirty() {
 	this.dirty = false;
+    }
+
+    /**
+     * Set the file for writing
+     * 
+     * @param file
+     */
+    public void setFile(File file) {
+	this.file = file;
     }
 
     /**
@@ -131,25 +123,6 @@ public abstract class AbstractWritablePojo<T> {
     public void setDirty() {
 	this.dirty = true;
     };
-
-    /**
-     * Set the file
-     * 
-     * @param file
-     */
-    public void setFile(File file) {
-	setFile(file, false);
-    }
-
-    /**
-     * Set the file
-     * 
-     * @param file
-     * @param doNotGenerate
-     */
-    public void setFile(File file, Boolean doNotGenerate) {
-	this.file = doNotGenerate ? file : generateFile(file);
-    }
 
     /**
      * Write the status to file

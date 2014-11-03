@@ -9,6 +9,7 @@ import com.matoski.glacier.cli.CommandVaultJobInfo;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
+import com.matoski.glacier.util.AmazonGlacierBaseUtil;
 
 public class VaultJobInfoCommand extends AbstractCommand<CommandVaultJobInfo> {
 
@@ -29,11 +30,11 @@ public class VaultJobInfoCommand extends AbstractCommand<CommandVaultJobInfo> {
 
 	System.out.println("START: vault-job-info\n");
 
+	AmazonGlacierBaseUtil base = new AmazonGlacierBaseUtil(credentials, client, region);
+
 	try {
 
-	    DescribeJobRequest request = new DescribeJobRequest().withVaultName(command.vaultName).withJobId(command.id);
-
-	    DescribeJobResult job = client.describeJob(request);
+	    DescribeJobResult job = base.DescribeJob(command.vaultName, command.id);
 
 	    System.out.println(String.format("%1$25s : %2$s", "Action", job.getAction()));
 	    System.out.println(String.format("%1$25s : %2$s", "Archive Id", job.getArchiveId()));

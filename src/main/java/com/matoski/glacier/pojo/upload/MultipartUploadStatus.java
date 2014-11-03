@@ -22,6 +22,7 @@ import com.matoski.glacier.enums.MultipartStatus;
  */
 public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadStatus> {
 
+    
     /**
      * The checksums
      */
@@ -389,5 +390,5 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
 
 	this.finalChecksum = TreeHashGenerator.calculateTreeHash(checksums);
     }
-
+   
 }

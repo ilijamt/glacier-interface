@@ -41,7 +41,7 @@ import com.matoski.glacier.enums.ArchiveState;
 import com.matoski.glacier.enums.GenericValidateEnum;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.enums.MultipartStatus;
-import com.matoski.glacier.errors.InvalidUploadedChecksumException;
+import com.matoski.glacier.errors.InvalidChecksumException;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.UploadTooManyPartsException;
 import com.matoski.glacier.pojo.Config;
@@ -350,8 +350,9 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	ExecutorService pool = Executors.newFixedThreadPool(threads);
 	HashMap<Integer, Future<UploadPiece>> map = new HashMap<Integer, Future<UploadPiece>>();
 
+	final File stateFile = new File(file, ".state");
 	Archive archive = new Archive();
-	long fileSize = file.length();
+	final long fileSize = file.length();
 	int pieces = (int) Math.ceil(fileSize / (double) partSize);
 
 	if (!isValidMaxParts(file, partSize)) {
@@ -364,9 +365,9 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	// 0. Get the upload state file, check if we have a state already
 	final MultipartUploadStatus uploadStatus;
 
-	if (MultipartUploadStatus.has(file)) {
+	if (MultipartUploadStatus.has(stateFile)) {
 	    System.out.println(String.format("Upload state found for %s, loading", file.getName()));
-	    uploadStatus = MultipartUploadStatus.load(file, MultipartUploadStatus.class);
+	    uploadStatus = MultipartUploadStatus.load(stateFile, MultipartUploadStatus.class);
 	} else {
 	    uploadStatus = new MultipartUploadStatus();
 	}
@@ -534,7 +535,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
      */
     public UploadPiece UploadMultipartPiece(File file, int pieces, int part, int partSize, String vaultName, String uploadId)
 	    throws AmazonServiceException, NoSuchAlgorithmException, AmazonClientException, FileNotFoundException, IOException,
-	    InvalidUploadedChecksumException, RequestTimeoutException {
+	    InvalidChecksumException, RequestTimeoutException {
 	return UploadMultipartPiece(file, pieces, part, partSize, vaultName, uploadId, null, null);
     }
 

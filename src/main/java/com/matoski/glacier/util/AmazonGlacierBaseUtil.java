@@ -26,6 +26,8 @@ import com.amazonaws.services.glacier.model.CreateVaultRequest;
 import com.amazonaws.services.glacier.model.CreateVaultResult;
 import com.amazonaws.services.glacier.model.DeleteArchiveRequest;
 import com.amazonaws.services.glacier.model.DeleteVaultRequest;
+import com.amazonaws.services.glacier.model.DescribeJobRequest;
+import com.amazonaws.services.glacier.model.DescribeJobResult;
 import com.amazonaws.services.glacier.model.DescribeVaultOutput;
 import com.amazonaws.services.glacier.model.DescribeVaultRequest;
 import com.amazonaws.services.glacier.model.DescribeVaultResult;
@@ -71,7 +73,7 @@ import com.matoski.glacier.errors.RegionNotSupportedException;
  * 
  * @author ilijamt
  */
-public abstract class AmazonGlacierBaseUtil {
+public class AmazonGlacierBaseUtil {
 
     /**
      * Can we split the file in the specified parts, without hitting the limit
@@ -343,6 +345,52 @@ public abstract class AmazonGlacierBaseUtil {
     public void DeleteVault(String vaultName) throws AmazonServiceException, AmazonClientException {
 	DeleteVaultRequest request = new DeleteVaultRequest().withVaultName(vaultName);
 	client.deleteVault(request);
+    }
+
+    /**
+     * Describe a job
+     * 
+     * @param vaultName
+     * @param jobId
+     * 
+     * @return
+     * 
+     * @throws AmazonClientException
+     * @throws AmazonServiceException
+     */
+    public DescribeJobResult DescribeJob(String vaultName, String jobId) throws AmazonServiceException, AmazonClientException {
+	return DescribeJob(vaultName, jobId, null, null);
+    }
+
+    /**
+     * Describe a job
+     * 
+     * @param vaultName
+     * @param jobId
+     * @param listener
+     * @param collector
+     *
+     * @return
+     * 
+     * @throws AmazonClientException
+     * @throws AmazonServiceException
+     */
+    public DescribeJobResult DescribeJob(String vaultName, String jobId, ProgressListener listener, RequestMetricCollector collector)
+	    throws AmazonServiceException, AmazonClientException {
+
+	DescribeJobRequest request = new DescribeJobRequest().withVaultName(vaultName).withJobId(jobId);
+
+	if (null != listener) {
+	    request.withGeneralProgressListener(listener);
+	}
+
+	if (null != collector) {
+	    request.withRequestMetricCollector(collector);
+	}
+
+	DescribeJobResult result = client.describeJob(request);
+
+	return result;
     }
 
     /**

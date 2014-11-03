@@ -1,6 +1,6 @@
 package com.matoski.glacier.errors;
 
-public class InvalidUploadedChecksumException extends Exception {
+public class InvalidChecksumException extends Exception {
 
     /**
      * Serial version ID

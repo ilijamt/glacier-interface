@@ -2,6 +2,7 @@ package com.matoski.glacier.cli;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.matoski.glacier.Constants;
 import com.matoski.glacier.base.GenericCommand;
 import com.matoski.glacier.enums.CliCommands;
 
@@ -18,7 +19,7 @@ public class CommandInventoryDownload extends GenericCommand {
     public String journal;
 
     @Parameter(names = "--metadata", description = "Available: mt2, fgv2")
-    public String metadata = "mt2";
+    public String metadata = Constants.DEFAULT_PARSER_METADATA;
 
     @Parameter(names = "--raw", description = "Store the glacier full data instead of the parsed one, useful for creating new metadata parsers")
     public Boolean raw = false;

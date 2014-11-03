@@ -21,6 +21,11 @@ public class DownloadJob {
     private String jobId;
 
     /**
+     * The ID of the archive
+     */
+    private String archiveId;
+
+    /**
      * The vault name of the download
      */
     private String vaultName;
@@ -35,6 +40,13 @@ public class DownloadJob {
      */
     public DownloadJob() {
 	created = new Date();
+    }
+
+    /**
+     * @return the archiveId
+     */
+    public String getArchiveId() {
+	return archiveId;
     }
 
     /**
@@ -69,6 +81,14 @@ public class DownloadJob {
      */
     public String getVaultName() {
 	return vaultName;
+    }
+
+    /**
+     * @param archiveId
+     *            the archiveId to set
+     */
+    public void setArchiveId(String archiveId) {
+	this.archiveId = archiveId;
     }
 
     /**

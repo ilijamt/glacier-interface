@@ -12,7 +12,7 @@ import com.matoski.glacier.cli.CommandAbortMultipartUpload;
 import com.matoski.glacier.cli.CommandCreateVault;
 import com.matoski.glacier.cli.CommandDeleteArchive;
 import com.matoski.glacier.cli.CommandDeleteVault;
-import com.matoski.glacier.cli.CommandDownloadArchive;
+import com.matoski.glacier.cli.CommandDownloadJob;
 import com.matoski.glacier.cli.CommandHelp;
 import com.matoski.glacier.cli.CommandInitDownload;
 import com.matoski.glacier.cli.CommandInventoryDownload;
@@ -30,7 +30,7 @@ import com.matoski.glacier.commands.AbortMultipartUploadCommand;
 import com.matoski.glacier.commands.CreateVaultCommand;
 import com.matoski.glacier.commands.DeleteArchiveCommand;
 import com.matoski.glacier.commands.DeleteVaultCommand;
-import com.matoski.glacier.commands.DownloadArchiveCommand;
+import com.matoski.glacier.commands.DownloadJobCommand;
 import com.matoski.glacier.commands.InitDownloadCommand;
 import com.matoski.glacier.commands.InventoryDownloadCommand;
 import com.matoski.glacier.commands.InventoryRetrievalCommand;
@@ -66,7 +66,7 @@ public class Main {
 	commands.put(CliCommands.ListMultipartUploads.ordinal(), new CommandListMultipartUploads());
 	commands.put(CliCommands.MultipartUploadInfo.ordinal(), new CommandMultipartUploadInfo());
 	commands.put(CliCommands.AbortMultipartUpload.ordinal(), new CommandAbortMultipartUpload());
-	commands.put(CliCommands.DownloadArchive.ordinal(), new CommandDownloadArchive());
+	commands.put(CliCommands.DownloadJob.ordinal(), new CommandDownloadJob());
 	commands.put(CliCommands.InitDownload.ordinal(), new CommandInitDownload());
 	commands.put(CliCommands.PurgeVault.ordinal(), new CommandPurgeVault());
 	commands.put(CliCommands.Sync.ordinal(), new CommandSync());
@@ -226,8 +226,8 @@ public class Main {
 		    new AbortMultipartUploadCommand(config, (CommandAbortMultipartUpload) commands.get(cliCommand.ordinal())).run();
 		    break;
 
-		case DownloadArchive:
-		    new DownloadArchiveCommand(config, (CommandDownloadArchive) commands.get(cliCommand.ordinal())).run();
+		case DownloadJob:
+		    new DownloadJobCommand(config, (CommandDownloadJob) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case InitDownload:
@@ -246,6 +246,10 @@ public class Main {
 		    break;
 
 		}
+	    } catch (FileNotFoundException e) {
+		System.err.println(String.format("ERROR: %s", e.getMessage()));
+	    } catch (IllegalArgumentException e) {
+		System.err.println(String.format("ERROR: %s", e.getMessage()));
 	    } catch (RuntimeException e) {
 		System.err.println(String.format("ERROR: %s", e.getMessage()));
 	    } catch (RegionNotSupportedException e) {

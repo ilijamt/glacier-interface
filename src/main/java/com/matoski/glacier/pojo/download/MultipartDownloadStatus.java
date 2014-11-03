@@ -386,7 +386,6 @@ public class MultipartDownloadStatus extends AbstractWritablePojo<MultipartDownl
 	for (Entry<Integer, DownloadPiece> entry : this.pieces.entrySet()) {
 	    this.checksums.add(BinaryUtils.fromHex(entry.getValue().getCalculatedChecksum()));
 	}
-
 	this.finalChecksum = TreeHashGenerator.calculateTreeHash(checksums);
     }
 

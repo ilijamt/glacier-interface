@@ -12,7 +12,7 @@ public enum CliCommands {
     InventoryDownload("inventory-download"),
     ListJournal("list-journal"),
     InitDownload("init-download"),
-    DownloadArchive("download-archive"),
+    DownloadJob("download-job"),
     DeleteArchive("delete-archive"),
     UploadArchive("upload-archive"),
     ListMultipartUploads("list-multipart-uploads"),

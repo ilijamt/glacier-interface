@@ -23,6 +23,26 @@ public class DownloadJobInfo extends AbstractWritablePojo<DownloadJobInfo> {
     private String directory;
 
     /**
+     * The journal used for the job
+     */
+    private String journal;
+
+    /**
+     * @return the journal
+     */
+    public String getJournal() {
+	return journal;
+    }
+
+    /**
+     * @param journal
+     *            the journal to set
+     */
+    public void setJournal(String journal) {
+	this.journal = journal;
+    }
+
+    /**
      * Add a single job
      * 
      * @param job

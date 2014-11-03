@@ -111,6 +111,8 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 	    System.out.println();
 	}
 
+	// TODO: Verify the parameters if we have supplied wait we need to have
+	// the parameters for downloading the job
     }
 
     /**
@@ -126,7 +128,7 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 	DownloadJobInfo jobs = new DownloadJobInfo();
 	Archive archive = null;
 
-	jobs.setFile(new File(command.jobFile), true);
+	jobs.setFile(new File(command.jobFile));
 	jobs.setDirectory(config.getDirectory());
 
 	for (String id : archiveId) {
@@ -135,6 +137,7 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 
 	    InitiateJobResult request = download.InitiateDownloadRequest(command.vaultName, id);
 
+	    job.setArchiveId(id);
 	    job.setJobId(request.getJobId());
 	    job.setVaultName(command.vaultName);
 
@@ -153,6 +156,10 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 		e.printStackTrace();
 	    }
 
+	}
+
+	if (command.wait) {
+	    System.out.println(String.format("We will wait for the download job to finish, before downloading"));
 	}
 
 	System.out.println("\nEND: init-download");
