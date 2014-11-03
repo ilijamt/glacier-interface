@@ -27,7 +27,7 @@ public class Parser {
     public static String encode(Metadata metadata, Archive archive) {
 	return getParser(metadata).encode(archive);
     }
-
+    
     /**
      * Get the parser dependent on the metadata
      * 

@@ -2,15 +2,23 @@ package com.matoski.glacier.commands;
 
 import java.util.List;
 
+import com.amazonaws.services.glacier.model.ListPartsResult;
+import com.amazonaws.services.glacier.model.PartListElement;
 import com.amazonaws.services.glacier.model.UploadListElement;
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandListMultipartUploads;
+import com.matoski.glacier.enums.Metadata;
+import com.matoski.glacier.errors.InvalidMetadataException;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
+import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
 import com.matoski.glacier.pojo.Config;
+import com.matoski.glacier.util.Parser;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
 public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMultipartUploads> {
+
+    final private Metadata metadata;
 
     public ListMultipartUploadsCommand(Config config, CommandListMultipartUploads command) throws VaultNameNotPresentException,
 	    RegionNotSupportedException {
@@ -24,6 +32,7 @@ public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMult
 	    command.vaultName = config.getVault();
 	}
 
+	metadata = Metadata.from(command.metadata);
     }
 
     @Override
@@ -41,10 +50,45 @@ public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMult
 
 	for (UploadListElement element : list) {
 
-	    System.out.println(String.format("%1$20s: %2$s", "ID", element.getMultipartUploadId()));
-	    System.out.println(String.format("%1$20s: %2$s", "ARN", element.getVaultARN()));
-	    System.out.println(String.format("%1$20s: %2$s", "Creation date", element.getCreationDate()));
-	    System.out.println(String.format("%1$20s: %2$s", "Part size", element.getPartSizeInBytes()));
+	    if (command.full) {
+
+		ListPartsResult result = upload.GetMultipartUploadInfo(command.vaultName, element.getMultipartUploadId());
+
+		System.out.println(String.format("%1$20s: %2$s", "ID", result.getMultipartUploadId()));
+		System.out.println(String.format("%1$20s: %2$s", "ARN", result.getVaultARN()));
+		System.out.println(String.format("%1$20s: %2$s", "Creation date", result.getCreationDate()));
+		System.out.println(String.format("%1$20s: %2$s", "Part size", result.getPartSizeInBytes()));
+		System.out.println(String.format("%1$20s: %2$s", "Description", result.getArchiveDescription()));
+		try {
+		    IGlacierInterfaceMetadata metadata = Parser.parse(this.metadata, element.getArchiveDescription());
+		    System.out.println(String.format("%1$20s: %2$s", "Name", metadata.giGetName()));
+		} catch (NullPointerException | InvalidMetadataException e) {
+		    // nothing we can do, not the correct metadata
+		}
+
+		System.out.println(String.format("Total available parts for the upload: %s", result.getParts().size()));
+
+		for (PartListElement partList : result.getParts()) {
+		    System.out.println(String.format("%1$20s: %2$s", "Byte Range", partList.getRangeInBytes()));
+		    System.out.println(String.format("%1$20s: %2$s", "SHA256 Tree Hash", partList.getSHA256TreeHash()));
+		}
+
+	    } else {
+
+		System.out.println(String.format("%1$20s: %2$s", "ID", element.getMultipartUploadId()));
+		System.out.println(String.format("%1$20s: %2$s", "ARN", element.getVaultARN()));
+		System.out.println(String.format("%1$20s: %2$s", "Creation date", element.getCreationDate()));
+		System.out.println(String.format("%1$20s: %2$s", "Part size", element.getPartSizeInBytes()));
+		System.out.println(String.format("%1$20s: %2$s", "Description", element.getArchiveDescription()));
+
+		try {
+		    IGlacierInterfaceMetadata metadata = Parser.parse(this.metadata, element.getArchiveDescription());
+		    System.out.println(String.format("%1$20s: %2$s", "Name", metadata.giGetName()));
+		} catch (NullPointerException | InvalidMetadataException e) {
+		    // nothing we can do, not the correct metadata
+		}
+
+	    }
 
 	    if (command.cancel) {
 		canceled = upload.CancelMultipartUpload(element.getMultipartUploadId(), command.vaultName);
