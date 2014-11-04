@@ -1,6 +1,6 @@
 Glacier Interface, Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp
+Current working directory: /home/ilijamt/workspace/java/glacier-interface
 Command: Help
 
 Usage: <main class> [options] [command] [command options]
@@ -130,6 +130,13 @@ Usage: <main class> [options] [command] [command options]
         Options:
         *     --job-file
              Uses this file to download all the archives in the file
+              --overwrite
+             This will force overwrite the file if it exists
+             Default: false
+              --part-size
+             How big chunks of data to download from amazon glacier during one
+             request, the part size has to be multiple of 2, like 1MB, 2MB, 4MB, 8MB, ...
+             Default: 1
 
     delete-archive      Initiate a deletion of archive
       Usage: delete-archive [options]
@@ -189,6 +196,12 @@ Usage: <main class> [options] [command] [command options]
               --cancel
              Cancels all the multipart uploads
              Default: false
+              --full
+             Show the full details of the multipart upload job
+             Default: false
+              --metadata
+             The metadata to use while parsing the archive description
+             Default: mt2
               --vault
              The name of the vault from which the multipart uploads will be
              retrieved, will be overwritten by --aws-vault if not specified
