@@ -97,7 +97,7 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 
 	    for (String fileName : command.files) {
 		upload.UploadArchive(journal, command.vaultName, fileName, command.forceUpload, command.concurrent,
-			command.retryFailedUpload, command.partSize);
+			command.retryFailedUpload, command.partSize, command.uploadReplaceModified);
 	    }
 
 	}

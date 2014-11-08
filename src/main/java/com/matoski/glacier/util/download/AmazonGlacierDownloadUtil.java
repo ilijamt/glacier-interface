@@ -96,6 +96,18 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
 
     }
 
+    /**
+     * Download archive
+     * 
+     * @param job
+     * @param partSize
+     * @param overwrite
+     * 
+     * @return
+     * 
+     * @throws FileAlreadyExistsException
+     * @throws InvalidChecksumException
+     */
     public MultipartDownloadStatus DownloadArchive(DownloadJob job, long partSize, boolean overwrite) throws FileAlreadyExistsException,
 	    InvalidChecksumException {
 
@@ -126,11 +138,41 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
 
     }
 
+    /**
+     * Download a chunk 
+     * 
+     * @param file
+     * @param vaultName
+     * @param jobId
+     * @param part
+     * @param partSize
+     * 
+     * @return
+     * 
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public DownloadPiece DownloadAndWriteChunk(File file, String vaultName, String jobId, int part, long partSize)
 	    throws FileNotFoundException, IOException {
 	return DownloadAndWriteChunk(file, vaultName, jobId, part, partSize, null, null);
     }
 
+    /**
+     * Download a chunk
+     * 
+     * @param file
+     * @param vaultName
+     * @param jobId
+     * @param part
+     * @param partSize
+     * @param listener
+     * @param collector
+     * 
+     * @return
+     * 
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public DownloadPiece DownloadAndWriteChunk(File file, String vaultName, String jobId, int part, long partSize,
 	    ProgressListener listener, RequestMetricCollector collector) throws FileNotFoundException, IOException {
 

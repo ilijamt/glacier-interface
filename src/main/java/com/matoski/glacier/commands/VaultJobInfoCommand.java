@@ -2,7 +2,6 @@ package com.matoski.glacier.commands;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.glacier.model.DescribeJobRequest;
 import com.amazonaws.services.glacier.model.DescribeJobResult;
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandVaultJobInfo;

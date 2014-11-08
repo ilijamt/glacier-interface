@@ -27,6 +27,12 @@ public class CommandSync extends GenericCommand {
     @Parameter(names = "--concurrent", description = "How many threads to open to use when uploading the data to amazon glacier, the more threads you have the more memory it will eat. The memory requirements will be partSize * concurrent")
     public Integer concurrent = Constants.DEFAULT_CONCURRENT_THREADS;
 
+    @Parameter(names = "--replaced-modified", description = "Replaces the modified file with a new one, and the old one is deleted from glacier and the journal")
+    public Boolean uploadReplaceModified = false;
+    
+    @Parameter(names = "--new", description = "Uploads only files that don't exist in the journal, this is the default behaviour")
+    public Boolean uploadNew = true;
+    
     public CommandSync() {
 	super(CliCommands.Sync);
     }

@@ -36,6 +36,9 @@ public class CommandUploadArchive extends GenericCommand {
     @Parameter(names = "--force-upload", description = "Force upload if it exist in the journal, but it will still keep the old archive, you will have to delete the old one on your own")
     public Boolean forceUpload = false;
 
+    @Parameter(names = "--replaced-modified", description = "Replaces the modified file with a new one, and the old one is deleted from glacier and the journal")
+    public Boolean uploadReplaceModified = false;
+
     public CommandUploadArchive() {
 	super(CliCommands.UploadArchive);
     }

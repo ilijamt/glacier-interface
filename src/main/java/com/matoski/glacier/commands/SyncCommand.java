@@ -43,6 +43,7 @@ public class SyncCommand extends AbstractCommand<CommandSync> {
 	System.out.println("START: sync\n");
 
 	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
+	Boolean exists = false;
 
 	Collection<File> result = FileUtils.listFiles(new File(config.getDirectory()), null, true);
 
@@ -53,8 +54,16 @@ public class SyncCommand extends AbstractCommand<CommandSync> {
 	System.out.println(String.format("%s files found", files.size()));
 
 	for (String fileName : files) {
+
+	    exists = journal.isFileInArchive(fileName);
+
+	    if (!command.uploadReplaceModified && exists) {
+		System.out.println(String.format("%s is already present in the journal, skipping", fileName));
+		continue;
+	    }
+
 	    upload.UploadArchive(journal, command.vaultName, fileName, false, command.concurrent, command.retryFailedUpload,
-		    command.partSize);
+		    command.partSize, command.uploadReplaceModified);
 	}
 
 	System.out.println("\nEND: sync");

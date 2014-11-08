@@ -281,35 +281,52 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
      * @return
      */
     public Archive UploadArchive(State journal, String vaultName, String fileName, Boolean forceUpload, int concurrent,
-	    int retryFailedUpload, int partSize) {
+	    int retryFailedUpload, int partSize, boolean replace) {
 
 	Archive archive = null;
 	Metadata metadata = journal.getMetadata();
 	boolean upload = true;
 	Boolean exists = journal.isFileInArchive(fileName);
+	Archive old = exists ? journal.getByName(fileName) : null;
 
 	// check if this file exists in the journal
-	if (exists) {
+	if (exists && (forceUpload || replace)) {
 
+	    upload = false;
 	    System.out.println(String.format("%s is already present in the journal", fileName));
-	    System.out.println(String.format("Verifying ..."));
 
-	    Archive testArchive = journal.getByName(fileName);
+	    if (forceUpload) {
 
-	    GenericValidateEnum validSize = State.archiveValidateFileSize(testArchive);
-	    GenericValidateEnum validModifiedDate = State.archiveValidateLastModified(testArchive);
+		System.out.println(String.format("Force upload in effect"));
+		upload = forceUpload;
 
-	    System.out.println(String.format("%s size is %s", fileName, validSize));
-	    System.out.println(String.format("%s modified date is %s", fileName, validModifiedDate));
-	    System.out.println(String.format("Verifying hash ..."));
+	    } else if (replace) {
 
-	    GenericValidateEnum validTreeHash = State.archiveValidateTreeHash(testArchive);
+		System.out.println(String.format("Verifying ..."));
 
-	    System.out.println(String.format("Hash is: %s", validTreeHash));
-	    System.out.println();
+		Archive testArchive = journal.getByName(fileName);
 
-	    upload = forceUpload;
+		GenericValidateEnum validSize = State.archiveValidateFileSize(testArchive);
+		GenericValidateEnum validModifiedDate = State.archiveValidateLastModified(testArchive);
 
+		System.out.println(String.format("%s size is %s", fileName, validSize));
+		System.out.println(String.format("%s modified date is %s", fileName, validModifiedDate));
+		System.out.println(String.format("Verifying hash, this may take a while depending on the file size ..."));
+
+		GenericValidateEnum validTreeHash = State.archiveValidateTreeHash(testArchive);
+
+		System.out.println(String.format("Hash is: %s", validTreeHash));
+		System.out.println();
+
+		upload =   validSize != GenericValidateEnum.VALID 
+			|| validModifiedDate != GenericValidateEnum.VALID
+			|| validTreeHash != GenericValidateEnum.VALID;
+		
+	    } else {
+		
+		System.err.println("Why are we here?");
+	    
+	    }
 	}
 
 	if (upload) {
@@ -318,8 +335,15 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 		    new File(Config.getInstance().getDirectory(), fileName).length()));
 
 	    try {
+
 		archive = UploadMultipartFile(fileName, new File(Config.getInstance().getDirectory(), fileName), concurrent,
 			retryFailedUpload, partSize, vaultName, metadata);
+
+		// delete the old archive if we have replace the file property
+		if (replace && archive != null) {
+		    System.out.println(String.format("Cleaning, removing old archive [%s] %s", old.getId(), old.getName()));
+		    DeleteArchive(vaultName, old.getId());
+		}
 
 		journal.addArchive(archive);
 		journal.save();
@@ -337,7 +361,9 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	    }
 
 	} else {
+	    
 	    System.out.println(String.format("Skipping upload for %s", fileName));
+	
 	}
 
 	return archive;
