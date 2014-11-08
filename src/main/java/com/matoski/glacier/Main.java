@@ -26,6 +26,7 @@ import com.matoski.glacier.cli.CommandPurgeVault;
 import com.matoski.glacier.cli.CommandSync;
 import com.matoski.glacier.cli.CommandUploadArchive;
 import com.matoski.glacier.cli.CommandVaultJobInfo;
+import com.matoski.glacier.cli.CommandVerifyJournal;
 import com.matoski.glacier.commands.AbortMultipartUploadCommand;
 import com.matoski.glacier.commands.CreateVaultCommand;
 import com.matoski.glacier.commands.DeleteArchiveCommand;
@@ -43,6 +44,7 @@ import com.matoski.glacier.commands.PurgeVaultCommand;
 import com.matoski.glacier.commands.SyncCommand;
 import com.matoski.glacier.commands.UploadArchiveCommand;
 import com.matoski.glacier.commands.VaultJobInfoCommand;
+import com.matoski.glacier.commands.VerifyJournalCommand;
 import com.matoski.glacier.enums.CliCommands;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
@@ -70,6 +72,7 @@ public class Main {
 	commands.put(CliCommands.InitDownload.ordinal(), new CommandInitDownload());
 	commands.put(CliCommands.PurgeVault.ordinal(), new CommandPurgeVault());
 	commands.put(CliCommands.Sync.ordinal(), new CommandSync());
+	commands.put(CliCommands.VerifyJournal.ordinal(), new CommandVerifyJournal());
 
     }
 
@@ -130,6 +133,7 @@ public class Main {
 	    switch (cliCommand) {
 	    case Help:
 	    case ListJournal:
+	    case VerifyJournal:
 		validConfig = true;
 		break;
 
@@ -240,6 +244,10 @@ public class Main {
 
 		case Sync:
 		    new SyncCommand(config, (CommandSync) commands.get(cliCommand.ordinal())).run();
+		    break;
+
+		case VerifyJournal:
+		    new VerifyJournalCommand(config, (CommandVerifyJournal) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		default:

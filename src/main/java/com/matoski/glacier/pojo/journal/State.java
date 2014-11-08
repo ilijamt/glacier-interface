@@ -62,9 +62,19 @@ public class State {
      */
     public static GenericValidateEnum archiveValidateTreeHash(Archive archive) {
 	File file = new File(archive.getName());
-	String checksum = TreeHashGenerator.calculateTreeHash(file);
 
-	return archive.getHash().equals(checksum) ? GenericValidateEnum.VALID : GenericValidateEnum.INVALID;
+	String checksum = null;
+	GenericValidateEnum state = GenericValidateEnum.ERROR;
+
+	try {
+	    checksum = TreeHashGenerator.calculateTreeHash(file);
+	    state = archive.getHash().equals(checksum) ? GenericValidateEnum.VALID : GenericValidateEnum.INVALID;
+	} catch (Exception e) {
+	    state = GenericValidateEnum.ERROR;
+	}
+
+	return state;
+
     }
 
     /**
@@ -103,7 +113,7 @@ public class State {
      * 
      * @return
      * 
-     * @throws FileNotFoundExceptioneclipse 
+     * @throws FileNotFoundExceptioneclipse
      * @throws IOException
      */
     public static State load(String file) throws FileNotFoundException, IOException {
@@ -231,7 +241,7 @@ public class State {
      * @return the archives
      */
     public HashMap<String, Archive> getArchives() {
-	return archives;
+	return this.archives;
     }
 
     /**

@@ -3,16 +3,15 @@ package com.matoski.glacier.commands;
 import java.io.IOException;
 import java.util.Map.Entry;
 
-import org.apache.commons.io.FileUtils;
-
 import com.matoski.glacier.base.AbstractEmptyCommand;
 import com.matoski.glacier.cli.CommandListJournal;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.pojo.archive.Archive;
 import com.matoski.glacier.pojo.journal.State;
+import com.matoski.glacier.util.FileUtils;
 
 /**
- * Lists items in a journal 
+ * Lists items in a journal
  * 
  * @author ilijamt
  *
@@ -25,7 +24,7 @@ public class ListJournalCommand extends AbstractEmptyCommand<CommandListJournal>
     private State journal;
 
     /**
-     * Constructor 
+     * Constructor
      * 
      * @param config
      * @param command
@@ -65,7 +64,7 @@ public class ListJournalCommand extends AbstractEmptyCommand<CommandListJournal>
 		System.out.println();
 
 	    } else {
-		System.out.println(String.format("[%1$7s] %2$s", FileUtils.byteCountToDisplaySize(archive.getSize()), archive.getName()));
+		System.out.println(String.format("[%1$7s] %2$s", FileUtils.humanReadableByteCount(archive.getSize(), false), archive.getName()));
 	    }
 
 	}
