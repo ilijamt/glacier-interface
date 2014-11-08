@@ -11,10 +11,26 @@ import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.pojo.archive.Archive;
 import com.matoski.glacier.pojo.journal.State;
 
+/**
+ * Lists items in a journal 
+ * 
+ * @author ilijamt
+ *
+ */
 public class ListJournalCommand extends AbstractEmptyCommand<CommandListJournal> {
 
+    /**
+     * The journal
+     */
     private State journal;
 
+    /**
+     * Constructor 
+     * 
+     * @param config
+     * @param command
+     * @throws IOException
+     */
     public ListJournalCommand(Config config, CommandListJournal command) throws IOException {
 	super(config, command);
 	if (null == command.journal) {
@@ -23,6 +39,9 @@ public class ListJournalCommand extends AbstractEmptyCommand<CommandListJournal>
 	this.journal = State.load(command.journal);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
 

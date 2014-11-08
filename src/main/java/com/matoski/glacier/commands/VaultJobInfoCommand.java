@@ -10,8 +10,22 @@ import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.util.AmazonGlacierBaseUtil;
 
+/**
+ * Show details about a vault job
+ * 
+ * @author ilijamt
+ *
+ */
 public class VaultJobInfoCommand extends AbstractCommand<CommandVaultJobInfo> {
 
+    /**
+     * Constructor 
+     * 
+     * @param config
+     * @param command
+     * @throws VaultNameNotPresentException
+     * @throws RegionNotSupportedException
+     */
     public VaultJobInfoCommand(Config config, CommandVaultJobInfo command) throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
 
@@ -24,6 +38,9 @@ public class VaultJobInfoCommand extends AbstractCommand<CommandVaultJobInfo> {
 	}
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
 

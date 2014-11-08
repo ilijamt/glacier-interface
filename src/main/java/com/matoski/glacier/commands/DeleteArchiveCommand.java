@@ -11,6 +11,11 @@ import com.matoski.glacier.pojo.archive.Archive;
 import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
+/**
+ * Delete an archive 
+ * 
+ * @author ilijamt
+ */
 public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> {
 
     /**

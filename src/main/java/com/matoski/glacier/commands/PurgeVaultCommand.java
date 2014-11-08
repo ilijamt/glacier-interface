@@ -12,6 +12,12 @@ import com.matoski.glacier.pojo.archive.Archive;
 import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
+/**
+ * Purges a vault from all files not present into the journal 
+ * 
+ * @author ilijamt
+ *
+ */
 public class PurgeVaultCommand extends AbstractCommand<CommandPurgeVault> {
 
     /**
@@ -19,6 +25,14 @@ public class PurgeVaultCommand extends AbstractCommand<CommandPurgeVault> {
      */
     protected State journal;
 
+    /**
+     * Constructor 
+     * 
+     * @param config
+     * @param command
+     * @throws VaultNameNotPresentException
+     * @throws RegionNotSupportedException
+     */
     public PurgeVaultCommand(Config config, CommandPurgeVault command) throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
 
@@ -41,6 +55,9 @@ public class PurgeVaultCommand extends AbstractCommand<CommandPurgeVault> {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
 

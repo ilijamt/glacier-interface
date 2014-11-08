@@ -16,11 +16,32 @@ import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
+/**
+ * Synchronizes a directory 
+ * 
+ * @author ilijamt
+ *
+ */
 public class SyncCommand extends AbstractCommand<CommandSync> {
 
+    /**
+     * List of files
+     */
     protected Collection<String> files = new LinkedList<String>();
+    
+    /**
+     * Journal
+     */
     private State journal;
 
+    /**
+     * Constructor 
+     * 
+     * @param config
+     * @param command
+     * @throws VaultNameNotPresentException
+     * @throws RegionNotSupportedException
+     */
     public SyncCommand(Config config, CommandSync command) throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
 
@@ -37,6 +58,9 @@ public class SyncCommand extends AbstractCommand<CommandSync> {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
 

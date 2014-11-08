@@ -9,8 +9,21 @@ import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
+/**
+ * Delete vault
+ * 
+ * @author ilijamt
+ */
 public class DeleteVaultCommand extends AbstractCommand<CommandDeleteVault> {
 
+    /**
+     * Constructor
+     * 
+     * @param config
+     * @param command
+     * @throws VaultNameNotPresentException
+     * @throws RegionNotSupportedException
+     */
     public DeleteVaultCommand(Config config, CommandDeleteVault command) throws VaultNameNotPresentException, RegionNotSupportedException {
 	super(config, command);
 
@@ -24,6 +37,9 @@ public class DeleteVaultCommand extends AbstractCommand<CommandDeleteVault> {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
 

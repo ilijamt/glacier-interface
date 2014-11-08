@@ -16,11 +16,33 @@ import com.matoski.glacier.pojo.job.DownloadJobInfo;
 import com.matoski.glacier.util.AmazonGlacierBaseUtil;
 import com.matoski.glacier.util.download.AmazonGlacierDownloadUtil;
 
+/**
+ * Creates a download job
+ * 
+ * @author ilijamt
+ */
 public class DownloadJobCommand extends AbstractCommand<CommandDownloadJob> {
 
+    /**
+     * The job
+     */
     DownloadJobInfo jobInfo = null;
+    
+    /**
+     * Download helper
+     */
     AmazonGlacierDownloadUtil download = null;
 
+    /**
+     * Constructor 
+     * 
+     * @param config
+     * @param command
+     * @throws VaultNameNotPresentException
+     * @throws RegionNotSupportedException
+     * @throws FileNotFoundException
+     * @throws IllegalArgumentException
+     */
     public DownloadJobCommand(Config config, CommandDownloadJob command) throws VaultNameNotPresentException, RegionNotSupportedException,
 	    FileNotFoundException, IllegalArgumentException {
 	super(config, command);
@@ -50,6 +72,9 @@ public class DownloadJobCommand extends AbstractCommand<CommandDownloadJob> {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
 

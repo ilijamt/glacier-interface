@@ -9,8 +9,22 @@ import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
+/**
+ * Show details about multipart info 
+ * 
+ * @author ilijamt
+ *
+ */
 public class MultipartUploadInfoCommand extends AbstractCommand<CommandMultipartUploadInfo> {
 
+    /**
+     * Constructor 
+     * 
+     * @param config
+     * @param command
+     * @throws VaultNameNotPresentException
+     * @throws RegionNotSupportedException
+     */
     public MultipartUploadInfoCommand(Config config, CommandMultipartUploadInfo command) throws VaultNameNotPresentException,
 	    RegionNotSupportedException {
 	super(config, command);
@@ -25,6 +39,9 @@ public class MultipartUploadInfoCommand extends AbstractCommand<CommandMultipart
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
 

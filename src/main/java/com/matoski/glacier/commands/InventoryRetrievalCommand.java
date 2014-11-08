@@ -8,8 +8,22 @@ import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
+/**
+ * Initiate an inventory retrieval 
+ * 
+ * @author ilijamt
+ *
+ */
 public class InventoryRetrievalCommand extends AbstractCommand<CommandInventoryRetrieval> {
 
+    /**
+     * Constructor 
+     * 
+     * @param config
+     * @param command
+     * @throws VaultNameNotPresentException
+     * @throws RegionNotSupportedException
+     */
     public InventoryRetrievalCommand(Config config, CommandInventoryRetrieval command) throws VaultNameNotPresentException,
 	    RegionNotSupportedException {
 	super(config, command);
@@ -24,6 +38,9 @@ public class InventoryRetrievalCommand extends AbstractCommand<CommandInventoryR
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
 

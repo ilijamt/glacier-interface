@@ -18,10 +18,27 @@ import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.FileWriteUtils;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
+/**
+ * Download inventory
+ * 
+ * @author ilijamt
+ *
+ */
 public class InventoryDownloadCommand extends AbstractCommand<CommandInventoryDownload> {
 
+    /**
+     * Metadata used
+     */
     protected Metadata metadata;
 
+    /**
+     * Constructor
+     * 
+     * @param config
+     * @param command
+     * @throws VaultNameNotPresentException
+     * @throws RegionNotSupportedException
+     */
     public InventoryDownloadCommand(Config config, CommandInventoryDownload command) throws VaultNameNotPresentException,
 	    RegionNotSupportedException {
 	super(config, command);
@@ -38,6 +55,9 @@ public class InventoryDownloadCommand extends AbstractCommand<CommandInventoryDo
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
 
