@@ -1,5 +1,0 @@
-#!/usr/bin/make -f
-export GI_DEB_BUILD=1
-
-%:
-	dh $@

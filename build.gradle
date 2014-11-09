@@ -2,10 +2,18 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 sourceCompatibility = 1.7
-version = '1.0'
+version = 0.2
+
+def getPackageName() {
+	return "glacier-interface"
+}
+
+def getFilename() {
+	return getPackageName() + ".jar"
+}
 
 jar {
-	archiveName = "glacier-interface.jar"
+	archiveName = getFilename()
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest {
         attributes(
@@ -41,5 +49,8 @@ test {
 }
 
 task('package', dependsOn: 'build', type: Exec) {
+   def argsList = [ version, getPackageName() ]
    commandLine './package.sh'
+   args = argsList
+   
 }
