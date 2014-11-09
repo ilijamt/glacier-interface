@@ -65,7 +65,9 @@ public class Main {
 	commands.put(CliCommands.InventoryDownload.ordinal(), new CommandInventoryDownload());
 	commands.put(CliCommands.UploadArchive.ordinal(), new CommandUploadArchive());
 	commands.put(CliCommands.DeleteArchive.ordinal(), new CommandDeleteArchive());
-	commands.put(CliCommands.ListMultipartUploads.ordinal(), new CommandListMultipartUploads());	
+	commands.put(CliCommands.ListMultipartUploads.ordinal(), new CommandListMultipartUploads());
+	commands.put(CliCommands.MultipartUploadInfo.ordinal(), new CommandMultipartUploadInfo());
+	commands.put(CliCommands.AbortMultipartUpload.ordinal(), new CommandAbortMultipartUpload());	
 	commands.put(CliCommands.DownloadJob.ordinal(), new CommandDownloadJob());
 	commands.put(CliCommands.InitDownload.ordinal(), new CommandInitDownload());	
 	commands.put(CliCommands.PurgeVault.ordinal(), new CommandPurgeVault());
@@ -226,6 +228,14 @@ public class Main {
 
 		case AbortMultipartUpload:
 		    new AbortMultipartUploadCommand(config, (CommandAbortMultipartUpload) commands.get(cliCommand.ordinal())).run();
+		    break;
+
+		case DownloadJob:
+		    new DownloadJobCommand(config, (CommandDownloadJob) commands.get(cliCommand.ordinal())).run();
+		    break;
+
+		case InitDownload:
+		    new InitDownloadCommand(config, (CommandInitDownload) commands.get(cliCommand.ordinal())).run();
 		    break;
 
 		case PurgeVault:
