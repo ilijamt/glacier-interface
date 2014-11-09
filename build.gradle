@@ -5,7 +5,7 @@ sourceCompatibility = 1.7
 version = '1.0'
 
 jar {
-	archiveName = "gi.jar"
+	archiveName = "glacier-interface.jar"
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest {
         attributes(
@@ -40,10 +40,6 @@ test {
     systemProperties 'property': 'value'
 }
 
-uploadArchives {
-    repositories {
-       flatDir {
-           dirs 'repos'
-       }
-    }
+task('package', dependsOn: 'build', type: Exec) {
+   commandLine './package.sh'
 }

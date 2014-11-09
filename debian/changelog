@@ -1,0 +1,23 @@
+glacier-interface (0.2-1) unstable; urgency=low
+
+  * Initial release.
+  
+  The following commands have been implemented
+  
+  list-vaults
+  create-vault
+  delete-vault
+  list-vault-jobs
+  vault-job-info
+  inventory-retrieve
+  inventory-download
+  list-journal
+  delete-archive
+  upload-archive
+  list-multipart-uploads
+  multipart-upload-info
+  abort-multipart-upload
+  purge-vault
+  sync
+
+ -- Ilija Matoski <ilijamt@gmail.com>  Sun, 09 Nov 2014 16:40:26 +0100

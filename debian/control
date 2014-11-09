@@ -1,0 +1,16 @@
+Package: glacier-interface
+Version: 0.2
+Section: net
+Architecture: all
+Essential: no
+Depends: default-jdk
+Maintainer: Ilija Matoski <ilijamt@gmail.com>
+Recommends: 
+Description: A multithreaded application, that supports multipart uploads to Amazon Glacier servers
+ A command line tool to interface with glacier. It's a multithreaded application, that supports 
+ multipart uploads to Amazon Glacier servers, you can specify concurrency, 
+ to speed up the upload.
+ Supports a lot of glacier functions, like listing vaults, deleting vaults, creating vaults, 
+ uploading archives, downloading archives, inventory downloads, folder syncing and journal verifications
+
+ 

@@ -2,6 +2,7 @@ Glacier Interface
 =================
 
 A command line tool to interface with glacier.
+
 It's a multithreaded application, that supports multipart uploads to Amazon Glacier servers, you can specify concurrency, to speed up the upload.  
 
 Intro
@@ -48,7 +49,7 @@ Commands
 Priorities
 -----------
 * init-download
-* download-archive
+* download-job
 
 Commands Description
 -------------------
