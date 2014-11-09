@@ -78,7 +78,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-	System.out.println("Glacier Interface, Copyright 2014, Ilija Matoski");
+	System.out.println(String.format("Glacier Interface (v%s), Copyright 2014, Ilija Matoski", Constants.VERSION));
 	System.out.println();
 
 	JCommander commander = null;

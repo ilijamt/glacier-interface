@@ -51,6 +51,10 @@ Priorities
 * init-download
 * download-job
 
+TODO
+----
+* bash auto-complete
+
 Commands Description
 -------------------
 ### `help`

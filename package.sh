@@ -28,19 +28,14 @@ cp -R $WORK_DIR/debian $TMP_DIR/DEBIAN
 mkdir -p "$TMP_DIR/usr/share/$PKG_NAME"
 mkdir -p "$TMP_DIR/usr/share/doc/$PKG_NAME"
 mkdir -p "$TMP_DIR/usr/bin"
+mkdir -p "$TMP_DIR/etc/bash_completion.d/"
 cp "$WORK_DIR/build/libs/$PKG_NAME.jar" "$TMP_DIR/usr/share/$PKG_NAME"
-cp "$WORK_DIR/gi" "$TMP_DIR/usr/bin"
+cp "$WORK_DIR/resources/gi" "$TMP_DIR/usr/bin"
+#cp "$WORK_DIR/resources/bash-autocomplete" "$TMP_DIR/etc/bash_completion.d/gi"
 gzip -9c "${WORK_DIR}/debian/changelog" > "${TMP_DIR}/usr/share/doc/${PKG_NAME}/changelog.gz"
 cp "${WORK_DIR}/debian/copyright" "${TMP_DIR}/usr/share/doc/${PKG_NAME}/copyright"
 chmod +x "$TMP_DIR/usr/bin/gi"
 rm "$TMP_DIR/DEBIAN/changelog" "$TMP_DIR/DEBIAN/compat" "$TMP_DIR/DEBIAN/copyright"
-
-touch "$TMP_DIR/DEBIAN/md5sums"
-cd $TMP_DIR
-md5sum "usr/share/$PKG_NAME/$PKG_NAME.jar" >> "$TMP_DIR/DEBIAN/md5sums"
-md5sum "usr/share/doc/${PKG_NAME}/changelog.gz" >> "$TMP_DIR/DEBIAN/md5sums"
-md5sum "usr/share/doc/${PKG_NAME}/copyright" >> "$TMP_DIR/DEBIAN/md5sums"
-md5sum "usr/bin/gi" >> "$TMP_DIR/DEBIAN/md5sums"
 
 PACKAGE_SIZE=`du -bs "$TMP_DIR" | cut -f 1`
 PACKAGE_SIZE=$((PACKAGE_SIZE/1024))
@@ -51,6 +46,11 @@ fakeroot chgrp -R root "$TMP_DIR"
 
 # Package 
 cd $TMP_DIR
+md5sum "usr/share/$PKG_NAME/$PKG_NAME.jar" >> "$TMP_DIR/DEBIAN/md5sums"
+md5sum "usr/share/doc/${PKG_NAME}/changelog.gz" >> "$TMP_DIR/DEBIAN/md5sums"
+md5sum "usr/share/doc/${PKG_NAME}/copyright" >> "$TMP_DIR/DEBIAN/md5sums"
+md5sum "usr/bin/gi" >> "$TMP_DIR/DEBIAN/md5sums"
+#md5sum "etc/bash_completion.d/gi" >> "$TMP_DIR/DEBIAN/md5sums"
 fakeroot dpkg-deb --build $TMP_DIR
 
 # Clean 

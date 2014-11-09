@@ -3,7 +3,7 @@ Version: 0.2
 Section: net
 Architecture: all
 Priority: standard
-Depends: default-jdk
+Depends: 
 Maintainer: Ilija Matoski <ilijamt@gmail.com>
 Recommends: 
 Description: Multithreaded command line application, to interface with glacier servers

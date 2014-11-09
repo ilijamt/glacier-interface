@@ -1,0 +1,64 @@
+__gi_opts="--aws-key --aws-region --aws-secret-key --aws-vault --config --create-config --directory"bash
+
+__gi_noopts_cmds="help list-journal verify-journal"
+__gi_opts_cmds="help list-vaults create-vault delete-vault list-vault-job inventory-retrieve inventory-download list-journal init-download download-job delete-archive upload-archive list-multipart-uploads multipart-upload-info abort-multipart-upload purge-vault sync"
+__gi_cmds="$__gi_noopts_cmds $__gi_opts_cmds"
+
+array_contains() {
+	local contains=1
+	value=$1
+	shift
+	arr=($@)
+	
+	for el in "${arr[@]}"; do
+		if [[ "$el" = "$value" ]]; then
+			contains=0
+		fi
+	done
+	
+    return $contains
+}
+
+__hasCommand () { 
+    local in=1
+    for element; do
+    	if array_contains "$element" "${__gi_cmds[@]}"; then
+    		in=0
+    		break
+    	fi
+	done
+    return $in
+}
+
+have gi && _gi() 
+{
+
+    local cur prev options
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+
+	opts=("${COMP_WORDS[@]:1}")
+	
+    # has command
+    local has=0
+    
+	# show general opts, but only if there is no command and the command is not already used,
+	# or commands don't require options
+	if [[ "$COMP_CWORD" -eq "1" ]]; then
+	    COMPREPLY=( $(compgen -W "${__gi_noopts_cmds} ${__gi_opts}" -- ${cur}) )
+		return 0
+	fi
+	   
+        
+    # show command options 
+    
+    COMPREPLY=()
+            
+    COMPREPLY=( $(compgen -W "${__gi_opts_cmds}" -- ${cur}) )
+    
+    return 0
+}
+
+[ "$have" ] && complete -F _gi gi
+

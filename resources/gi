@@ -1,0 +1,17 @@
+#!/bin/bash
+
+die () {
+    echo >&2 "$@"
+    exit 1
+}
+
+LOCATION="/usr/share/glacier-interface"
+JAR="$LOCATION/glacier-interface.jar"
+
+if [ ! -f $JAR ]; then
+	die "The main application is not found, please reinstall"
+fi
+
+java -jar $JAR $@
+
+exit 0
