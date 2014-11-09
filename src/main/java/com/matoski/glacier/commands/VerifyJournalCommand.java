@@ -1,6 +1,7 @@
 package com.matoski.glacier.commands;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map.Entry;
 
 import com.matoski.glacier.base.AbstractEmptyCommand;
@@ -75,10 +76,11 @@ public class VerifyJournalCommand extends AbstractEmptyCommand<CommandVerifyJour
 	    vModified = State.archiveValidateLastModified(archive);
 	    System.out.println(String.format("%1$17s : %2$s", "Archive ID", archive.getId()));
 	    System.out.println(String.format("%1$17s : %2$s", "Name", archive.getName()));
-	    System.out.println(String.format("%1$17s : %2$s", "Size", vSize));
-	    System.out.println(String.format("%1$17s : %2$s", "Modified", vModified));
+	    System.out.println(String.format("%1$17s : %2$s (%3$s, %4$s bytes)", "Size", vSize,
+		    FileUtils.humanReadableByteCount(archive.getSize()), archive.getSize()));
+	    System.out.println(String.format("%1$17s : %2$s (%3$s)", "Modified", vModified, new Date(archive.getModifiedDate())));
 	    vHash = State.archiveValidateTreeHash(archive);
-	    System.out.println(String.format("%1$17s : %2$s", "SHA256 TreeHash", vHash));
+	    System.out.println(String.format("%1$17s : %2$s (%3$s)", "SHA256 TreeHash", vHash, archive.getHash()));
 
 	    valid = vSize == GenericValidateEnum.VALID && vModified == GenericValidateEnum.VALID && vHash == GenericValidateEnum.VALID;
 
