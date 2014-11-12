@@ -27,14 +27,14 @@ public class DownloadJobCommand extends AbstractCommand<CommandDownloadJob> {
      * The job
      */
     DownloadJobInfo jobInfo = null;
-    
+
     /**
      * Download helper
      */
     AmazonGlacierDownloadUtil download = null;
 
     /**
-     * Constructor 
+     * Constructor
      * 
      * @param config
      * @param command
@@ -86,7 +86,11 @@ public class DownloadJobCommand extends AbstractCommand<CommandDownloadJob> {
 
 	for (DownloadJob job : jobInfo.getJobs()) {
 	    try {
-		download.DownloadArchive(job, (long) command.partSize * AmazonGlacierBaseUtil.MINIMUM_PART_SIZE, command.overwrite);
+		if (command.dryRun) {
+		    System.out.println(String.format("[--dry-run] Skipping download for : %s [%s]", job.getName(), job.getArchiveId()));
+		} else {
+		    download.DownloadArchive(job, (long) command.partSize * AmazonGlacierBaseUtil.MINIMUM_PART_SIZE, command.overwrite);
+		}
 	    } catch (FileAlreadyExistsException e) {
 		System.out.println(String.format("ERROR: [%s] %s already exists, skipping", job.getArchiveId(), job.getName()));
 	    } catch (InvalidChecksumException e) {

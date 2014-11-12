@@ -108,8 +108,8 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
      * @throws FileAlreadyExistsException
      * @throws InvalidChecksumException
      */
-    public MultipartDownloadStatus DownloadArchive(DownloadJob job, long partSize, boolean overwrite) throws FileAlreadyExistsException,
-	    InvalidChecksumException {
+    public MultipartDownloadStatus DownloadArchive(DownloadJob job, long partSize, boolean overwrite)
+	    throws FileAlreadyExistsException, InvalidChecksumException {
 
 	// get the details about the job
 	final DescribeJobResult jobResult = DescribeJob(job.getVaultName(), job.getJobId());
@@ -139,7 +139,7 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
     }
 
     /**
-     * Download a chunk 
+     * Download a chunk
      * 
      * @param file
      * @param vaultName

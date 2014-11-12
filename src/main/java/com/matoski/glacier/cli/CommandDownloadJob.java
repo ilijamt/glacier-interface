@@ -18,6 +18,9 @@ public class CommandDownloadJob extends GenericCommand {
     @Parameter(names = "--part-size", description = "How big chunks of data to download from amazon glacier during one request, the part size has to be multiple of 2, like 1MB, 2MB, 4MB, 8MB, ...")
     public Integer partSize = Constants.DEFAULT_PART_SIZE;
 
+    @Parameter(names = "--dry-run", description = "Do not download the files, just go through the process")
+    public Boolean dryRun = false;
+
     public CommandDownloadJob() {
 	super(CliCommands.DownloadJob);
     }
