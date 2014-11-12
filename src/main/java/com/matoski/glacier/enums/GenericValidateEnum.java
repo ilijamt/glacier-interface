@@ -2,6 +2,6 @@ package com.matoski.glacier.enums;
 
 public enum GenericValidateEnum {
 
-    VALID, INVALID, ERROR
+    VALID, INVALID, ERROR, SKIP
 
 }

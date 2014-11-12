@@ -79,10 +79,16 @@ public class VerifyJournalCommand extends AbstractEmptyCommand<CommandVerifyJour
 	    System.out.println(String.format("%1$17s : %2$s (%3$s, %4$s bytes)", "Size", vSize,
 		    FileUtils.humanReadableByteCount(archive.getSize()), archive.getSize()));
 	    System.out.println(String.format("%1$17s : %2$s (%3$s)", "Modified", vModified, new Date(archive.getModifiedDate())));
-	    vHash = State.archiveValidateTreeHash(archive);
-	    System.out.println(String.format("%1$17s : %2$s (%3$s)", "SHA256 TreeHash", vHash, archive.getHash()));
 
-	    valid = vSize == GenericValidateEnum.VALID && vModified == GenericValidateEnum.VALID && vHash == GenericValidateEnum.VALID;
+	    if (command.skipHash) {
+		vHash = GenericValidateEnum.SKIP;
+	    } else {
+		vHash = State.archiveValidateTreeHash(archive);
+	    }
+
+	    System.out.println(String.format("%1$17s : %2$s (%3$s)", "SHA256 TreeHash", vHash, archive.getHash()));
+	    valid = vSize == GenericValidateEnum.VALID && vModified == GenericValidateEnum.VALID
+		    && (vHash == GenericValidateEnum.VALID || vHash == GenericValidateEnum.SKIP);
 
 	    System.out.println(String.format("%1$17s : %2$s", "Valid", valid));
 	    System.out.println();

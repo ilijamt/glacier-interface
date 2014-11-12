@@ -117,6 +117,8 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
 	final String treeHashOriginal = jobResult.getSHA256TreeHash();
 	final MultipartDownloadStatus status = new MultipartDownloadStatus();
 	final int pieces = (int) Math.ceil(archiveSize / (double) partSize);
+	
+	// check if the file exists, and if it exists, verify it
 
 	// create an empty archive
 	CreateEmptyFile(job.getName(), archiveSize, overwrite);

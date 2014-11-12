@@ -10,6 +10,9 @@ public class CommandListJournal extends GenericCommand {
 
     @Parameter(names = "--journal", description = "The journal to read the data from")
     public String journal;
+    
+    @Parameter(names = "--exists", description = "Check if the file exists or not")
+    public Boolean exists = false;
 
     @Parameter(names = "--full", description = "Display the full data from the journal")
     public Boolean full = false;

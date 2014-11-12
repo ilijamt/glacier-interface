@@ -11,6 +11,9 @@ public class CommandVerifyJournal extends GenericCommand {
     @Parameter(required = true, names = "--journal", description = "The journal we use to verify the data")
     public String journal;
 
+    @Parameter(names = "--skip-hash", description = "Skip the hash checking")
+    public Boolean skipHash = false;
+    
     public CommandVerifyJournal() {
 	super(CliCommands.VerifyJournal);
     }

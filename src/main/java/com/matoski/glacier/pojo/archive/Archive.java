@@ -1,5 +1,6 @@
 package com.matoski.glacier.pojo.archive;
 
+import java.io.File;
 import java.util.Date;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
@@ -259,5 +260,24 @@ public class Archive implements Cloneable {
      */
     public void setUri(String uri) {
 	this.uri = uri;
+    }
+
+    /**
+     * Get the file to the archive
+     * 
+     * @return
+     */
+    public File getFile() {
+	return new File(getName());
+    }
+
+    /**
+     * Get the file to the archive with a parent
+     * 
+     * @param parent
+     * @return
+     */
+    public File getFile(String parent) {
+	return new File(parent, getName());
     }
 }
