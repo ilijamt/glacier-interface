@@ -1,7 +1,10 @@
 package com.matoski.glacier.commands;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandPurgeVault;
@@ -13,7 +16,7 @@ import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
 /**
- * Purges a vault from all files not present into the journal 
+ * Purges a vault from all files not present into the journal
  * 
  * @author ilijamt
  *
@@ -26,7 +29,7 @@ public class PurgeVaultCommand extends AbstractCommand<CommandPurgeVault> {
     protected State journal;
 
     /**
-     * Constructor 
+     * Constructor
      * 
      * @param config
      * @param command
@@ -67,22 +70,33 @@ public class PurgeVaultCommand extends AbstractCommand<CommandPurgeVault> {
 	    Archive archive = null;
 	    AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
-	    for (Entry<String, Archive> entry : journal.getArchives().entrySet()) {
+	    Set<Entry<String, Archive>> archives = journal.getArchives().entrySet();
+	    List<String> ids = new ArrayList<String>();
+
+	    for (Entry<String, Archive> entry : archives) {
 
 		try {
 		    archive = entry.getValue();
+		    ids.add(archive.getId());
 
 		    upload.DeleteArchive(command.vaultName, archive.getId());
 		    System.out.println(String.format("DELETED [%s] %s", archive.getId(), archive.getName()));
-
-		    this.journal.deleteArchive(archive.getId());
-		    this.journal.save();
-
 		} catch (Exception e) {
 		    System.err.println("Failed to delete the archive");
 		}
 
 	    }
+
+	    for (String id : ids) {
+		try {
+		    this.journal.deleteArchive(id);
+		    this.journal.save();
+		} catch (Exception e) {
+		    System.err.println("Failed to clean journal");
+		}
+
+	    }
+
 	} else {
 	    System.out.println("No items available in the journal");
 	}

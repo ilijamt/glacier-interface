@@ -1,5 +1,7 @@
 package com.matoski.glacier.metadata;
 
+import java.util.Date;
+
 import org.apache.commons.codec.binary.Base64;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
@@ -60,17 +62,21 @@ public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterface
      * @return the mtime
      */
     public long getMtime() {
-	StringBuilder builder = new StringBuilder();
-	builder.append(mtime.substring(0, 4));
-	builder.append("-");
-	builder.append(mtime.substring(4, 6));
-	builder.append("-");
-	builder.append(mtime.substring(6, 11));
-	builder.append(":");
-	builder.append(mtime.substring(11, 13));
-	builder.append(":");
-	builder.append(mtime.substring(13));
-	return ISO8601Utils.parse(builder.toString()).getTime();
+	if (mtime.contains("T") && mtime.contains("Z")) {
+	    StringBuilder builder = new StringBuilder();
+	    builder.append(mtime.substring(0, 4));
+	    builder.append("-");
+	    builder.append(mtime.substring(4, 6));
+	    builder.append("-");
+	    builder.append(mtime.substring(6, 11));
+	    builder.append(":");
+	    builder.append(mtime.substring(11, 13));
+	    builder.append(":");
+	    builder.append(mtime.substring(13));
+	    return ISO8601Utils.parse(builder.toString()).getTime();
+	} else {
+	    return Long.valueOf(mtime);
+	}
     }
 
     /**
