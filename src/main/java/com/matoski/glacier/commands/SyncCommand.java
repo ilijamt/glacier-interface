@@ -17,7 +17,7 @@ import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
 /**
- * Synchronizes a directory 
+ * Synchronizes a directory
  * 
  * @author ilijamt
  *
@@ -28,14 +28,14 @@ public class SyncCommand extends AbstractCommand<CommandSync> {
      * List of files
      */
     protected Collection<String> files = new LinkedList<String>();
-    
+
     /**
      * Journal
      */
     private State journal;
 
     /**
-     * Constructor 
+     * Constructor
      * 
      * @param config
      * @param command
@@ -87,7 +87,7 @@ public class SyncCommand extends AbstractCommand<CommandSync> {
 	    }
 
 	    upload.UploadArchive(journal, command.vaultName, fileName, false, command.concurrent, command.retryFailedUpload,
-		    command.partSize, command.uploadReplaceModified);
+		    command.partSize, command.uploadReplaceModified, command.dryRun);
 	}
 
 	System.out.println("\nEND: sync");

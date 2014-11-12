@@ -33,6 +33,9 @@ public class CommandSync extends GenericCommand {
     @Parameter(names = "--new", description = "Uploads only files that don't exist in the journal, this is the default behaviour")
     public Boolean uploadNew = true;
     
+    @Parameter(names = "--dry-run", description = "Do not upload the files, just go through the process")
+    public Boolean dryRun = false;
+    
     public CommandSync() {
 	super(CliCommands.Sync);
     }

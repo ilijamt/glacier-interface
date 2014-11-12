@@ -268,6 +268,24 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     }
 
     /**
+     * Upload archive to glacier
+     * 
+     * @param journal
+     * @param vaultName
+     * @param fileName
+     * @param forceUpload
+     * @param concurrent
+     * @param retryFailedUpload
+     * @param partSize
+     * @param replace
+     * @return
+     */
+    public Archive UploadArchive(State journal, String vaultName, String fileName, Boolean forceUpload, int concurrent,
+	    int retryFailedUpload, int partSize, boolean replace) {
+	return UploadArchive(journal, vaultName, fileName, forceUpload, concurrent, retryFailedUpload, partSize, replace, false);
+    }
+
+    /**
      * Uploads the archive to Glacier
      * 
      * @param journal
@@ -281,7 +299,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
      * @return
      */
     public Archive UploadArchive(State journal, String vaultName, String fileName, Boolean forceUpload, int concurrent,
-	    int retryFailedUpload, int partSize, boolean replace) {
+	    int retryFailedUpload, int partSize, boolean replace, boolean dryRun) {
 
 	Archive archive = null;
 	Metadata metadata = journal.getMetadata();
@@ -318,18 +336,17 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 		System.out.println(String.format("Hash is: %s", validTreeHash));
 		System.out.println();
 
-		upload =   validSize != GenericValidateEnum.VALID 
-			|| validModifiedDate != GenericValidateEnum.VALID
+		upload = validSize != GenericValidateEnum.VALID || validModifiedDate != GenericValidateEnum.VALID
 			|| validTreeHash != GenericValidateEnum.VALID;
-		
+
 	    } else {
-		
+
 		System.err.println("Why are we here?");
-	    
+
 	    }
 	}
 
-	if (upload) {
+	if (upload && !dryRun) {
 
 	    System.out.println(String.format("Processing: %s (size: %s)", fileName,
 		    new File(Config.getInstance().getDirectory(), fileName).length()));
@@ -361,9 +378,9 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 	    }
 
 	} else {
-	    
-	    System.out.println(String.format("Skipping upload for %s", fileName));
-	
+
+	    System.out.println(String.format("%s Skipping upload for %s", dryRun ? "[--dry-run]": "", fileName));
+
 	}
 
 	return archive;
