@@ -1,7 +1,5 @@
 package com.matoski.glacier.metadata;
 
-import java.util.Date;
-
 import org.apache.commons.codec.binary.Base64;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
