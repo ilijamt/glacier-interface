@@ -100,9 +100,9 @@ public class VerifyJournalCommand extends AbstractEmptyCommand<CommandVerifyJour
 
 	}
 
-	System.out.println(String.format("Invalid: %s", FileUtils.humanReadableByteCount(size - validSize)));
-	System.out.println(String.format("Valid: %s", FileUtils.humanReadableByteCount(validSize)));
-	System.out.println(String.format("Total size: %s", FileUtils.humanReadableByteCount(size)));
+	System.out.println(String.format("Invalid: %s (%s bytes)", FileUtils.humanReadableByteCount(size - validSize), (size - validSize)));
+	System.out.println(String.format("Valid: %s (%s bytes)", FileUtils.humanReadableByteCount(validSize), validSize));
+	System.out.println(String.format("Total size: %s (%s bytes)", FileUtils.humanReadableByteCount(size), size));
 
 	System.out.println("\nEND: verify-journal");
 

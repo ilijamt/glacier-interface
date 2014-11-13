@@ -78,7 +78,7 @@ public class ListJournalCommand extends AbstractEmptyCommand<CommandListJournal>
 		    extras = "";
 		}
 
-		System.out.println(String.format("[%1$15s%3$s] %2$s", FileUtils.humanReadableByteCount(archive.getSize()),
+		System.out.println(String.format("[%1$10s%3$s] %2$s", FileUtils.humanReadableByteCount(archive.getSize()),
 			archive.getName(), extras));
 
 	    }
