@@ -1,4 +1,4 @@
-Glacier Interface, Copyright 2014, Ilija Matoski
+Glacier Interface (v0.2), Copyright 2014, Ilija Matoski
 
 Current working directory: /home/ilijamt/workspace/java/glacier-interface
 Command: Help
@@ -94,6 +94,9 @@ Usage: <main class> [options] [command] [command options]
     list-journal      List the data in the journal
       Usage: list-journal [options]
         Options:
+              --exists
+             Check if the file exists or not
+             Default: false
               --full
              Display the full data from the journal
              Default: false
@@ -128,6 +131,9 @@ Usage: <main class> [options] [command] [command options]
     download-job      Download the job
       Usage: download-job [options]
         Options:
+              --dry-run
+             Do not download the files, just go through the process
+             Default: false
         *     --job-file
              Uses this file to download all the archives in the file
               --overwrite
@@ -182,6 +188,10 @@ Usage: <main class> [options] [command] [command options]
              How big chunks of data to upload to amazon glacier during one
              request, the part size has to be multiple of 2, like 1MB, 2MB, 4MB, 8MB, ...
              Default: 1
+              --replaced-modified
+             Replaces the modified file with a new one, and the old one is
+             deleted from glacier and the journal
+             Default: false
               --retry-failed-upload
              How many times should it retry to upload a failed piece before
              giving up.
@@ -241,6 +251,9 @@ Usage: <main class> [options] [command] [command options]
              glacier, the more threads you have the more memory it will eat. The memory
              requirements will be partSize * concurrent
              Default: 1
+              --dry-run
+             Do not upload the files, just go through the process
+             Default: false
         *     --journal
              Journal
               --metadata
@@ -248,10 +261,18 @@ Usage: <main class> [options] [command] [command options]
              journal, also if a journal is specified, the metadata will be read from the
              journal and not from the command line
              Default: mt2
+              --new
+             Uploads only files that don't exist in the journal, this is the
+             default behaviour
+             Default: true
               --part-size
              How big chunks of data to upload to amazon glacier during one
              request, the part size has to be multiple of 2, like 1MB, 2MB, 4MB, 8MB, ...
              Default: 1
+              --replaced-modified
+             Replaces the modified file with a new one, and the old one is
+             deleted from glacier and the journal
+             Default: false
               --retry-failed-upload
              How many times should it retry to upload a failed piece before
              giving up.
@@ -259,6 +280,15 @@ Usage: <main class> [options] [command] [command options]
               --vault
              The name of the vault to where the archives will be synced, will be
              overwritten by --aws-vault if not specified
+
+    verify-journal      Verifies the data in the journal with the files on the disk
+      Usage: verify-journal [options]
+        Options:
+        *     --journal
+             The journal we use to verify the data
+              --skip-hash
+             Skip the hash checking
+             Default: false
 
 
 
