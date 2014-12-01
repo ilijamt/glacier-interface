@@ -19,62 +19,69 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
  */
 public class CreateVaultCommand extends AbstractCommand<CommandCreateVault> {
 
-    /**
-     * Constructor
-     * 
-     * @param config
-     * @param command
-     * @throws VaultNameNotPresentException
-     * @throws RegionNotSupportedException
-     */
-    public CreateVaultCommand(Config config, CommandCreateVault command) throws VaultNameNotPresentException, RegionNotSupportedException {
-	super(config, command);
+  /**
+   * Constructor
+   * 
+   * @param config
+   * @param command
+   * @throws VaultNameNotPresentException
+   * @throws RegionNotSupportedException
+   */
+  public CreateVaultCommand(Config config, CommandCreateVault command)
+      throws VaultNameNotPresentException, RegionNotSupportedException {
+    super(config, command);
 
-	if ((null == command.vaultName || command.vaultName.isEmpty()) && (null == config.getVault() || config.getVault().isEmpty())) {
-	    throw new VaultNameNotPresentException();
-	}
-
-	if ((null == command.vaultName) || command.vaultName.isEmpty()) {
-	    command.vaultName = config.getVault();
-	}
+    if ((null == command.vaultName || command.vaultName.isEmpty())
+        && (null == config.getVault() || config.getVault().isEmpty())) {
+      throw new VaultNameNotPresentException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void run() {
-
-	System.out.println("START: create-vault\n");
-
-	try {
-
-	    AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
-
-	    CreateVaultResult createVaultResult = upload.CreateVault(command.vaultName);
-	    DescribeVaultResult describeVaultResult = upload.DescribeVault(command.vaultName);
-
-	    System.out.println(String.format("%1$12s: %2$s%3$s", "Location", this.region.getServiceEndpoint("glacier"),
-		    createVaultResult.getLocation()));
-	    System.out.println(String.format("%1$12s: %2$s", "ARN", describeVaultResult.getVaultARN()));
-	    System.out.println(String.format("%1$12s: %2$s", "Vault Name", describeVaultResult.getVaultName()));
-	    System.out.println(String.format("%1$12s: %2$s", "Created", describeVaultResult.getCreationDate()));
-
-	} catch (AmazonServiceException e) {
-	    switch (e.getErrorCode()) {
-	    case "InvalidSignatureException":
-		System.err.println(String.format("ERROR: Invalid credentials, check you key and secret key."));
-		break;
-	    default:
-		System.err.println(String.format("ERROR: Failed to create a vault: %s\n\t%s", command.vaultName, e.getMessage()));
-		break;
-	    }
-	} catch (AmazonClientException e) {
-	    System.err.println(String.format("ERROR: Cannot connect to the amazon web services.\n\t%s", e.getMessage()));
-	}
-
-	System.out.println("\nEND: create-vault");
-
+    if ((null == command.vaultName) || command.vaultName.isEmpty()) {
+      command.vaultName = config.getVault();
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void run() {
+
+    System.out.println("START: create-vault\n");
+
+    try {
+
+      AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
+
+      CreateVaultResult createVaultResult = upload.CreateVault(command.vaultName);
+      DescribeVaultResult describeVaultResult = upload.DescribeVault(command.vaultName);
+
+      System.out.println(String.format("%1$12s: %2$s%3$s", "Location",
+          this.region.getServiceEndpoint("glacier"), createVaultResult.getLocation()));
+      System.out.println(String.format("%1$12s: %2$s", "ARN", describeVaultResult.getVaultARN()));
+      System.out.println(String.format("%1$12s: %2$s", "Vault Name",
+          describeVaultResult.getVaultName()));
+      System.out.println(String.format("%1$12s: %2$s", "Created",
+          describeVaultResult.getCreationDate()));
+
+    } catch (AmazonServiceException e) {
+      switch (e.getErrorCode()) {
+        case "InvalidSignatureException":
+          System.err.println(String
+              .format("ERROR: Invalid credentials, check you key and secret key."));
+          break;
+        default:
+          System.err.println(String.format("ERROR: Failed to create a vault: %s\n\t%s",
+              command.vaultName, e.getMessage()));
+          break;
+      }
+    } catch (AmazonClientException e) {
+      System.err.println(String.format("ERROR: Cannot connect to the amazon web services.\n\t%s",
+          e.getMessage()));
+    }
+
+    System.out.println("\nEND: create-vault");
+
+  }
 
 }

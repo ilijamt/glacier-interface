@@ -2,26 +2,26 @@ package com.matoski.glacier.enums;
 
 public enum Metadata {
 
-    FAST_GLACIER_V2("fgv2"), MT_AWS_GLACIER_B("mt2");
+  FAST_GLACIER_V2("fgv2"), MT_AWS_GLACIER_B("mt2");
 
-    public static Metadata from(String x) {
-	for (Metadata currentType : Metadata.values()) {
-	    if (x.equals(currentType.getPropertyName())) {
-		return currentType;
-	    }
-	}
-	// default command
-	return Metadata.MT_AWS_GLACIER_B;
+  public static Metadata from(String x) {
+    for (Metadata currentType : Metadata.values()) {
+      if (x.equals(currentType.getPropertyName())) {
+        return currentType;
+      }
     }
+    // default command
+    return Metadata.MT_AWS_GLACIER_B;
+  }
 
-    private String propertyName;
+  private String propertyName;
 
-    Metadata(String propName) {
-	this.propertyName = propName;
-    }
+  Metadata(String propName) {
+    this.propertyName = propName;
+  }
 
-    public String getPropertyName() {
-	return propertyName;
-    }
+  public String getPropertyName() {
+    return propertyName;
+  }
 
 }

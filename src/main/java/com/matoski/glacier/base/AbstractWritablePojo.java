@@ -19,155 +19,157 @@ import com.google.gson.GsonBuilder;
  */
 public abstract class AbstractWritablePojo<T> {
 
-    /**
-     * Do we have an upload status or not ?
-     * 
-     * @param file
-     * 
-     * @return
-     */
-    public static Boolean has(File file) {
-	return file.exists() && file.isFile();
+  /**
+   * Do we have an upload status or not ?
+   * 
+   * @param file
+   * 
+   * @return
+   */
+  public static Boolean has(File file) {
+    return file.exists() && file.isFile();
+  }
+
+  /**
+   * Load the file
+   * 
+   * @param file
+   * @param cls
+   * 
+   * @return
+   * @throws IOException
+   * @throws InstantiationException
+   * @throws IllegalAccessException
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> T load(File file, Class<T> cls) throws IOException, InstantiationException,
+      IllegalAccessException {
+
+    if (!file.exists()) {
+      // no journal, it's an empty one so we just return an empty Journal
+      return cls.newInstance();
     }
 
-    /**
-     * Load the file
-     * 
-     * @param file
-     * @param cls
-     * 
-     * @return
-     * @throws IOException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T load(File file, Class<T> cls) throws IOException, InstantiationException, IllegalAccessException {
+    String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
 
-	if (!file.exists()) {
-	    // no journal, it's an empty one so we just return an empty Journal
-	    return cls.newInstance();
-	}
+    T status = new Gson().fromJson(json, cls);
+    ((AbstractWritablePojo<T>) status).setFile(file);
 
-	String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+    return status;
 
-	T status = new Gson().fromJson(json, cls);
-	((AbstractWritablePojo<T>) status).setFile(file);
+  }
 
-	return status;
+  /**
+   * Load the file
+   * 
+   * @param <T>
+   * 
+   * @param file
+   * 
+   * @return
+   * 
+   * @throws IOException
+   * @throws IllegalAccessException
+   * @throws InstantiationException
+   */
+  public static <T> T load(String file, Class<T> cls) throws IOException, InstantiationException,
+      IllegalAccessException {
+    return load(new File(file), cls);
+  }
 
+  /**
+   * A dirty flag, used to know if we should write it or not?
+   */
+  protected transient boolean dirty = false;
+
+  /**
+   * The file for the upload state
+   */
+  protected transient File file;
+
+  /**
+   * The object is no longer dirty
+   */
+  public void clearDirty() {
+    this.dirty = false;
+  }
+
+  /**
+   * Set the file for writing
+   * 
+   * @param file
+   */
+  public void setFile(File file) {
+    this.file = file;
+  }
+
+  /**
+   * Get the file
+   * 
+   * @return
+   */
+  public File getFile() {
+    return file;
+  }
+
+  /**
+   * @return the dirty
+   */
+  public boolean isDirty() {
+    return dirty;
+  }
+
+  /**
+   * Sets the object as dirty
+   */
+  public void setDirty() {
+    this.dirty = true;
+  }
+
+  /**
+   * Write the status to file
+   * 
+   * @return
+   * @throws IOException
+   * @throws NullPointerException
+   */
+  public boolean write() throws NullPointerException, IOException {
+    return write(getFile());
+  }
+
+  /**
+   * Write the status to file
+   * 
+   * @param file
+   * @return
+   * @throws IOException
+   * @throws NullPointerException
+   */
+  @SuppressWarnings("unchecked")
+  protected boolean write(File file) throws NullPointerException, IOException {
+
+    if (!isDirty()) {
+      // no need to write the file as the data has not been updated
+      return true;
     }
 
-    /**
-     * Load the file
-     * 
-     * @param <T>
-     * 
-     * @param file
-     * 
-     * @return
-     * 
-     * @throws IOException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     */
-    public static <T> T load(String file, Class<T> cls) throws IOException, InstantiationException, IllegalAccessException {
-	return load(new File(file), cls);
+    if (null == file) {
+      throw new NullPointerException();
     }
 
-    /**
-     * A dirty flag, used to know if we should write it or not?
-     */
-    protected transient boolean dirty = false;
-
-    /**
-     * The file for the upload state
-     */
-    protected transient File file;
-
-    /**
-     * The object is no longer dirty
-     */
-    public void clearDirty() {
-	this.dirty = false;
+    if (!file.exists()) {
+      file.createNewFile();
     }
 
-    /**
-     * Set the file for writing
-     * 
-     * @param file
-     */
-    public void setFile(File file) {
-	this.file = file;
-    }
+    FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+    bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create().toJson((T) this));
 
-    /**
-     * Get the file
-     * 
-     * @return
-     */
-    public File getFile() {
-	return file;
-    }
+    bufferedWriter.close();
+    fileWriter.close();
 
-    /**
-     * @return the dirty
-     */
-    public boolean isDirty() {
-	return dirty;
-    }
+    clearDirty();
 
-    /**
-     * Sets the object as dirty
-     */
-    public void setDirty() {
-	this.dirty = true;
-    };
-
-    /**
-     * Write the status to file
-     * 
-     * @return
-     * @throws IOException
-     * @throws NullPointerException
-     */
-    public boolean write() throws NullPointerException, IOException {
-	return write(getFile());
-    }
-
-    /**
-     * Write the status to file
-     * 
-     * @param file
-     * @return
-     * @throws IOException
-     * @throws NullPointerException
-     */
-    @SuppressWarnings("unchecked")
-    protected boolean write(File file) throws NullPointerException, IOException {
-
-	if (!isDirty()) {
-	    // no need to write the file as the data has not been updated
-	    return true;
-	}
-
-	if (null == file) {
-	    throw new NullPointerException();
-	}
-
-	if (!file.exists()) {
-	    file.createNewFile();
-	}
-
-	FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
-	BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create().toJson((T) this));
-
-	bufferedWriter.close();
-	fileWriter.close();
-
-	clearDirty();
-
-	return true;
-    }
+    return true;
+  }
 }

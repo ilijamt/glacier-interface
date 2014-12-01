@@ -16,123 +16,123 @@ import com.matoski.glacier.pojo.archive.Archive;
  */
 public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterfaceMetadata {
 
-    /**
-     * Identifier
-     */
-    public static final String IDENTIFIER = "mt2 ";
+  /**
+   * Identifier
+   */
+  public static final String IDENTIFIER = "mt2 ";
 
-    /**
-     * The original filename
-     */
-    private String filename;
+  /**
+   * The original filename
+   */
+  private String filename;
 
-    /**
-     * The last modified time
-     */
-    private String mtime;
+  /**
+   * The last modified time
+   */
+  private String mtime;
 
-    /**
-     * Constructor
-     */
-    public MT_AWS_GLACIER_B() {
-	super(Metadata.MT_AWS_GLACIER_B);
+  /**
+   * Constructor
+   */
+  public MT_AWS_GLACIER_B() {
+    super(Metadata.MT_AWS_GLACIER_B);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String encode(Archive archive) {
+    this.mtime = Long.toString(archive.getModifiedDate());
+    this.filename = archive.getName();
+    return IDENTIFIER + Base64.encodeBase64String(new Gson().toJson(this).getBytes());
+
+  }
+
+  /**
+   * @return the filename
+   */
+  public String getFilename() {
+    return filename;
+  }
+
+  /**
+   * @return the mtime
+   */
+  public long getMtime() {
+    if (mtime.contains("T") && mtime.contains("Z")) {
+      StringBuilder builder = new StringBuilder();
+      builder.append(mtime.substring(0, 4));
+      builder.append("-");
+      builder.append(mtime.substring(4, 6));
+      builder.append("-");
+      builder.append(mtime.substring(6, 11));
+      builder.append(":");
+      builder.append(mtime.substring(11, 13));
+      builder.append(":");
+      builder.append(mtime.substring(13));
+      return ISO8601Utils.parse(builder.toString()).getTime();
+    } else {
+      return Long.valueOf(mtime);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public long giGetModifiedDate() {
+    return this.getMtime();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String giGetName() {
+    return this.getFilename();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IGlacierInterfaceMetadata parse(String data) throws InvalidMetadataException {
+    if (!verify(data)) {
+      throw new InvalidMetadataException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String encode(Archive archive) {
-	this.mtime = Long.toString(archive.getModifiedDate());
-	this.filename = archive.getName();
-	return IDENTIFIER + Base64.encodeBase64String(new Gson().toJson(this).getBytes());
+    String base64data = data.substring(IDENTIFIER.length(), data.length());
 
-    }
+    String json = new String(Base64.decodeBase64(base64data)).trim();
+    MT_AWS_GLACIER_B obj = new Gson().fromJson(json, MT_AWS_GLACIER_B.class);
 
-    /**
-     * @return the filename
-     */
-    public String getFilename() {
-	return filename;
-    }
+    return (IGlacierInterfaceMetadata) obj;
 
-    /**
-     * @return the mtime
-     */
-    public long getMtime() {
-	if (mtime.contains("T") && mtime.contains("Z")) {
-	    StringBuilder builder = new StringBuilder();
-	    builder.append(mtime.substring(0, 4));
-	    builder.append("-");
-	    builder.append(mtime.substring(4, 6));
-	    builder.append("-");
-	    builder.append(mtime.substring(6, 11));
-	    builder.append(":");
-	    builder.append(mtime.substring(11, 13));
-	    builder.append(":");
-	    builder.append(mtime.substring(13));
-	    return ISO8601Utils.parse(builder.toString()).getTime();
-	} else {
-	    return Long.valueOf(mtime);
-	}
-    }
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public long giGetModifiedDate() {
-	return this.getMtime();
-    }
+  /**
+   * @param filename
+   *          the filename to set
+   */
+  public void setFilename(String filename) {
+    this.filename = filename;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String giGetName() {
-	return this.getFilename();
-    }
+  /**
+   * @param mtime
+   *          the mtime to set
+   */
+  public void setMtime(String mtime) {
+    this.mtime = mtime;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public IGlacierInterfaceMetadata parse(String data) throws InvalidMetadataException {
-	if (!verify(data)) {
-	    throw new InvalidMetadataException();
-	}
-
-	String base64data = data.substring(IDENTIFIER.length(), data.length());
-
-	String json = new String(Base64.decodeBase64(base64data)).trim();
-	MT_AWS_GLACIER_B obj = new Gson().fromJson(json, MT_AWS_GLACIER_B.class);
-
-	return (IGlacierInterfaceMetadata) obj;
-
-    }
-
-    /**
-     * @param filename
-     *            the filename to set
-     */
-    public void setFilename(String filename) {
-	this.filename = filename;
-    }
-
-    /**
-     * @param mtime
-     *            the mtime to set
-     */
-    public void setMtime(String mtime) {
-	this.mtime = mtime;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean verify(String data) {
-	return data.startsWith(IDENTIFIER);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean verify(String data) {
+    return data.startsWith(IDENTIFIER);
+  }
 
 }

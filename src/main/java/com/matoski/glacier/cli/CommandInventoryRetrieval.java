@@ -8,11 +8,11 @@ import com.matoski.glacier.enums.CliCommands;
 @Parameters(commandNames = "inventory-retrieve", commandDescription = "Initiate an inventory retrieval")
 public class CommandInventoryRetrieval extends GenericCommand {
 
-    @Parameter(names = "--vault", description = "The name of the vault for whom the inventory needs to be retrieved, will be overwritten by --aws-vault if not specified")
-    public String vaultName;
+  @Parameter(names = "--vault", description = "The name of the vault for whom the inventory needs to be retrieved, will be overwritten by --aws-vault if not specified")
+  public String vaultName;
 
-    public CommandInventoryRetrieval() {
-	super(CliCommands.InventoryRetrieve);
-    }
+  public CommandInventoryRetrieval() {
+    super(CliCommands.InventoryRetrieve);
+  }
 
 }

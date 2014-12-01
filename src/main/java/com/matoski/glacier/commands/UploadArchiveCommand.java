@@ -20,88 +20,89 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
  */
 public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> {
 
-    /**
-     * Metadata
-     */
-    protected Metadata metadata;
+  /**
+   * Metadata
+   */
+  protected Metadata metadata;
 
-    /**
-     * The helper utility for uploading
-     */
-    protected AmazonGlacierUploadUtil upload;
+  /**
+   * The helper utility for uploading
+   */
+  protected AmazonGlacierUploadUtil upload;
 
-    /**
-     * The journal, we use this for storing the data
-     */
-    protected State journal;
+  /**
+   * The journal, we use this for storing the data
+   */
+  protected State journal;
 
-    /**
-     * Constructor
-     * 
-     * @param config
-     * @param command
-     * 
-     * @throws VaultNameNotPresentException
-     * @throws RegionNotSupportedException
-     */
-    public UploadArchiveCommand(Config config, CommandUploadArchive command) throws VaultNameNotPresentException,
-	    RegionNotSupportedException {
-	super(config, command);
+  /**
+   * Constructor
+   * 
+   * @param config
+   * @param command
+   * 
+   * @throws VaultNameNotPresentException
+   * @throws RegionNotSupportedException
+   */
+  public UploadArchiveCommand(Config config, CommandUploadArchive command)
+      throws VaultNameNotPresentException, RegionNotSupportedException {
+    super(config, command);
 
-	Boolean validVaultName = null != command.vaultName;
-	Boolean validVaultNameConfig = null != config.getVault();
+    Boolean validVaultName = null != command.vaultName;
+    Boolean validVaultNameConfig = null != config.getVault();
 
-	if (!validVaultName && !validVaultNameConfig) {
-	    throw new VaultNameNotPresentException();
-	}
+    if (!validVaultName && !validVaultNameConfig) {
+      throw new VaultNameNotPresentException();
+    }
 
-	if (validVaultNameConfig) {
-	    command.vaultName = config.getVault();
-	}
+    if (validVaultNameConfig) {
+      command.vaultName = config.getVault();
+    }
 
-	if (command.partSize % 2 != 0 && command.partSize != 1) {
-	    throw new IllegalArgumentException("Part size has to be a multiple of 2");
-	}
+    if (command.partSize % 2 != 0 && command.partSize != 1) {
+      throw new IllegalArgumentException("Part size has to be a multiple of 2");
+    }
 
-	this.metadata = Metadata.from(command.metadata);
-	this.upload = new AmazonGlacierUploadUtil(credentials, client, region);
+    this.metadata = Metadata.from(command.metadata);
+    this.upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
-	try {
-	    this.journal = State.load(command.journal);
-	} catch (IOException e) {
-	    System.out.println(String.format("Creating a new journal: %s", command.journal));
-	    this.journal = new State();
-	    this.journal.setMetadata(metadata);
-	    this.journal.setName(command.vaultName);
-	    this.journal.setDate(new Date());
-	    this.journal.setFile(command.journal);
-	}
+    try {
+      this.journal = State.load(command.journal);
+    } catch (IOException e) {
+      System.out.println(String.format("Creating a new journal: %s", command.journal));
+      this.journal = new State();
+      this.journal.setMetadata(metadata);
+      this.journal.setName(command.vaultName);
+      this.journal.setDate(new Date());
+      this.journal.setFile(command.journal);
+    }
 
-	command.partSize = command.partSize * (int) AmazonGlacierBaseUtil.MINIMUM_PART_SIZE;
+    command.partSize = command.partSize * (int) AmazonGlacierBaseUtil.MINIMUM_PART_SIZE;
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void run() {
+
+    System.out.println("START: upload-archive\n");
+
+    if (command.files.isEmpty()) {
+      System.out.println("ERROR: No files specified");
+    } else {
+
+      AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
+
+      for (String fileName : command.files) {
+        upload.UploadArchive(journal, command.vaultName, fileName, command.forceUpload,
+            command.concurrent, command.retryFailedUpload, command.partSize,
+            command.uploadReplaceModified);
+      }
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void run() {
-
-	System.out.println("START: upload-archive\n");
-
-	if (command.files.isEmpty()) {
-	    System.out.println("ERROR: No files specified");
-	} else {
-
-	    AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
-
-	    for (String fileName : command.files) {
-		upload.UploadArchive(journal, command.vaultName, fileName, command.forceUpload, command.concurrent,
-			command.retryFailedUpload, command.partSize, command.uploadReplaceModified);
-	    }
-
-	}
-
-	System.out.println("\nEND: upload-archive");
-    }
+    System.out.println("\nEND: upload-archive");
+  }
 }

@@ -7,8 +7,8 @@ import com.matoski.glacier.enums.CliCommands;
 @Parameters(commandNames = "help", commandDescription = "Show the help page")
 public class CommandHelp extends GenericCommand {
 
-    public CommandHelp() {
-	super(CliCommands.Help);
-    }
+  public CommandHelp() {
+    super(CliCommands.Help);
+  }
 
 }

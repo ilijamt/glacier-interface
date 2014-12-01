@@ -23,83 +23,88 @@ import com.matoski.glacier.util.download.AmazonGlacierDownloadUtil;
  */
 public class DownloadJobCommand extends AbstractCommand<CommandDownloadJob> {
 
-    /**
-     * The job
-     */
-    DownloadJobInfo jobInfo = null;
+  /**
+   * The job
+   */
+  DownloadJobInfo jobInfo = null;
 
-    /**
-     * Download helper
-     */
-    AmazonGlacierDownloadUtil download = null;
+  /**
+   * Download helper
+   */
+  AmazonGlacierDownloadUtil download = null;
 
-    /**
-     * Constructor
-     * 
-     * @param config
-     * @param command
-     * @throws VaultNameNotPresentException
-     * @throws RegionNotSupportedException
-     * @throws FileNotFoundException
-     * @throws IllegalArgumentException
-     */
-    public DownloadJobCommand(Config config, CommandDownloadJob command) throws VaultNameNotPresentException, RegionNotSupportedException,
-	    FileNotFoundException, IllegalArgumentException {
-	super(config, command);
+  /**
+   * Constructor
+   * 
+   * @param config
+   * @param command
+   * @throws VaultNameNotPresentException
+   * @throws RegionNotSupportedException
+   * @throws FileNotFoundException
+   * @throws IllegalArgumentException
+   */
+  public DownloadJobCommand(Config config, CommandDownloadJob command)
+      throws VaultNameNotPresentException, RegionNotSupportedException, FileNotFoundException,
+      IllegalArgumentException {
+    super(config, command);
 
-	if (command.partSize % 2 != 0 && command.partSize != 1) {
-	    throw new IllegalArgumentException("Part size has to be a multiple of 2");
-	}
-
-	File jobFile = new File(command.jobFile);
-
-	if (!jobFile.exists()) {
-	    throw new FileNotFoundException(command.jobFile);
-	}
-
-	try {
-	    jobInfo = DownloadJobInfo.load(command.jobFile, DownloadJobInfo.class);
-	} catch (InstantiationException | IllegalAccessException | IOException e) {
-	    e.printStackTrace();
-	    throw new IllegalArgumentException("Job info couldn't be loaded");
-	}
-
-	if (null == jobInfo) {
-	    throw new FileNotFoundException(command.jobFile);
-	}
-
-	download = new AmazonGlacierDownloadUtil(credentials, client, region);
-
+    if (command.partSize % 2 != 0 && command.partSize != 1) {
+      throw new IllegalArgumentException("Part size has to be a multiple of 2");
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void run() {
+    File jobFile = new File(command.jobFile);
 
-	System.out.println("START: download-job");
-	System.out.println();
-
-	System.out.println(String.format("%s jobs to process", jobInfo.getJobs().size()));
-	System.out.println();
-
-	for (DownloadJob job : jobInfo.getJobs()) {
-	    try {
-		if (command.dryRun) {
-		    System.out.println(String.format("[--dry-run] Skipping download for : %s [%s]", job.getName(), job.getArchiveId()));
-		} else {
-		    download.DownloadArchive(job, (long) command.partSize * AmazonGlacierBaseUtil.MINIMUM_PART_SIZE, command.overwrite);
-		}
-	    } catch (FileAlreadyExistsException e) {
-		System.out.println(String.format("ERROR: [%s] %s already exists, skipping", job.getArchiveId(), job.getName()));
-	    } catch (InvalidChecksumException e) {
-		System.out.println(String.format("ERROR: Invalid checksum [%s] %s", job.getArchiveId(), job.getName()));
-	    }
-	    System.out.println();
-	}
-
-	System.out.println();
-	System.out.println("END: download-job");
+    if (!jobFile.exists()) {
+      throw new FileNotFoundException(command.jobFile);
     }
+
+    try {
+      jobInfo = DownloadJobInfo.load(command.jobFile, DownloadJobInfo.class);
+    } catch (InstantiationException | IllegalAccessException | IOException e) {
+      e.printStackTrace();
+      throw new IllegalArgumentException("Job info couldn't be loaded");
+    }
+
+    if (null == jobInfo) {
+      throw new FileNotFoundException(command.jobFile);
+    }
+
+    download = new AmazonGlacierDownloadUtil(credentials, client, region);
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void run() {
+
+    System.out.println("START: download-job");
+    System.out.println();
+
+    System.out.println(String.format("%s jobs to process", jobInfo.getJobs().size()));
+    System.out.println();
+
+    for (DownloadJob job : jobInfo.getJobs()) {
+      try {
+        if (command.dryRun) {
+          System.out.println(String.format("[--dry-run] Skipping download for : %s [%s]",
+              job.getName(), job.getArchiveId()));
+        } else {
+          download.DownloadArchive(job, (long) command.partSize
+              * AmazonGlacierBaseUtil.MINIMUM_PART_SIZE, command.overwrite);
+        }
+      } catch (FileAlreadyExistsException e) {
+        System.out.println(String.format("ERROR: [%s] %s already exists, skipping",
+            job.getArchiveId(), job.getName()));
+      } catch (InvalidChecksumException e) {
+        System.out.println(String.format("ERROR: Invalid checksum [%s] %s", job.getArchiveId(),
+            job.getName()));
+      }
+      System.out.println();
+    }
+
+    System.out.println();
+    System.out.println("END: download-job");
+  }
 }

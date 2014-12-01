@@ -8,17 +8,17 @@ import com.matoski.glacier.enums.CliCommands;
 @Parameters(commandNames = "list-journal", commandDescription = "List the data in the journal")
 public class CommandListJournal extends GenericCommand {
 
-    @Parameter(names = "--journal", description = "The journal to read the data from")
-    public String journal;
-    
-    @Parameter(names = "--exists", description = "Check if the file exists or not")
-    public Boolean exists = false;
+  @Parameter(names = "--journal", description = "The journal to read the data from")
+  public String journal;
 
-    @Parameter(names = "--full", description = "Display the full data from the journal")
-    public Boolean full = false;
+  @Parameter(names = "--exists", description = "Check if the file exists or not")
+  public Boolean exists = false;
 
-    public CommandListJournal() {
-	super(CliCommands.ListJournal);
-    }
+  @Parameter(names = "--full", description = "Display the full data from the journal")
+  public Boolean full = false;
+
+  public CommandListJournal() {
+    super(CliCommands.ListJournal);
+  }
 
 }

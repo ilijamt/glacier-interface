@@ -9,23 +9,23 @@ import com.google.gson.GsonBuilder;
 
 public class FileWriteUtils {
 
-    public static void toJson(File file, Object obj) throws IOException {
+  public static void toJson(File file, Object obj) throws IOException {
 
-	if (!file.exists()) {
-	    file.createNewFile();
-	}
-
-	FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
-	BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-	bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create().toJson(obj));
-
-	bufferedWriter.close();
-	fileWriter.close();
-
+    if (!file.exists()) {
+      file.createNewFile();
     }
 
-    public static void toJson(String file, Object obj) throws IOException {
-	toJson(new File(file), obj);
-    }
+    FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+    bufferedWriter.write(new GsonBuilder().setPrettyPrinting().create().toJson(obj));
+
+    bufferedWriter.close();
+    fileWriter.close();
+
+  }
+
+  public static void toJson(String file, Object obj) throws IOException {
+    toJson(new File(file), obj);
+  }
 
 }

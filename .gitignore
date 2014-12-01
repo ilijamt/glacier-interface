@@ -42,3 +42,4 @@ config.json
 demo.log
 *.state
 *.journal
+.checkstyle

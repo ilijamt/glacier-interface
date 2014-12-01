@@ -19,43 +19,45 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
  */
 public class ListVaultsCommand extends AbstractCommand<CommandListVaults> {
 
-    /**
-     * Constructor
-     * 
-     * @param config
-     * @param command
-     * @throws VaultNameNotPresentException
-     * @throws RegionNotSupportedException
-     */
-    public ListVaultsCommand(Config config, CommandListVaults command) throws VaultNameNotPresentException, RegionNotSupportedException {
-	super(config, command);
+  /**
+   * Constructor
+   * 
+   * @param config
+   * @param command
+   * @throws VaultNameNotPresentException
+   * @throws RegionNotSupportedException
+   */
+  public ListVaultsCommand(Config config, CommandListVaults command)
+      throws VaultNameNotPresentException, RegionNotSupportedException {
+    super(config, command);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void run() {
+
+    System.out.println("START: list-vaults\n");
+
+    AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
+
+    List<DescribeVaultOutput> result = upload.ListVaults();
+
+    System.out.println(String.format("Total available vaults: %s\n", result.size()));
+
+    for (DescribeVaultOutput vault : result) {
+
+      System.out.println(String.format("%1$20s: %2$s", "ARN", vault.getVaultARN()));
+      System.out.println(String.format("%1$20s: %2$s", "Vault Name", vault.getVaultName()));
+      System.out.println(String.format("%1$20s: %2$s", "Created", vault.getCreationDate()));
+      System.out.println(String.format("%1$20s: %2$s (%3$s bytes)", "Inventory Size",
+          FileUtils.humanReadableByteCount(vault.getSizeInBytes()), vault.getSizeInBytes()));
+      System.out.println(String.format("%1$20s: %2$s", "Last Inventory Date",
+          vault.getLastInventoryDate()));
+      System.out.println();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void run() {
-
-	System.out.println("START: list-vaults\n");
-
-	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
-
-	List<DescribeVaultOutput> result = upload.ListVaults();
-
-	System.out.println(String.format("Total available vaults: %s\n", result.size()));
-
-	for (DescribeVaultOutput vault : result) {
-
-	    System.out.println(String.format("%1$20s: %2$s", "ARN", vault.getVaultARN()));
-	    System.out.println(String.format("%1$20s: %2$s", "Vault Name", vault.getVaultName()));
-	    System.out.println(String.format("%1$20s: %2$s", "Created", vault.getCreationDate()));
-	    System.out.println(String.format("%1$20s: %2$s (%3$s bytes)", "Inventory Size",
-		    FileUtils.humanReadableByteCount(vault.getSizeInBytes()), vault.getSizeInBytes()));
-	    System.out.println(String.format("%1$20s: %2$s", "Last Inventory Date", vault.getLastInventoryDate()));
-	    System.out.println();
-	}
-
-	System.out.println("END: list-vaults");
-    }
+    System.out.println("END: list-vaults");
+  }
 }

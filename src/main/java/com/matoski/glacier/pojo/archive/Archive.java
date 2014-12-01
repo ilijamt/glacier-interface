@@ -7,277 +7,281 @@ import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.matoski.glacier.enums.ArchiveState;
 
 /**
- * An archive element, it's used to store all the relevant information about the
- * archive in one place
+ * An archive element, it's used to store all the relevant information about the archive in one
+ * place
  * 
  * @author ilijamt
  */
 public class Archive implements Cloneable {
 
-    /**
-     * The state of the file in the journal, default state is
-     * {@link ArchiveState#NOT_DEFINED}
-     */
-    private ArchiveState state = ArchiveState.NOT_DEFINED;
+  /**
+   * The state of the file in the journal, default state is {@link ArchiveState#NOT_DEFINED}
+   */
+  private ArchiveState state = ArchiveState.NOT_DEFINED;
 
-    /**
-     * The ID of the Archive
-     */
-    private String id;
+  /**
+   * The ID of the Archive
+   */
+  private String id;
 
-    /**
-     * The name of the Archive, it will be stored in the metadata, as amazon
-     * glacier doesn't support names
-     */
-    private String name;
+  /**
+   * The name of the Archive, it will be stored in the metadata, as amazon glacier doesn't support
+   * names
+   */
+  private String name;
 
-    /**
-     * The date when the archive was last modified, as a timestamp
-     */
-    private long modifiedDate;
+  /**
+   * The date when the archive was last modified, as a timestamp
+   */
+  private long modifiedDate;
 
-    /**
-     * When was the archive created
-     */
-    private Date createdDate;
+  /**
+   * When was the archive created
+   */
+  private Date createdDate;
 
-    /**
-     * What is the size of the archive
-     */
-    private long size;
+  /**
+   * What is the size of the archive
+   */
+  private long size;
 
-    /**
-     * What is the hash of the archive
-     */
-    private String hash;
+  /**
+   * What is the hash of the archive
+   */
+  private String hash;
 
-    /**
-     * Uri of the uploaded file
-     */
-    private String uri;
+  /**
+   * Uri of the uploaded file
+   */
+  private String uri;
 
-    /**
-     * Constructor
-     */
-    public Archive() {
-	super();
+  /**
+   * Constructor
+   */
+  public Archive() {
+    super();
+  }
+
+  /**
+   * Constructor
+   * 
+   * @param state
+   * @param id
+   * @param name
+   * @param modifiedDate
+   * @param createdDate
+   * @param size
+   * @param hash
+   * @param uri
+   */
+  public Archive(ArchiveState state, String id, String name, long modifiedDate, Date createdDate,
+      long size, String hash, String uri) {
+    super();
+    this.state = state;
+    this.id = id;
+    this.name = name;
+    this.modifiedDate = modifiedDate;
+    this.createdDate = createdDate;
+    this.size = size;
+    this.hash = hash;
+    this.uri = uri;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object clone() {
+    return new Archive(getState(), getId(), getName(), getModifiedDate(), getCreatedDate(),
+        getSize(), getHash(), getUri());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean equals(Object obj) {
+
+    if (!(obj instanceof Archive)) {
+      return false;
     }
 
-    /**
-     * Constructor
-     * 
-     * @param state
-     * @param id
-     * @param name
-     * @param modifiedDate
-     * @param createdDate
-     * @param size
-     * @param hash
-     * @param uri
-     */
-    public Archive(ArchiveState state, String id, String name, long modifiedDate, Date createdDate, long size, String hash, String uri) {
-	super();
-	this.state = state;
-	this.id = id;
-	this.name = name;
-	this.modifiedDate = modifiedDate;
-	this.createdDate = createdDate;
-	this.size = size;
-	this.hash = hash;
-	this.uri = uri;
-    }
+    Archive archive = (Archive) obj;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object clone() {
-	return new Archive(getState(), getId(), getName(), getModifiedDate(), getCreatedDate(), getSize(), getHash(), getUri());
-    }
+    return ((null != this.id) ? this.id.equals(archive.id) : true)
+        && ((null != this.name) ? this.name.equals(archive.name) : true)
+        && (this.size == archive.size)
+        && ((null != this.hash) ? this.hash.equals(archive.hash) : true)
+        && ((null != this.uri) ? this.uri.equals(archive.uri) : true)
+        && ((null != this.createdDate) ? (this.createdDate.compareTo(archive.createdDate) == 0)
+            : true) && (this.modifiedDate == archive.modifiedDate)
+        && (this.state.equals(archive.state));
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object obj) {
+  }
 
-	if (!(obj instanceof Archive)) {
-	    return false;
-	}
+  /**
+   * @return the created
+   */
+  public Date getCreatedDate() {
+    return createdDate;
+  }
 
-	Archive archive = (Archive) obj;
+  /**
+   * @return the hash
+   */
+  public String getHash() {
+    return hash;
+  }
 
-	return ((null != this.id) ? this.id.equals(archive.id) : true) && ((null != this.name) ? this.name.equals(archive.name) : true)
-		&& (this.size == archive.size) && ((null != this.hash) ? this.hash.equals(archive.hash) : true)
-		&& ((null != this.uri) ? this.uri.equals(archive.uri) : true)
-		&& ((null != this.createdDate) ? (this.createdDate.compareTo(archive.createdDate) == 0) : true)
-		&& (this.modifiedDate == archive.modifiedDate) && (this.state.equals(archive.state));
+  /**
+   * @return the id
+   */
+  public String getId() {
+    return id;
+  }
 
-    }
+  /**
+   * Get's the key used to store it in the Journal
+   * 
+   * @return
+   */
+  public String getKeyId() {
+    return this.id;
+  }
 
-    /**
-     * @return the created
-     */
-    public Date getCreatedDate() {
-	return createdDate;
-    }
+  /**
+   * @return the mtime
+   */
+  public long getModifiedDate() {
+    return modifiedDate;
+  }
 
-    /**
-     * @return the hash
-     */
-    public String getHash() {
-	return hash;
-    }
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
 
-    /**
-     * @return the id
-     */
-    public String getId() {
-	return id;
-    }
+  /**
+   * @return the size
+   */
+  public long getSize() {
+    return size;
+  }
 
-    /**
-     * Get's the key used to store it in the Journal
-     * 
-     * @return
-     */
-    public String getKeyId() {
-	return this.id;
-    }
+  /**
+   * Get the state of the Archive
+   * 
+   * @return
+   */
+  public ArchiveState getState() {
+    return state;
+  }
 
-    /**
-     * @return the mtime
-     */
-    public long getModifiedDate() {
-	return modifiedDate;
-    }
+  /**
+   * get the uploaded uri
+   * 
+   * @return
+   */
+  public String getUri() {
+    return uri;
+  }
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-	return name;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int hashCode() {
+    return this.id.hashCode();
+  }
 
-    /**
-     * @return the size
-     */
-    public long getSize() {
-	return size;
-    }
+  /**
+   * @param created
+   *          the created to set
+   */
+  public void setCreatedDate(Date created) {
+    this.createdDate = created;
+  }
 
-    /**
-     * Get the state of the Archive
-     * 
-     * @return
-     */
-    public ArchiveState getState() {
-	return state;
-    }
+  public void setCreatedDate(String date) {
+    this.createdDate = ISO8601Utils.parse(date);
+  }
 
-    /**
-     * get the uploaded uri
-     * 
-     * @return
-     */
-    public String getUri() {
-	return uri;
-    }
+  /**
+   * @param hash
+   *          the hash to set
+   */
+  public void setHash(String hash) {
+    this.hash = hash;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-	return this.id.hashCode();
-    }
+  /**
+   * @param id
+   *          the id to set
+   */
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    /**
-     * @param created
-     *            the created to set
-     */
-    public void setCreatedDate(Date created) {
-	this.createdDate = created;
-    }
+  /**
+   * @param date
+   *          the date to set
+   */
+  public void setModifiedDate(long date) {
+    this.modifiedDate = date;
+  }
 
-    public void setCreatedDate(String date) {
-	this.createdDate = ISO8601Utils.parse(date);
-    }
+  /**
+   * @param name
+   *          the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    /**
-     * @param hash
-     *            the hash to set
-     */
-    public void setHash(String hash) {
-	this.hash = hash;
-    }
+  /**
+   * @param size
+   *          the size to set
+   */
+  public void setSize(long size) {
+    this.size = size;
+  }
 
-    /**
-     * @param id
-     *            the id to set
-     */
-    public void setId(String id) {
-	this.id = id;
-    }
+  /**
+   * Sets the archive status
+   * 
+   * @param state
+   */
+  public void setState(ArchiveState state) {
+    this.state = state;
+  }
 
-    /**
-     * @param mtime
-     *            the mtime to set
-     */
-    public void setModifiedDate(long date) {
-	this.modifiedDate = date;
-    }
+  /**
+   * Set the uploaded uri
+   * 
+   * @param uri
+   */
+  public void setUri(String uri) {
+    this.uri = uri;
+  }
 
-    /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-	this.name = name;
-    }
+  /**
+   * Get the file to the archive
+   * 
+   * @return
+   */
+  public File getFile() {
+    return new File(getName());
+  }
 
-    /**
-     * @param size
-     *            the size to set
-     */
-    public void setSize(long size) {
-	this.size = size;
-    }
-
-    /**
-     * Sets the archive status
-     * 
-     * @param state
-     */
-    public void setState(ArchiveState state) {
-	this.state = state;
-    }
-
-    /**
-     * Set the uploaded uri
-     * 
-     * @param uri
-     */
-    public void setUri(String uri) {
-	this.uri = uri;
-    }
-
-    /**
-     * Get the file to the archive
-     * 
-     * @return
-     */
-    public File getFile() {
-	return new File(getName());
-    }
-
-    /**
-     * Get the file to the archive with a parent
-     * 
-     * @param parent
-     * @return
-     */
-    public File getFile(String parent) {
-	return new File(parent, getName());
-    }
+  /**
+   * Get the file to the archive with a parent
+   * 
+   * @param parent
+   * @return
+   */
+  public File getFile(String parent) {
+    return new File(parent, getName());
+  }
 }

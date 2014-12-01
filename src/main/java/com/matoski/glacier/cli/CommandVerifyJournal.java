@@ -8,14 +8,14 @@ import com.matoski.glacier.enums.CliCommands;
 @Parameters(commandNames = "verify-journal", commandDescription = "Verifies the data in the journal with the files on the disk")
 public class CommandVerifyJournal extends GenericCommand {
 
-    @Parameter(required = true, names = "--journal", description = "The journal we use to verify the data")
-    public String journal;
+  @Parameter(required = true, names = "--journal", description = "The journal we use to verify the data")
+  public String journal;
 
-    @Parameter(names = "--skip-hash", description = "Skip the hash checking")
-    public Boolean skipHash = false;
-    
-    public CommandVerifyJournal() {
-	super(CliCommands.VerifyJournal);
-    }
+  @Parameter(names = "--skip-hash", description = "Skip the hash checking")
+  public Boolean skipHash = false;
+
+  public CommandVerifyJournal() {
+    super(CliCommands.VerifyJournal);
+  }
 
 }

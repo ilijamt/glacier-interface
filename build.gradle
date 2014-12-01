@@ -1,8 +1,22 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'checkstyle'
 
 sourceCompatibility = 1.7
 version = 0.2
+
+configurations {
+    doclet
+}
+
+checkstyle {
+	toolVersion = 6.1
+	showViolations = true
+}
+
+dependencies {
+    doclet group: 'org.jboss.apiviz', name: 'apiviz', version: '1.3.2.GA'
+}
 
 def getPackageName() {
 	return "glacier-interface"
@@ -54,3 +68,10 @@ task('package', dependsOn: 'build', type: Exec) {
    args = argsList
    
 }
+
+checkstyleMain << {
+    ant.xslt(in: reports.xml.destination,
+             style: new File('config/checkstyle/checkstyle-noframes-sorted.xsl'),
+             out: new File(reports.xml.destination.parent, 'main.html'))
+}
+

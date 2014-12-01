@@ -12,14 +12,14 @@ import com.matoski.glacier.util.ThreadAmazonGlacierDummy;
  */
 public class ThreadAmazonGlacierDownloadDummy extends ThreadAmazonGlacierDummy<DownloadPiece> {
 
-    public ThreadAmazonGlacierDownloadDummy(int pieces, File file, DownloadPiece piece) {
-	super(pieces, file, piece);
-    }
+  public ThreadAmazonGlacierDownloadDummy(int pieces, File file, DownloadPiece piece) {
+    super(pieces, file, piece);
+  }
 
-    @Override
-    public void __call() {
-	System.out.println(String.format(AmazonGlacierDownloadUtil.FORMAT, piece.getPart() + 1, pieces, piece.getStatus(), file,
-		"Already downloaded"));
-    }
+  @Override
+  public void __call() {
+    System.out.println(String.format(AmazonGlacierDownloadUtil.FORMAT, piece.getPart() + 1, pieces,
+        piece.getStatus(), file, "Already downloaded"));
+  }
 
 }

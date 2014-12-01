@@ -24,72 +24,75 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
  */
 public class SyncCommand extends AbstractCommand<CommandSync> {
 
-    /**
-     * List of files
-     */
-    protected Collection<String> files = new LinkedList<String>();
+  /**
+   * List of files
+   */
+  protected Collection<String> files = new LinkedList<String>();
 
-    /**
-     * Journal
-     */
-    private State journal;
+  /**
+   * Journal
+   */
+  private State journal;
 
-    /**
-     * Constructor
-     * 
-     * @param config
-     * @param command
-     * @throws VaultNameNotPresentException
-     * @throws RegionNotSupportedException
-     */
-    public SyncCommand(Config config, CommandSync command) throws VaultNameNotPresentException, RegionNotSupportedException {
-	super(config, command);
+  /**
+   * Constructor
+   * 
+   * @param config
+   * @param command
+   * @throws VaultNameNotPresentException
+   * @throws RegionNotSupportedException
+   */
+  public SyncCommand(Config config, CommandSync command) throws VaultNameNotPresentException,
+      RegionNotSupportedException {
+    super(config, command);
 
-	try {
-	    this.journal = State.load(command.journal);
-	} catch (IOException e) {
-	    System.out.println(String.format("Creating a new journal: %s", command.journal));
-	    this.journal = new State();
-	    this.journal.setMetadata(command.metadata);
-	    this.journal.setName(command.vaultName);
-	    this.journal.setDate(new Date());
-	    this.journal.setFile(command.journal);
-	}
-
+    try {
+      this.journal = State.load(command.journal);
+    } catch (IOException e) {
+      System.out.println(String.format("Creating a new journal: %s", command.journal));
+      this.journal = new State();
+      this.journal.setMetadata(command.metadata);
+      this.journal.setName(command.vaultName);
+      this.journal.setDate(new Date());
+      this.journal.setFile(command.journal);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void run() {
+  }
 
-	System.out.println("START: sync\n");
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void run() {
 
-	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
-	Boolean exists = false;
+    System.out.println("START: sync\n");
 
-	Collection<File> result = FileUtils.listFiles(new File(config.getDirectory()), null, true);
+    AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
+    Boolean exists = false;
 
-	for (File file : result) {
-	    files.add(file.getAbsolutePath().replace(config.getDirectory() + "/", ""));
-	}
+    Collection<File> result = FileUtils.listFiles(new File(config.getDirectory()), null, true);
 
-	System.out.println(String.format("%s files found", files.size()));
-
-	for (String fileName : files) {
-
-	    exists = journal.isFileInArchive(fileName);
-
-	    if (!command.uploadReplaceModified && exists) {
-		System.out.println(String.format("%s is already present in the journal, skipping", fileName));
-		continue;
-	    }
-
-	    upload.UploadArchive(journal, command.vaultName, fileName, false, command.concurrent, command.retryFailedUpload,
-		    command.partSize, command.uploadReplaceModified, command.dryRun);
-	}
-
-	System.out.println("\nEND: sync");
+    for (File file : result) {
+      files.add(file.getAbsolutePath().replace(config.getDirectory() + "/", ""));
     }
+
+    System.out.println(String.format("%s files found", files.size()));
+
+    for (String fileName : files) {
+
+      exists = journal.isFileInArchive(fileName);
+
+      if (!command.uploadReplaceModified && exists) {
+        System.out.println(String
+            .format("%s is already present in the journal, skipping", fileName));
+        continue;
+      }
+
+      upload.UploadArchive(journal, command.vaultName, fileName, false, command.concurrent,
+          command.retryFailedUpload, command.partSize, command.uploadReplaceModified,
+          command.dryRun);
+    }
+
+    System.out.println("\nEND: sync");
+  }
 }

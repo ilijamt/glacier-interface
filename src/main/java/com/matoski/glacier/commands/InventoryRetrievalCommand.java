@@ -9,52 +9,53 @@ import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
 /**
- * Initiate an inventory retrieval 
+ * Initiate an inventory retrieval
  * 
  * @author ilijamt
  *
  */
 public class InventoryRetrievalCommand extends AbstractCommand<CommandInventoryRetrieval> {
 
-    /**
-     * Constructor 
-     * 
-     * @param config
-     * @param command
-     * @throws VaultNameNotPresentException
-     * @throws RegionNotSupportedException
-     */
-    public InventoryRetrievalCommand(Config config, CommandInventoryRetrieval command) throws VaultNameNotPresentException,
-	    RegionNotSupportedException {
-	super(config, command);
+  /**
+   * Constructor
+   * 
+   * @param config
+   * @param command
+   * @throws VaultNameNotPresentException
+   * @throws RegionNotSupportedException
+   */
+  public InventoryRetrievalCommand(Config config, CommandInventoryRetrieval command)
+      throws VaultNameNotPresentException, RegionNotSupportedException {
+    super(config, command);
 
-	if ((null == command.vaultName || command.vaultName.isEmpty()) && (null == config.getVault() || config.getVault().isEmpty())) {
-	    throw new VaultNameNotPresentException();
-	}
-
-	if ((null == command.vaultName) || command.vaultName.isEmpty()) {
-	    command.vaultName = config.getVault();
-	}
-
+    if ((null == command.vaultName || command.vaultName.isEmpty())
+        && (null == config.getVault() || config.getVault().isEmpty())) {
+      throw new VaultNameNotPresentException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void run() {
-
-	System.out.println("START: inventory-retrieve\n");
-
-	AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
-
-	InitiateJobResult job = upload.InventoryRetrieval(command.vaultName);
-
-	System.out.println("Inventory retrieved.\n");
-
-	System.out.println(String.format("%1$10s: %2$s", "Job ID", job.getJobId()));
-	System.out.println(String.format("%1$10s: %2$s", "Vault", command.vaultName));
-
-	System.out.println("\nEND: inventory-retrieve");
+    if ((null == command.vaultName) || command.vaultName.isEmpty()) {
+      command.vaultName = config.getVault();
     }
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void run() {
+
+    System.out.println("START: inventory-retrieve\n");
+
+    AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
+
+    InitiateJobResult job = upload.InventoryRetrieval(command.vaultName);
+
+    System.out.println("Inventory retrieved.\n");
+
+    System.out.println(String.format("%1$10s: %2$s", "Job ID", job.getJobId()));
+    System.out.println(String.format("%1$10s: %2$s", "Vault", command.vaultName));
+
+    System.out.println("\nEND: inventory-retrieve");
+  }
 }

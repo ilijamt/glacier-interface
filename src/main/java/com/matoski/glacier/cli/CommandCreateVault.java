@@ -8,11 +8,11 @@ import com.matoski.glacier.enums.CliCommands;
 @Parameters(commandNames = "create-vault", commandDescription = "Creates a new vault on Amazon Glacier")
 public class CommandCreateVault extends GenericCommand {
 
-    @Parameter(names = "--vault", description = "The name of the vault to be created, will be overwritten by --aws-vault if not specified")
-    public String vaultName;
+  @Parameter(names = "--vault", description = "The name of the vault to be created, will be overwritten by --aws-vault if not specified")
+  public String vaultName;
 
-    public CommandCreateVault() {
-	super(CliCommands.CreateVault);
-    }
+  public CommandCreateVault() {
+    super(CliCommands.CreateVault);
+  }
 
 }
