@@ -775,9 +775,9 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     FileInputStream stream = new FileInputStream(file);
 
     int position = part * (int) partSize;
-    
+
     long skipped = stream.skip(position);
-    
+
     if (part > pieces) {
       ret.setStatus(MultipartPieceStatus.PIECE_INVALID_PART);
       stream.close();

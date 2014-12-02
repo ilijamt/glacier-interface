@@ -11,6 +11,6 @@ public class InvalidMetadataException extends Exception {
   /**
    * Serial version ID.
    */
-  private static final long serialVersionUID = 8372188761929830421L;
+  static final long serialVersionUID = 8372188761929830421L;
 
 }

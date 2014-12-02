@@ -337,8 +337,8 @@ public class Config {
    * @return true if the configuration is valid and has all required parameters to run
    */
   public boolean valid(boolean vault) {
-    return null != this.getKey() && null != this.getSecretKey()
-        && vault ? null != this.getVault() : true && null != this.getRegion();
+    return null != this.getKey() && null != this.getSecretKey() && vault ? null != this.getVault()
+        : true && null != this.getRegion();
 
   }
 

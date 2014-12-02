@@ -5,6 +5,8 @@ apply plugin: 'findbugs'
 apply plugin: 'pmd'
 
 sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 version = 0.2
 
 configure(allprojects) {
