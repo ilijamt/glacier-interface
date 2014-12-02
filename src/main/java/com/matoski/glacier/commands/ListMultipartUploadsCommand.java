@@ -82,7 +82,8 @@ public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMult
         System.out.println(String.format("%1$20s: %2$s", "ARN", result.getVaultARN()));
         System.out
             .println(String.format("%1$20s: %2$s", "Creation date", result.getCreationDate()));
-        System.out.println(String.format("%1$20s: %2$s", "Part size", result.getPartSizeInBytes()));
+        System.out
+            .println(String.format("%1$20s: %2$s", "Part size", result.getPartSizeInBytes()));
         System.out.println(String.format("%1$20s: %2$s", "Description",
             result.getArchiveDescription()));
         try {
@@ -97,8 +98,8 @@ public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMult
             .getParts().size()));
 
         for (PartListElement partList : result.getParts()) {
-          System.out
-              .println(String.format("%1$20s: %2$s", "Byte Range", partList.getRangeInBytes()));
+          System.out.println(String.format("%1$20s: %2$s", "Byte Range",
+              partList.getRangeInBytes()));
           System.out.println(String.format("%1$20s: %2$s", "SHA256 Tree Hash",
               partList.getSHA256TreeHash()));
         }
@@ -107,8 +108,8 @@ public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMult
 
         System.out.println(String.format("%1$20s: %2$s", "ID", element.getMultipartUploadId()));
         System.out.println(String.format("%1$20s: %2$s", "ARN", element.getVaultARN()));
-        System.out
-            .println(String.format("%1$20s: %2$s", "Creation date", element.getCreationDate()));
+        System.out.println(String.format("%1$20s: %2$s", "Creation date",
+            element.getCreationDate()));
         System.out
             .println(String.format("%1$20s: %2$s", "Part size", element.getPartSizeInBytes()));
         System.out.println(String.format("%1$20s: %2$s", "Description",

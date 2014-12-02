@@ -85,8 +85,8 @@ public class SyncCommand extends AbstractCommand<CommandSync> {
       exists = journal.isFileInArchive(fileName);
 
       if (!command.uploadReplaceModified && exists) {
-        System.out.println(String
-            .format("%s is already present in the journal, skipping", fileName));
+        System.out.println(String.format("%s is already present in the journal, skipping",
+            fileName));
         continue;
       }
 

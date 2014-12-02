@@ -12,12 +12,11 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import com.matoski.glacier.enums.MultipartPieceStatus;
-import com.matoski.glacier.pojo.upload.UploadPiece;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class UploadPieceTest {
+public class PieceTest {
 
-  private UploadPiece piece;
+  private Piece piece;
 
   private String calculatedChecksum;
   private String uploadedChecksum;
@@ -28,7 +27,7 @@ public class UploadPieceTest {
   @Before
   public void setUp() throws Exception {
 
-    this.piece = new UploadPiece();
+    this.piece = new Piece();
     this.status = MultipartPieceStatus.PIECE_COMPLETE;
     this.part = Integer.valueOf(RandomStringUtils.randomNumeric(3));
     this.id = RandomStringUtils.randomAlphanumeric(12);

@@ -15,7 +15,7 @@ public class FileUtils {
    * 
    * @param bytes
    *          Bytes to convert
-   *          
+   * 
    * @return Human readable output in SI format.
    */
   public static String humanReadableByteCount(long bytes) {
@@ -41,7 +41,8 @@ public class FileUtils {
     }
     int exp = (int) (Math.log(bytes) / Math.log(unit));
     String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
-    return String.format("%." + String.valueOf(digits) + "f %sB", bytes / Math.pow(unit, exp), pre);
+    return String
+        .format("%." + String.valueOf(digits) + "f %sB", bytes / Math.pow(unit, exp), pre);
   }
 
 }

@@ -106,7 +106,8 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
       for (String item : command.name) {
         archive = this.journal.getByName(item);
         if (null == archive) {
-          System.out.println(String.format("%s is not present in the journal, skipping ...", item));
+          System.out
+              .println(String.format("%s is not present in the journal, skipping ...", item));
         } else {
           archiveName = archive.getName();
           archiveId.add(archive.getId());

@@ -1,7 +1,7 @@
 package com.matoski.glacier.interfaces;
 
 import com.matoski.glacier.cli.CommandUploadArchive;
-import com.matoski.glacier.pojo.upload.UploadPiece;
+import com.matoski.glacier.pojo.Piece;
 
 /**
  * Upload piece handler, used to show the progress output of the archive.
@@ -20,7 +20,7 @@ public interface IUploadPieceHandler {
    * @param piece
    *          The details about the uploaded piece
    */
-  void end(int part, UploadPiece piece);
+  void end(int part, Piece piece);
 
   /**
    * We have an exception, this will show use which exception happend and to decide if we need to do

@@ -73,8 +73,8 @@ public class ListJournalCommand extends AbstractEmptyCommand<CommandListJournal>
         System.out.println(String.format("%1$20s: %2$s (%3$s)", "Modified Date",
             new Date(archive.getModifiedDate()), archive.getModifiedDate()));
         if (command.exists) {
-          System.out
-              .println(String.format("%1$20s: %2$s", "Exists", file.exists() && file.isFile()));
+          System.out.println(String.format("%1$20s: %2$s", "Exists",
+              file.exists() && file.isFile()));
         }
 
         System.out.println();

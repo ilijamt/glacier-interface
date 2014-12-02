@@ -228,8 +228,8 @@ public class Main {
             break;
 
           case VaultJobInfo:
-            new VaultJobInfoCommand(config,
-                (CommandVaultJobInfo) commands.get(cliCommand.ordinal())).run();
+            new VaultJobInfoCommand(config, (CommandVaultJobInfo) commands.get(cliCommand
+                .ordinal())).run();
             break;
 
           case InventoryRetrieve:
@@ -238,8 +238,8 @@ public class Main {
             break;
 
           case InventoryDownload:
-            new InventoryDownloadCommand(config, (CommandInventoryDownload) commands.get(cliCommand
-                .ordinal())).run();
+            new InventoryDownloadCommand(config,
+                (CommandInventoryDownload) commands.get(cliCommand.ordinal())).run();
             break;
 
           case DeleteArchive:
@@ -273,8 +273,8 @@ public class Main {
             break;
 
           case InitDownload:
-            new InitDownloadCommand(config,
-                (CommandInitDownload) commands.get(cliCommand.ordinal())).run();
+            new InitDownloadCommand(config, (CommandInitDownload) commands.get(cliCommand
+                .ordinal())).run();
             break;
 
           case PurgeVault:
@@ -316,8 +316,8 @@ public class Main {
     if (null != arguments.createConfig) {
       try {
         config.createConfigurationFile(arguments.createConfig);
-        System.out.println(String
-            .format("Created a configuration file: %s", arguments.createConfig));
+        System.out.println(String.format("Created a configuration file: %s",
+            arguments.createConfig));
       } catch (IOException e) {
         System.err.println("ERROR: Failed to write the configuration");
         e.printStackTrace();

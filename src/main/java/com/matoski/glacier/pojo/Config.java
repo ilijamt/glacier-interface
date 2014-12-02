@@ -70,8 +70,8 @@ public class Config {
    * @throws IOException
    *           If the file cannot be read, or an error occurs during reading
    */
-  public static Config fromFile(String filename) throws JsonSyntaxException, FileNotFoundException,
-      IOException {
+  public static Config fromFile(String filename) throws JsonSyntaxException,
+      FileNotFoundException, IOException {
 
     File file = new File(filename);
 

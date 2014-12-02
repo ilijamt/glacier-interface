@@ -72,8 +72,8 @@ public class ListVaultJobsCommand extends AbstractCommand<CommandListVaultJobs> 
             System.out.println(String.format("%1$25s : %2$s", "Completed", job.getCompleted()));
             System.out.println(String.format("%1$25s : %2$s", "CompletionDate",
                 job.getCompletionDate()));
-            System.out
-                .println(String.format("%1$25s : %2$s", "CreationDate", job.getCreationDate()));
+            System.out.println(String.format("%1$25s : %2$s", "CreationDate",
+                job.getCreationDate()));
             System.out.println(String.format("%1$25s : %2$s", "Inventory Size In Bytes",
                 job.getInventorySizeInBytes()));
             System.out.println(String.format("%1$25s : %2$s", "Job Description",

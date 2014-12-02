@@ -415,7 +415,8 @@ public class AmazonGlacierBaseUtil {
   public DescribeJobResult describeJob(String vaultName, String jobId, ProgressListener listener,
       RequestMetricCollector collector) throws AmazonServiceException, AmazonClientException {
 
-    DescribeJobRequest request = new DescribeJobRequest().withVaultName(vaultName).withJobId(jobId);
+    DescribeJobRequest request = new DescribeJobRequest().withVaultName(vaultName)
+        .withJobId(jobId);
 
     if (null != listener) {
       request.withGeneralProgressListener(listener);
@@ -445,7 +446,8 @@ public class AmazonGlacierBaseUtil {
    */
   public DescribeVaultResult describeVault(String vaultName) throws AmazonServiceException,
       AmazonClientException {
-    DescribeVaultRequest describeVaultRequest = new DescribeVaultRequest().withVaultName(vaultName);
+    DescribeVaultRequest describeVaultRequest = new DescribeVaultRequest()
+        .withVaultName(vaultName);
     return client.describeVault(describeVaultRequest);
   }
 

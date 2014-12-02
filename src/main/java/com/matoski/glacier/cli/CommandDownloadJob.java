@@ -13,7 +13,8 @@ public class CommandDownloadJob extends GenericCommand {
       description = "Uses this file to download all the archives in the file")
   public String jobFile;
 
-  @Parameter(names = "--overwrite", description = "This will force overwrite the file if it exists")
+  @Parameter(names = "--overwrite",
+      description = "This will force overwrite the file if it exists")
   public Boolean overwrite = false;
 
   @Parameter(

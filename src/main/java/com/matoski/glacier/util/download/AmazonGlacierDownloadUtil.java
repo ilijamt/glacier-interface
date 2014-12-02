@@ -23,7 +23,7 @@ import com.amazonaws.services.glacier.model.JobParameters;
 import com.matoski.glacier.enums.MultipartPieceStatus;
 import com.matoski.glacier.errors.InvalidChecksumException;
 import com.matoski.glacier.errors.RegionNotSupportedException;
-import com.matoski.glacier.pojo.download.DownloadPiece;
+import com.matoski.glacier.pojo.Piece;
 import com.matoski.glacier.pojo.download.MultipartDownloadStatus;
 import com.matoski.glacier.pojo.job.DownloadJob;
 import com.matoski.glacier.util.AmazonGlacierBaseUtil;
@@ -185,7 +185,7 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
    * @throws IOException
    *           IO Exception
    */
-  public DownloadPiece downloadAndWriteChunk(File file, String vaultName, String jobId, int part,
+  public Piece downloadAndWriteChunk(File file, String vaultName, String jobId, int part,
       long partSize) throws FileNotFoundException, IOException {
     return downloadAndWriteChunk(file, vaultName, jobId, part, partSize, null, null);
   }
@@ -215,7 +215,7 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
    * @throws IOException
    *           IO Exception
    */
-  public DownloadPiece downloadAndWriteChunk(File file, String vaultName, String jobId, int part,
+  public Piece downloadAndWriteChunk(File file, String vaultName, String jobId, int part,
       long partSize, ProgressListener listener, RequestMetricCollector collector)
       throws FileNotFoundException, IOException {
 
@@ -223,7 +223,7 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
       throw new FileNotFoundException(file.getName());
     }
 
-    final DownloadPiece downloadPiece = new DownloadPiece();
+    final Piece downloadPiece = new Piece();
     downloadPiece.setPart(part);
     downloadPiece.setStatus(MultipartPieceStatus.PIECE_START);
     downloadPiece.setId(jobId);

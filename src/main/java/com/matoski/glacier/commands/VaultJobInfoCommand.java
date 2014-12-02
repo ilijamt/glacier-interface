@@ -61,15 +61,16 @@ public class VaultJobInfoCommand extends AbstractCommand<CommandVaultJobInfo> {
       System.out.println(String.format("%1$25s : %2$s", "Archive Size In Bytes",
           job.getArchiveSizeInBytes()));
       System.out.println(String.format("%1$25s : %2$s", "Completed", job.getCompleted()));
-      System.out.println(String.format("%1$25s : %2$s", "CompletionDate", job.getCompletionDate()));
+      System.out
+          .println(String.format("%1$25s : %2$s", "CompletionDate", job.getCompletionDate()));
       System.out.println(String.format("%1$25s : %2$s", "CreationDate", job.getCreationDate()));
       System.out.println(String.format("%1$25s : %2$s", "Inventory Size In Bytes",
           job.getInventorySizeInBytes()));
       System.out
           .println(String.format("%1$25s : %2$s", "Job Description", job.getJobDescription()));
       System.out.println(String.format("%1$25s : %2$s", "Job Id", job.getJobId()));
-      System.out
-          .println(String.format("%1$25s : %2$s", "SHA256 Tree Hash", job.getSHA256TreeHash()));
+      System.out.println(String.format("%1$25s : %2$s", "SHA256 Tree Hash",
+          job.getSHA256TreeHash()));
       System.out.println(String.format("%1$25s : %2$s", "SNS Topic", job.getSNSTopic()));
       System.out.println(String.format("%1$25s : %2$s", "Status Code", job.getStatusCode()));
       System.out.println(String.format("%1$25s : %2$s", "Status Message", job.getStatusMessage()));

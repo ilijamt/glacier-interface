@@ -2,7 +2,7 @@ package com.matoski.glacier.util.download;
 
 import java.io.File;
 
-import com.matoski.glacier.pojo.download.DownloadPiece;
+import com.matoski.glacier.pojo.Piece;
 import com.matoski.glacier.util.ThreadAmazonGlacierDummy;
 
 /**
@@ -10,7 +10,7 @@ import com.matoski.glacier.util.ThreadAmazonGlacierDummy;
  * 
  * @author Ilija Matoski (ilijamt@gmail.com)
  */
-public class ThreadAmazonGlacierDownloadDummy extends ThreadAmazonGlacierDummy<DownloadPiece> {
+public class ThreadAmazonGlacierDownloadDummy extends ThreadAmazonGlacierDummy<Piece> {
 
   /**
    * Constructor.
@@ -22,14 +22,14 @@ public class ThreadAmazonGlacierDownloadDummy extends ThreadAmazonGlacierDummy<D
    * @param piece
    *          The download piece data
    */
-  public ThreadAmazonGlacierDownloadDummy(int pieces, File file, DownloadPiece piece) {
+  public ThreadAmazonGlacierDownloadDummy(int pieces, File file, Piece piece) {
     super(pieces, file, piece);
   }
 
   @Override
   public void process() {
-    System.out.println(String.format(AmazonGlacierDownloadUtil.FORMAT, piece.getPart() + 1, pieces,
-        piece.getStatus(), file, "Already downloaded"));
+    System.out.println(String.format(AmazonGlacierDownloadUtil.FORMAT, piece.getPart() + 1,
+        pieces, piece.getStatus(), file, "Already downloaded"));
   }
 
 }
