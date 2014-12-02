@@ -21,28 +21,32 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> {
 
   /**
-   * Metadata
+   * Metadata.
    */
   protected Metadata metadata;
 
   /**
-   * The helper utility for uploading
+   * The helper utility for uploading.
    */
   protected AmazonGlacierUploadUtil upload;
 
   /**
-   * The journal, we use this for storing the data
+   * The journal, we use this for storing the data.
    */
   protected State journal;
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
    * 
    * @throws VaultNameNotPresentException
+   *           Vault not present in config
    * @throws RegionNotSupportedException
+   *           Region not supported
    */
   public UploadArchiveCommand(Config config, CommandUploadArchive command)
       throws VaultNameNotPresentException, RegionNotSupportedException {
@@ -81,9 +85,6 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 

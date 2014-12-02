@@ -20,9 +20,14 @@ public class DeleteVaultCommand extends AbstractCommand<CommandDeleteVault> {
    * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
+   * 
    * @throws VaultNameNotPresentException
+   *           Vault not present in config
    * @throws RegionNotSupportedException
+   *           Region not supported
    */
   public DeleteVaultCommand(Config config, CommandDeleteVault command)
       throws VaultNameNotPresentException, RegionNotSupportedException {
@@ -39,9 +44,6 @@ public class DeleteVaultCommand extends AbstractCommand<CommandDeleteVault> {
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 

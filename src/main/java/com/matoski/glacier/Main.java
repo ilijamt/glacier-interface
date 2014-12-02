@@ -63,7 +63,7 @@ public class Main {
    * A list of available commands, contains a list of objects extending from
    * {@linkplain GenericCommand}.
    */
-  final private static HashMap<Integer, Object> commands = new HashMap<Integer, Object>();
+  private static final HashMap<Integer, Object> commands = new HashMap<Integer, Object>();
 
   /**
    * Initializes the applications commands, this creates a list of available commands that can be

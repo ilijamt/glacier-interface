@@ -14,48 +14,66 @@ import com.matoski.glacier.pojo.Config;
  * 
  * @author Ilija Matoski (ilijamt@gmail.com)
  * @param <T>
+ *          usually a command that extends from {@link GenericCommand}
  */
 public abstract class AbstractCommand<T> extends AbstractEmptyCommand<T> {
 
   /**
-   * Basic AWS credentials
+   * Basic AWS credentials.
    */
   protected BasicAWSCredentials credentials = null;
 
   /**
-   * The client used to connect to amazon glacier
+   * The client used to connect to amazon glacier.
    */
   protected AmazonGlacierClient client = null;
 
   /**
-   * The region used for all operations with Amazon Glacier
+   * The region used for all operations with Amazon Glacier.
    */
   protected Region region = null;
 
   /**
-   * Service name
+   * Service name.
    */
   public static String SERVICE_NAME = "glacier";
 
   /**
-   * Service name
+   * Service name for SNS.
    */
   public static String SERVICE_SNS_NAME = "sns";
 
   /**
-   * Service name
+   * Service name for SQS.
    */
   public static String SERVICE_SQS_NAME = "sqs";
 
   /**
-   * Constructor
+   * Does this service has HTTP endpoint.
+   */
+  public Boolean hasHttpEndpoint = false;
+
+  /**
+   * Does this servie has HTTPS endpoint.
+   */
+  public Boolean hasHttpsEndpoint = false;
+
+  /**
+   * The service endpoint.
+   */
+  public transient String serviceEndpoint = null;
+
+  /**
+   * Constructor.
    * 
    * @param config
+   *          The configuration for the system
    * 
    * @throws VaultNameNotPresentException
+   *           No vault present in the config
    * @throws RegionNotSupportedException
+   *           Region is invalid
    */
-  @SuppressWarnings("unused")
   public AbstractCommand(Config config, T command) throws VaultNameNotPresentException,
       RegionNotSupportedException {
     super(config, command);
@@ -71,12 +89,12 @@ public abstract class AbstractCommand<T> extends AbstractEmptyCommand<T> {
       throw new RegionNotSupportedException();
     }
 
-    Boolean hasHttpEndpoint = this.region.hasHttpEndpoint(SERVICE_NAME);
-    Boolean hasHttpsEndpoint = this.region.hasHttpsEndpoint(SERVICE_NAME);
-    String endpoint = this.region.getServiceEndpoint(SERVICE_NAME);
+    this.hasHttpEndpoint = this.region.hasHttpEndpoint(SERVICE_NAME);
+    this.hasHttpsEndpoint = this.region.hasHttpsEndpoint(SERVICE_NAME);
+    this.serviceEndpoint = this.region.getServiceEndpoint(SERVICE_NAME);
 
-    this.client.setRegion(region);
-    this.client.setEndpoint(endpoint);
+    this.client.setRegion(this.region);
+    this.client.setEndpoint(this.serviceEndpoint);
 
   }
 

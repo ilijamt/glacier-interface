@@ -25,17 +25,22 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMultipartUploads> {
 
   /**
-   * Metadata
+   * Metadata.
    */
-  final private Metadata metadata;
+  private final Metadata metadata;
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
+   * 
    * @throws VaultNameNotPresentException
+   *           Vault not present in config
    * @throws RegionNotSupportedException
+   *           Region not supported
    */
   public ListMultipartUploadsCommand(Config config, CommandListMultipartUploads command)
       throws VaultNameNotPresentException, RegionNotSupportedException {
@@ -53,9 +58,6 @@ public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMult
     metadata = Metadata.from(command.metadata);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 

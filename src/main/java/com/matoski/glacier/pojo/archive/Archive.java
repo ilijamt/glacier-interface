@@ -15,64 +15,72 @@ import com.matoski.glacier.enums.ArchiveState;
 public class Archive implements Cloneable {
 
   /**
-   * The state of the file in the journal, default state is {@link ArchiveState#NOT_DEFINED}
+   * The state of the file in the journal, default state is {@link ArchiveState#NOT_DEFINED}.
    */
   private ArchiveState state = ArchiveState.NOT_DEFINED;
 
   /**
-   * The ID of the Archive
+   * The ID of the Archive.
    */
   private String id;
 
   /**
    * The name of the Archive, it will be stored in the metadata, as amazon glacier doesn't support
-   * names
+   * names.
    */
   private String name;
 
   /**
-   * The date when the archive was last modified, as a timestamp
+   * The date when the archive was last modified, as a timestamp.
    */
   private long modifiedDate;
 
   /**
-   * When was the archive created
+   * When was the archive created.
    */
   private Date createdDate;
 
   /**
-   * What is the size of the archive
+   * What is the size of the archive.
    */
   private long size;
 
   /**
-   * What is the hash of the archive
+   * What is the hash of the archive.
    */
   private String hash;
 
   /**
-   * Uri of the uploaded file
+   * Uri of the uploaded file.
    */
   private String uri;
 
   /**
-   * Constructor
+   * Constructor.
    */
   public Archive() {
     super();
   }
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param state
+   *          The initial state of the archive
    * @param id
+   *          The id of the archive
    * @param name
+   *          The name of the archive
    * @param modifiedDate
+   *          The modified date of the archive
    * @param createdDate
+   *          The created date of the archive
    * @param size
+   *          The size of the archive
    * @param hash
+   *          The hash of the archive
    * @param uri
+   *          The uri of the archive
    */
   public Archive(ArchiveState state, String id, String name, long modifiedDate, Date createdDate,
       long size, String hash, String uri) {
@@ -87,18 +95,17 @@ public class Archive implements Cloneable {
     this.uri = uri;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  @Override
+  public int hashCode() {
+    return this.id.hashCode();
+  }
+
   @Override
   public Object clone() {
     return new Archive(getState(), getId(), getName(), getModifiedDate(), getCreatedDate(),
         getSize(), getHash(), getUri());
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean equals(Object obj) {
 
@@ -120,83 +127,90 @@ public class Archive implements Cloneable {
   }
 
   /**
-   * @return the created
+   * Gets the created date of the archive.
+   * 
+   * @return {@link #createdDate}
    */
   public Date getCreatedDate() {
     return createdDate;
   }
 
   /**
-   * @return the hash
+   * Gets the hash of the archive.
+   * 
+   * @return {@link #hash}
    */
   public String getHash() {
     return hash;
   }
 
   /**
-   * @return the id
+   * Gets the Amazon Glacier Archive ID, this is used to do various operations on the archive.
+   * 
+   * @return {@link #id}
    */
   public String getId() {
     return id;
   }
 
   /**
-   * Get's the key used to store it in the Journal
+   * Get's the key used to store it in the Journal.
    * 
-   * @return
+   * @return {@link #id}
    */
   public String getKeyId() {
     return this.id;
   }
 
   /**
-   * @return the mtime
+   * Gets the last modified date.
+   * 
+   * @return {@link #modifiedDate}
    */
   public long getModifiedDate() {
     return modifiedDate;
   }
 
   /**
-   * @return the name
+   * Gets the archive name, this is stored in the archive description as glacier doesn't allow for
+   * storage of names.
+   * 
+   * @return {@link #name}
    */
   public String getName() {
     return name;
   }
 
   /**
-   * @return the size
+   * Gets the archive size.
+   * 
+   * @return {@link #size}
    */
   public long getSize() {
     return size;
   }
 
   /**
-   * Get the state of the Archive
+   * Get the state of the Archive.
    * 
-   * @return
+   * @return {@link #state}
    */
   public ArchiveState getState() {
     return state;
   }
 
   /**
-   * get the uploaded uri
+   * Gets the uploaded URI.
    * 
-   * @return
+   * @return {@link #uri}
    */
   public String getUri() {
     return uri;
   }
 
   /**
-   * {@inheritDoc}
-   */
-  @Override
-  public int hashCode() {
-    return this.id.hashCode();
-  }
-
-  /**
+   * Sets the created date for the archive, this sets {@link #createdDate}.
+   * 
    * @param created
    *          the created to set
    */
@@ -204,11 +218,19 @@ public class Archive implements Cloneable {
     this.createdDate = created;
   }
 
+  /**
+   * Sets the created date for the archive, this sets {@link #createdDate}.
+   * 
+   * @param date
+   *          The string to parse for date
+   */
   public void setCreatedDate(String date) {
     this.createdDate = ISO8601Utils.parse(date);
   }
 
   /**
+   * Sets the hash for the archive, this sets {@link #hash}.
+   * 
    * @param hash
    *          the hash to set
    */
@@ -217,6 +239,8 @@ public class Archive implements Cloneable {
   }
 
   /**
+   * Sets the archive ID on amazon glacier, this sets {@link #id}.
+   * 
    * @param id
    *          the id to set
    */
@@ -225,6 +249,8 @@ public class Archive implements Cloneable {
   }
 
   /**
+   * Sets the modified date for the archive, this sets {@link #modifiedDate}.
+   * 
    * @param date
    *          the date to set
    */
@@ -233,6 +259,8 @@ public class Archive implements Cloneable {
   }
 
   /**
+   * Sets the name for the archive, this sets {@link #name}.
+   * 
    * @param name
    *          the name to set
    */
@@ -241,6 +269,8 @@ public class Archive implements Cloneable {
   }
 
   /**
+   * Sets the archive size, this sets {@link #size}.
+   * 
    * @param size
    *          the size to set
    */
@@ -249,37 +279,41 @@ public class Archive implements Cloneable {
   }
 
   /**
-   * Sets the archive status
+   * Sets the archive status, this sets {@link #state}.
    * 
    * @param state
+   *          The archive state to set.
    */
   public void setState(ArchiveState state) {
     this.state = state;
   }
 
   /**
-   * Set the uploaded uri
+   * Set the uploaded uri, this sets {@link #uri}.
    * 
    * @param uri
+   *          The uri to set.
    */
   public void setUri(String uri) {
     this.uri = uri;
   }
 
   /**
-   * Get the file to the archive
+   * Get the file to the archive.
    * 
-   * @return
+   * @return {@link File}({@link #getName()}
    */
   public File getFile() {
     return new File(getName());
   }
 
   /**
-   * Get the file to the archive with a parent
+   * Get the file to the archive with a parent.
    * 
    * @param parent
-   * @return
+   *          The parent to use for creating {@link File}
+   * 
+   * @return {@link File}({@link #getName()}
    */
   public File getFile(String parent) {
     return new File(parent, getName());

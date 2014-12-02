@@ -21,18 +21,25 @@ import com.matoski.glacier.util.FileUtils;
 public class ListJournalCommand extends AbstractEmptyCommand<CommandListJournal> {
 
   /**
-   * The journal
+   * The journal.
    */
   private State journal;
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
+   * 
    * @throws IOException
+   *           Cannot read the journal
+   * @throws IllegalArgumentException
+   *           Invalid or missing arguments
    */
-  public ListJournalCommand(Config config, CommandListJournal command) throws IOException {
+  public ListJournalCommand(Config config, CommandListJournal command)
+      throws IllegalArgumentException, IOException {
     super(config, command);
     if (null == command.journal) {
       throw new IllegalArgumentException("Missing --journal from the command line");
@@ -40,9 +47,6 @@ public class ListJournalCommand extends AbstractEmptyCommand<CommandListJournal>
     this.journal = State.load(command.journal);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 

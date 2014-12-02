@@ -40,6 +40,7 @@ import com.matoski.glacier.Constants;
 import com.matoski.glacier.enums.ArchiveState;
 import com.matoski.glacier.enums.GenericValidateEnum;
 import com.matoski.glacier.enums.Metadata;
+import com.matoski.glacier.enums.MultipartPieceStatus;
 import com.matoski.glacier.enums.MultipartStatus;
 import com.matoski.glacier.errors.InvalidChecksumException;
 import com.matoski.glacier.errors.RegionNotSupportedException;
@@ -634,7 +635,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     ret.setPart(part);
     ret.setId(uploadId);
-    ret.setStatus(MultipartStatus.PIECE_START);
+    ret.setStatus(MultipartPieceStatus.PIECE_START);
 
     int bufferSize = partSize;
 
@@ -644,7 +645,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     stream.skip(position);
 
     if (part > pieces) {
-      ret.setStatus(MultipartStatus.PIECE_INVALID_PART);
+      ret.setStatus(MultipartPieceStatus.PIECE_INVALID_PART);
       stream.close();
       return ret;
     } else if (part == (pieces - 1)) {
@@ -656,7 +657,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     stream.close();
 
     if (read == -1) {
-      ret.setStatus(MultipartStatus.PIECE_INVALID_PART);
+      ret.setStatus(MultipartPieceStatus.PIECE_INVALID_PART);
       return ret;
     }
 
@@ -682,9 +683,9 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     ret.setUploadedChecksum(result.getChecksum());
 
     if (ret.getCalculatedChecksum().equals(ret.getUploadedChecksum())) {
-      ret.setStatus(MultipartStatus.PIECE_COMPLETE);
+      ret.setStatus(MultipartPieceStatus.PIECE_COMPLETE);
     } else {
-      ret.setStatus(MultipartStatus.PIECE_CHECKSUM_MISMATCH);
+      ret.setStatus(MultipartPieceStatus.PIECE_CHECKSUM_MISMATCH);
     }
 
     return ret;

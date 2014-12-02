@@ -24,24 +24,31 @@ import com.matoski.glacier.util.download.AmazonGlacierDownloadUtil;
 public class DownloadJobCommand extends AbstractCommand<CommandDownloadJob> {
 
   /**
-   * The job
+   * The job.
    */
   DownloadJobInfo jobInfo = null;
 
   /**
-   * Download helper
+   * Download helper.
    */
   AmazonGlacierDownloadUtil download = null;
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
+   * 
    * @throws VaultNameNotPresentException
+   *           Vault not present in config
    * @throws RegionNotSupportedException
+   *           Region not supported
    * @throws FileNotFoundException
+   *           Job Info file not found
    * @throws IllegalArgumentException
+   *           Missing or invalid arguments
    */
   public DownloadJobCommand(Config config, CommandDownloadJob command)
       throws VaultNameNotPresentException, RegionNotSupportedException, FileNotFoundException,
@@ -73,9 +80,6 @@ public class DownloadJobCommand extends AbstractCommand<CommandDownloadJob> {
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 

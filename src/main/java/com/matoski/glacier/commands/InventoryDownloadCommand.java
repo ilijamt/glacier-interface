@@ -27,17 +27,22 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 public class InventoryDownloadCommand extends AbstractCommand<CommandInventoryDownload> {
 
   /**
-   * Metadata used
+   * Metadata used.
    */
   protected Metadata metadata;
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
+   * 
    * @throws VaultNameNotPresentException
+   *           Vault not present in config
    * @throws RegionNotSupportedException
+   *           Region not supported
    */
   public InventoryDownloadCommand(Config config, CommandInventoryDownload command)
       throws VaultNameNotPresentException, RegionNotSupportedException {
@@ -56,9 +61,6 @@ public class InventoryDownloadCommand extends AbstractCommand<CommandInventoryDo
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 

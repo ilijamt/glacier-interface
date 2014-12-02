@@ -24,17 +24,22 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 public class PurgeVaultCommand extends AbstractCommand<CommandPurgeVault> {
 
   /**
-   * The journal, we use this for storing the data
+   * The journal, we use this for storing the data.
    */
   protected State journal;
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
+   * 
    * @throws VaultNameNotPresentException
+   *           Vault not present in config
    * @throws RegionNotSupportedException
+   *           Region not supported
    */
   public PurgeVaultCommand(Config config, CommandPurgeVault command)
       throws VaultNameNotPresentException, RegionNotSupportedException {
@@ -59,9 +64,6 @@ public class PurgeVaultCommand extends AbstractCommand<CommandPurgeVault> {
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 

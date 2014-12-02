@@ -8,14 +8,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.FileAlreadyExistsException;
 
-import com.matoski.glacier.enums.MultipartStatus;
-import com.matoski.glacier.errors.InvalidChecksumException;
-import com.matoski.glacier.errors.RegionNotSupportedException;
-import com.matoski.glacier.pojo.download.DownloadPiece;
-import com.matoski.glacier.pojo.download.MultipartDownloadStatus;
-import com.matoski.glacier.pojo.job.DownloadJob;
-import com.matoski.glacier.util.AmazonGlacierBaseUtil;
-
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.event.ProgressListener;
 import com.amazonaws.metrics.RequestMetricCollector;
@@ -28,6 +20,13 @@ import com.amazonaws.services.glacier.model.GetJobOutputResult;
 import com.amazonaws.services.glacier.model.InitiateJobRequest;
 import com.amazonaws.services.glacier.model.InitiateJobResult;
 import com.amazonaws.services.glacier.model.JobParameters;
+import com.matoski.glacier.enums.MultipartPieceStatus;
+import com.matoski.glacier.errors.InvalidChecksumException;
+import com.matoski.glacier.errors.RegionNotSupportedException;
+import com.matoski.glacier.pojo.download.DownloadPiece;
+import com.matoski.glacier.pojo.download.MultipartDownloadStatus;
+import com.matoski.glacier.pojo.job.DownloadJob;
+import com.matoski.glacier.util.AmazonGlacierBaseUtil;
 
 /**
  * Amazon Glacier helper utilities
@@ -130,7 +129,7 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
 
     // get the threads and download them
     for (int i = 0; i < pieces; i++) {
-      System.out.println(String.format(FORMAT, i + 1, pieces, MultipartStatus.PIECE_START,
+      System.out.println(String.format(FORMAT, i + 1, pieces, MultipartPieceStatus.PIECE_START,
           job.getName(), "Download started"));
     }
 
@@ -191,7 +190,7 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
 
     final DownloadPiece downloadPiece = new DownloadPiece();
     downloadPiece.setPart(part);
-    downloadPiece.setStatus(MultipartStatus.PIECE_START);
+    downloadPiece.setStatus(MultipartPieceStatus.PIECE_START);
     downloadPiece.setId(jobId);
 
     long startRange = part * partSize;
@@ -240,9 +239,9 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
     }
 
     if (downloadPiece.getCalculatedChecksum().equals(downloadPiece.getUploadedChecksum())) {
-      downloadPiece.setStatus(MultipartStatus.PIECE_COMPLETE);
+      downloadPiece.setStatus(MultipartPieceStatus.PIECE_COMPLETE);
     } else {
-      downloadPiece.setStatus(MultipartStatus.PIECE_CHECKSUM_MISMATCH);
+      downloadPiece.setStatus(MultipartPieceStatus.PIECE_CHECKSUM_MISMATCH);
     }
 
     return downloadPiece;

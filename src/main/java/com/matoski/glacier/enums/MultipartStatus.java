@@ -1,9 +1,40 @@
 package com.matoski.glacier.enums;
 
+/**
+ * Multipart status, contains the states as they go through while uploading or downloading.
+ * 
+ * <p>
+ * Used to track the upload/download process, as it goes through it.
+ * </p>
+ * 
+ * @author Ilija Matoski (ilijamt@gmail.com)
+ *
+ */
 public enum MultipartStatus {
 
-  PIECE_START, PIECE_COMPLETE, PIECE_CHECKSUM_MISMATCH, PIECE_ERROR, PIECE_INVALID_PART,
+  /**
+   * No operation.
+   */
+  NOP,
 
-  NOP, START, IN_PROGRESS, COMPLETE, ERROR
+  /**
+   * In progress.
+   */
+  START,
+
+  /**
+   * The process is in progress.
+   */
+  IN_PROGRESS,
+
+  /**
+   * The process is complete.
+   */
+  COMPLETE,
+
+  /**
+   * Some kind of error occured.
+   */
+  ERROR
 
 }

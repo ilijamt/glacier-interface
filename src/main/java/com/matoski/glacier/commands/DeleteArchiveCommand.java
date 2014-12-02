@@ -19,33 +19,38 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> {
 
   /**
-   * The journal, we use this for storing the data
+   * The journal, we use this for storing the data.
    */
   protected State journal;
 
   /**
-   * The archive ID we need to delete
+   * The archive ID we need to delete.
    */
   protected String archiveId;
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
    * 
    * @throws VaultNameNotPresentException
+   *           Vault not present in config
    * @throws RegionNotSupportedException
+   *           Region not supported
    * @throws IllegalArgumentException
+   *           Missing arguments
    */
   public DeleteArchiveCommand(Config config, CommandDeleteArchive command)
       throws VaultNameNotPresentException, RegionNotSupportedException, IllegalArgumentException {
     super(config, command);
 
-    Boolean validVaultName = null != command.vaultName;
-    Boolean validVaultNameConfig = null != config.getVault();
-    Boolean validId = (null != command.id);
-    Boolean validName = (null != command.name);
+    final Boolean validVaultName = null != command.vaultName;
+    final Boolean validVaultNameConfig = null != config.getVault();
+    final Boolean validId = (null != command.id);
+    final Boolean validName = (null != command.name);
 
     if (!command.ignoreJournal) {
       try {
@@ -87,9 +92,6 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 

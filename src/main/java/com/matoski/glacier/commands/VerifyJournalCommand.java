@@ -23,17 +23,22 @@ import com.matoski.glacier.util.FileUtils;
 public class VerifyJournalCommand extends AbstractEmptyCommand<CommandVerifyJournal> {
 
   /**
-   * The journal
+   * The journal.
    */
   private State journal;
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
+   * 
    * @throws VaultNameNotPresentException
+   *           Vault not present in config
    * @throws RegionNotSupportedException
+   *           Region not supported
    */
   public VerifyJournalCommand(Config config, CommandVerifyJournal command)
       throws VaultNameNotPresentException, RegionNotSupportedException {
@@ -47,9 +52,6 @@ public class VerifyJournalCommand extends AbstractEmptyCommand<CommandVerifyJour
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 
@@ -61,9 +63,9 @@ public class VerifyJournalCommand extends AbstractEmptyCommand<CommandVerifyJour
     long size = 0;
     Boolean valid = false;
 
-    GenericValidateEnum vSize;
-    GenericValidateEnum vModified;
-    GenericValidateEnum vHash;
+    GenericValidateEnum validateSize;
+    GenericValidateEnum validateModified;
+    GenericValidateEnum validateHash;
 
     System.out.println(String.format("There are %s files in the journal", this.journal.size()));
     System.out.println();
@@ -72,25 +74,28 @@ public class VerifyJournalCommand extends AbstractEmptyCommand<CommandVerifyJour
       valid = false;
       archive = entry.getValue();
 
-      vSize = State.archiveValidateFileSize(archive);
-      vModified = State.archiveValidateLastModified(archive);
+      validateSize = State.archiveValidateFileSize(archive);
+      validateModified = State.archiveValidateLastModified(archive);
       System.out.println(String.format("%1$17s : %2$s", "Archive ID", archive.getId()));
       System.out.println(String.format("%1$17s : %2$s", "Name", archive.getName()));
-      System.out.println(String.format("%1$17s : %2$s (%3$s, %4$s bytes)", "Size", vSize,
+      System.out.println(String.format("%1$17s : %2$s (%3$s, %4$s bytes)", "Size", validateSize,
           FileUtils.humanReadableByteCount(archive.getSize()), archive.getSize()));
-      System.out.println(String.format("%1$17s : %2$s (%3$s)", "Modified", vModified, new Date(
-          archive.getModifiedDate())));
+      Date modifiedDate = new Date(archive.getModifiedDate());
+      System.out.println(String.format("%1$17s : %2$s (%3$s)", "Modified", validateModified,
+          modifiedDate));
 
       if (command.skipHash) {
-        vHash = GenericValidateEnum.SKIP;
+        validateHash = GenericValidateEnum.SKIP;
       } else {
-        vHash = State.archiveValidateTreeHash(archive);
+        validateHash = State.archiveValidateTreeHash(archive);
       }
 
-      System.out.println(String.format("%1$17s : %2$s (%3$s)", "SHA256 TreeHash", vHash,
+      System.out.println(String.format("%1$17s : %2$s (%3$s)", "SHA256 TreeHash", validateHash,
           archive.getHash()));
-      valid = vSize == GenericValidateEnum.VALID && vModified == GenericValidateEnum.VALID
-          && (vHash == GenericValidateEnum.VALID || vHash == GenericValidateEnum.SKIP);
+      boolean validHash = (validateHash == GenericValidateEnum.VALID)
+          || (validateHash == GenericValidateEnum.SKIP);
+      valid = (validateSize == GenericValidateEnum.VALID)
+          && (validateModified == GenericValidateEnum.VALID) && validHash;
 
       System.out.println(String.format("%1$17s : %2$s", "Valid", valid));
       System.out.println();

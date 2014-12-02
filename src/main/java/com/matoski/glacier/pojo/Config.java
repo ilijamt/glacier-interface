@@ -21,10 +21,12 @@ import com.matoski.glacier.cli.Arguments;
 public class Config {
 
   /**
-   * Create the config file from the arguments
+   * Create the config file from the arguments.
    * 
    * @param arguments
-   * @return
+   *          The arguments from which to generate {@link Config}
+   * 
+   * @return A configuration class generated from arguments
    */
   public static Config fromArguments(Arguments arguments) {
 
@@ -54,48 +56,54 @@ public class Config {
   }
 
   /**
-   * Create the config object from the file
+   * Create the config object from the file.
    * 
    * @param filename
+   *          The file name from where to read the {@link Config} object
    * 
-   * @return
+   * @return The configuration object
    * 
    * @throws JsonSyntaxException
+   *           Invalid JSON format
    * @throws FileNotFoundException
+   *           If the file cannot be found
    * @throws IOException
+   *           If the file cannot be read, or an error occurs during reading
    */
   public static Config fromFile(String filename) throws JsonSyntaxException, FileNotFoundException,
       IOException {
 
-    File f = new File(filename);
+    File file = new File(filename);
 
-    if (f.exists() && !f.isFile()) {
+    if (file.exists() && !file.isFile()) {
       throw new FileNotFoundException(filename);
     }
 
-    instance = fromJSON(new String(Files.readAllBytes(Paths.get(filename))));
+    instance = fromJson(new String(Files.readAllBytes(Paths.get(filename))));
     return instance;
 
   }
 
   /**
-   * Create the config from the JSON data
+   * Create the config from the JSON data.
    * 
    * @param json
+   *          The json string from which we create {@link Config} object
    * 
-   * @return
+   * @return The created configuration object
    * 
    * @throws JsonSyntaxException
+   *           Invalid JSON format
    */
-  public static Config fromJSON(String json) throws JsonSyntaxException {
+  public static Config fromJson(String json) throws JsonSyntaxException {
     instance = new Gson().fromJson(json, Config.class);
     return instance;
   }
 
   /**
-   * Get the current instance
+   * Get the current instance.
    * 
-   * @return
+   * @return The {@link Config} instance
    */
   public static Config getInstance() {
 
@@ -108,47 +116,50 @@ public class Config {
   }
 
   /**
-   * Static instance
+   * Static instance for the application configuration.
    */
   private static Config instance;
 
   /**
-   * Amazon region to use
+   * Amazon region to use.
    */
   private String region;
 
   /**
-   * Amazon access secret key
+   * Amazon access secret key.
    */
   private String secretKey;
 
   /**
-   * Amazon access key
+   * Amazon access key.
    */
   private String key;
 
   /**
-   * Amazon vault
+   * Amazon vault.
    */
   private String vault;
 
   /**
-   * Directory used
+   * Directory used.
    */
   private String directory;
 
   /**
-   * Constructor
+   * Constructor.
    */
   private Config() {
 
   }
 
   /**
-   * Creates a configuration file based on the data in the configuration
+   * Creates a configuration file based on the data in the configuration.
    * 
    * @param filename
+   *          Which filename to save the configuration to
+   * 
    * @throws IOException
+   *           Cannot write to file
    */
   public void createConfigurationFile(String filename) throws IOException {
     File file = new File(filename);
@@ -169,7 +180,10 @@ public class Config {
   }
 
   /**
-   * @return the directory
+   * Gets the directory, this is used to supply a directory which will be used to create all the
+   * pats for a directory.
+   * 
+   * @return The working directory
    */
   public String getDirectory() {
     if (null == directory) {
@@ -179,13 +193,17 @@ public class Config {
   }
 
   /**
-   * @return the key
+   * Gets the amazon key from {@link #key}.
+   * 
+   * @return the amazon key
    */
   public String getKey() {
     return key;
   }
 
   /**
+   * Gets the amazon region from {@link #region}.
+   * 
    * @return the region
    */
   public String getRegion() {
@@ -193,6 +211,8 @@ public class Config {
   }
 
   /**
+   * Gets the amazon secret key from {@link #secretKey}.
+   * 
    * @return the secretKey
    */
   public String getSecretKey() {
@@ -200,6 +220,8 @@ public class Config {
   }
 
   /**
+   * Gets the amazon glacier vault name from {@link #vault}.
+   * 
    * @return the vault
    */
   public String getVault() {
@@ -211,6 +233,8 @@ public class Config {
    * from the command line.
    * 
    * @param arguments
+   *          The arguments supplied by the command line, this is used to merge the arguments from a
+   *          configuration file with the arguments supplied in the command line
    */
   public void merge(Arguments arguments) {
 
@@ -237,6 +261,8 @@ public class Config {
   }
 
   /**
+   * Sets the working directory.
+   * 
    * @param directory
    *          the directory to set
    */
@@ -245,6 +271,8 @@ public class Config {
   }
 
   /**
+   * Sets the amazon key.
+   * 
    * @param key
    *          the key to set
    */
@@ -253,7 +281,7 @@ public class Config {
   }
 
   /**
-   * Sets region.
+   * Sets the amazon region.
    * 
    * @param region
    *          the region to set
@@ -287,27 +315,26 @@ public class Config {
    * 
    * @return The generated JSON string
    */
-  public String toJSON() {
+  public String toJson() {
     return new GsonBuilder().setPrettyPrinting().create().toJson(this);
   }
 
   /**
-   * Is the config valid, has minimum required parameters?
+   * Is the config valid, and has minimum required parameters.
    * 
-   * @return
+   * @return true if the configuration is valid and has all required parameters to run
    */
   public boolean valid() {
     return valid(true);
   }
 
   /**
-   * 
-   * Is the config valid, has minimum required parameters?
+   * Is the config valid, has minimum required parameters, this also checks if vault is present too.
    * 
    * @param vault
    *          Is the vault required
    * 
-   * @return
+   * @return true if the configuration is valid and has all required parameters to run
    */
   public boolean valid(boolean vault) {
     return (null != this.getKey()) && (null != this.getSecretKey())

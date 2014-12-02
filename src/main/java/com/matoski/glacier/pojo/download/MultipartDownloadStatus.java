@@ -11,7 +11,7 @@ import java.util.TreeMap;
 import com.amazonaws.services.glacier.TreeHashGenerator;
 import com.amazonaws.util.BinaryUtils;
 import com.matoski.glacier.base.AbstractWritablePojo;
-import com.matoski.glacier.enums.MultipartStatus;
+import com.matoski.glacier.enums.MultipartPieceStatus;
 
 /**
  * A state file, used to store the state of the uploading file, we use this to store all the
@@ -45,7 +45,7 @@ public class MultipartDownloadStatus extends AbstractWritablePojo<MultipartDownl
   /**
    * The generic status
    */
-  MultipartStatus status = MultipartStatus.NOP;
+  MultipartPieceStatus status = MultipartPieceStatus.NOP;
 
   /**
    * The ID of the upload process
@@ -203,7 +203,7 @@ public class MultipartDownloadStatus extends AbstractWritablePojo<MultipartDownl
   /**
    * @return the status
    */
-  public MultipartStatus getStatus() {
+  public MultipartPieceStatus getStatus() {
     return status;
   }
 
@@ -211,7 +211,7 @@ public class MultipartDownloadStatus extends AbstractWritablePojo<MultipartDownl
    * Is everything finished?
    * 
    * It will iterate over {@link MultipartDownloadStatus#pieces} and compare the status with
-   * {@link MultipartStatus#PIECE_COMPLETE}
+   * {@link MultipartPieceStatus#PIECE_COMPLETE}
    * 
    * If the state is finished, {@link MultipartDownloadStatus#remove()} is called.
    * 
@@ -229,7 +229,7 @@ public class MultipartDownloadStatus extends AbstractWritablePojo<MultipartDownl
 
     // go over the elements, and compare if all the pieces are complete
     for (Entry<Integer, DownloadPiece> piece : this.pieces.entrySet()) {
-      valid &= (piece.getValue().getStatus() == MultipartStatus.PIECE_COMPLETE);
+      valid &= (piece.getValue().getStatus() == MultipartPieceStatus.PIECE_COMPLETE);
     }
 
     if (valid) {
@@ -252,7 +252,7 @@ public class MultipartDownloadStatus extends AbstractWritablePojo<MultipartDownl
    * Is the piece completed?
    * 
    * <p>
-   * Compares the {@link DownloadPiece#getStatus()} to {@link MultipartStatus#PIECE_COMPLETE}
+   * Compares the {@link DownloadPiece#getStatus()} to {@link MultipartPieceStatus#PIECE_COMPLETE}
    * </p>
    * 
    * @param piece
@@ -373,7 +373,7 @@ public class MultipartDownloadStatus extends AbstractWritablePojo<MultipartDownl
    * @param status
    *          the status to set
    */
-  public void setStatus(MultipartStatus status) {
+  public void setStatus(MultipartPieceStatus status) {
     setDirty();
     this.status = status;
   }

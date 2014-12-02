@@ -11,6 +11,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import com.matoski.glacier.enums.MultipartPieceStatus;
 import com.matoski.glacier.enums.MultipartStatus;
 import com.matoski.glacier.pojo.upload.UploadPiece;
 
@@ -23,13 +24,13 @@ public class UploadPieceTest {
   private String UploadedChecksum;
   private String Id;
   private Integer Part;
-  private MultipartStatus Status;
+  private MultipartPieceStatus Status;
 
   @Before
   public void setUp() throws Exception {
 
     this.piece = new UploadPiece();
-    this.Status = MultipartStatus.PIECE_COMPLETE;
+    this.Status = MultipartPieceStatus.PIECE_COMPLETE;
     this.Part = Integer.valueOf(RandomStringUtils.randomNumeric(3));
     this.Id = RandomStringUtils.randomAlphanumeric(12);
     this.UploadedChecksum = RandomStringUtils.randomAlphanumeric(64);
@@ -69,9 +70,15 @@ public class UploadPieceTest {
 
   @Test
   public final void test06() {
-    this.piece.setStatus(MultipartStatus.PIECE_COMPLETE);
+    this.piece.setStatus(MultipartPieceStatus.PIECE_COMPLETE);
     assertTrue(this.piece.isFinished());
-    this.piece.setStatus(MultipartStatus.COMPLETE);
+    this.piece.setStatus(MultipartPieceStatus.PIECE_CHECKSUM_MISMATCH);
+    assertFalse(this.piece.isFinished());
+    this.piece.setStatus(MultipartPieceStatus.PIECE_ERROR);
+    assertFalse(this.piece.isFinished());
+    this.piece.setStatus(MultipartPieceStatus.PIECE_INVALID_PART);
+    assertFalse(this.piece.isFinished());
+    this.piece.setStatus(MultipartPieceStatus.PIECE_START);
     assertFalse(this.piece.isFinished());
   }
 

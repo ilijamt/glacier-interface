@@ -25,33 +25,37 @@ import com.matoski.glacier.util.download.AmazonGlacierDownloadUtil;
 public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 
   /**
-   * List of archive ids to download
+   * List of archive ids to download.
    */
   protected List<String> archiveId = new ArrayList<String>();
 
   /**
-   * Journal
+   * Journal.
    */
   private State journal;
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
+   * 
    * @throws VaultNameNotPresentException
+   *           Vault not present in config
    * @throws RegionNotSupportedException
+   *           Region not supported
    */
   public InitDownloadCommand(Config config, CommandInitDownload command)
       throws VaultNameNotPresentException, RegionNotSupportedException {
     super(config, command);
     archiveId = command.id;
 
-    Boolean validVaultName = null != command.vaultName;
-    Boolean validVaultNameConfig = null != config.getVault();
-
-    Boolean validId = (command.id.size() > 0);
-    Boolean validName = (command.name.size() > 0);
+    final Boolean validVaultName = null != command.vaultName;
+    final Boolean validVaultNameConfig = null != config.getVault();
+    final Boolean validId = (command.id.size() > 0);
+    final Boolean validName = (command.name.size() > 0);
 
     try {
       this.journal = State.load(command.journal);
@@ -117,9 +121,6 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
     // the parameters for downloading the job
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 

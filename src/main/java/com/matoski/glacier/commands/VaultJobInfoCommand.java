@@ -19,12 +19,17 @@ import com.matoski.glacier.util.AmazonGlacierBaseUtil;
 public class VaultJobInfoCommand extends AbstractCommand<CommandVaultJobInfo> {
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
+   * 
    * @throws VaultNameNotPresentException
+   *           Vault not present in config
    * @throws RegionNotSupportedException
+   *           Region not supported
    */
   public VaultJobInfoCommand(Config config, CommandVaultJobInfo command)
       throws VaultNameNotPresentException, RegionNotSupportedException {
@@ -40,9 +45,6 @@ public class VaultJobInfoCommand extends AbstractCommand<CommandVaultJobInfo> {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 

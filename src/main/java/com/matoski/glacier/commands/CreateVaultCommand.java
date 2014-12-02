@@ -20,12 +20,17 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 public class CreateVaultCommand extends AbstractCommand<CommandCreateVault> {
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
+   * 
    * @throws VaultNameNotPresentException
+   *           Vault not present in config
    * @throws RegionNotSupportedException
+   *           Region not supported
    */
   public CreateVaultCommand(Config config, CommandCreateVault command)
       throws VaultNameNotPresentException, RegionNotSupportedException {
@@ -41,9 +46,6 @@ public class CreateVaultCommand extends AbstractCommand<CommandCreateVault> {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 

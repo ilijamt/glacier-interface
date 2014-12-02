@@ -15,12 +15,17 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 public class AbortMultipartUploadCommand extends AbstractCommand<CommandAbortMultipartUpload> {
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
+   * 
    * @throws VaultNameNotPresentException
+   *           Vault not present in config
    * @throws RegionNotSupportedException
+   *           Region not supported
    */
   public AbortMultipartUploadCommand(Config config, CommandAbortMultipartUpload command)
       throws VaultNameNotPresentException, RegionNotSupportedException {
@@ -37,9 +42,6 @@ public class AbortMultipartUploadCommand extends AbstractCommand<CommandAbortMul
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 

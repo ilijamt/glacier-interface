@@ -25,22 +25,27 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 public class SyncCommand extends AbstractCommand<CommandSync> {
 
   /**
-   * List of files
+   * List of files.
    */
   protected Collection<String> files = new LinkedList<String>();
 
   /**
-   * Journal
+   * Journal.
    */
   private State journal;
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param config
+   *          Application config
    * @param command
+   *          The command configuration
+   * 
    * @throws VaultNameNotPresentException
+   *           Vault not present in config
    * @throws RegionNotSupportedException
+   *           Region not supported
    */
   public SyncCommand(Config config, CommandSync command) throws VaultNameNotPresentException,
       RegionNotSupportedException {
@@ -59,9 +64,6 @@ public class SyncCommand extends AbstractCommand<CommandSync> {
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public void run() {
 

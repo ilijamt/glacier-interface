@@ -13,7 +13,7 @@ public abstract class GenericCommand {
   /**
    * The command name.
    */
-  private final String __name;
+  private final transient String genericCommandName;
 
   /**
    * Constructor.
@@ -22,7 +22,7 @@ public abstract class GenericCommand {
    *          The command
    */
   public GenericCommand(CliCommands command) {
-    this.__name = command.getPropertyName();
+    this.genericCommandName = command.getPropertyName();
   }
 
   /**
@@ -32,27 +32,24 @@ public abstract class GenericCommand {
    *          The command
    */
   public GenericCommand(String name) {
-    this.__name = name;
+    this.genericCommandName = name;
   }
 
   /**
    * Get the command name.
    * 
-   * @return The command
+   * @return {@link #genericCommandName}
    */
-  public String __getCommandName() {
-    return __name;
+  public String getGenericCommandName() {
+    return genericCommandName;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public int hashCode() {
     final int prime = 31;
     int hashCode = 1;
 
-    hashCode = prime * hashCode + __name.hashCode();
+    hashCode = prime * hashCode + genericCommandName.hashCode();
     return hashCode;
   }
 }

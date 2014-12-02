@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import com.amazonaws.services.glacier.TreeHashGenerator;
 import com.amazonaws.util.BinaryUtils;
 import com.matoski.glacier.base.AbstractWritablePojo;
+import com.matoski.glacier.enums.MultipartPieceStatus;
 import com.matoski.glacier.enums.MultipartStatus;
 
 /**
@@ -211,7 +212,7 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
    * Is everything finished?
    * 
    * It will iterate over {@link MultipartUploadStatus#pieces} and compare the status with
-   * {@link MultipartStatus#PIECE_COMPLETE}
+   * {@link MultipartPieceStatus#PIECE_COMPLETE}
    * 
    * If the state is finished, {@link MultipartUploadStatus#remove()} is called.
    * 
@@ -229,7 +230,7 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
 
     // go over the elements, and compare if all the pieces are complete
     for (Entry<Integer, UploadPiece> piece : this.pieces.entrySet()) {
-      valid &= (piece.getValue().getStatus() == MultipartStatus.PIECE_COMPLETE);
+      valid &= (piece.getValue().getStatus() == MultipartPieceStatus.PIECE_COMPLETE);
     }
 
     if (valid) {
@@ -251,7 +252,7 @@ public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadS
   /**
    * Is the piece completed?
    * 
-   * Compares the {@link UploadPiece#getStatus()} to {@link MultipartStatus#PIECE_COMPLETE}
+   * Compares the {@link UploadPiece#getStatus()} to {@link MultipartPieceStatus#PIECE_COMPLETE}
    * 
    * @param piece
    * @return
