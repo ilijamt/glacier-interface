@@ -4,6 +4,7 @@ import org.apache.commons.codec.binary.Base64;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.InvalidMetadataException;
 import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
@@ -14,7 +15,7 @@ import com.matoski.glacier.pojo.archive.Archive;
  * 
  * @author Ilija Matoski (ilijamt@gmail.com)
  */
-public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterfaceMetadata {
+public class MtAwsGlacierB extends GenericParser implements IGlacierInterfaceMetadata {
 
   /**
    * Identifier.
@@ -29,18 +30,19 @@ public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterface
   /**
    * The last modified time.
    */
-  private String mtime;
+  @SerializedName(value = "mtime")
+  private String lastModifiedDate;
 
   /**
    * Constructor.
    */
-  public MT_AWS_GLACIER_B() {
+  public MtAwsGlacierB() {
     super(Metadata.MT_AWS_GLACIER_B);
   }
 
   @Override
   public String encode(Archive archive) {
-    this.mtime = Long.toString(archive.getModifiedDate());
+    this.lastModifiedDate = Long.toString(archive.getModifiedDate());
     this.filename = archive.getName();
     return IDENTIFIER + Base64.encodeBase64String(new Gson().toJson(this).getBytes());
 
@@ -60,27 +62,27 @@ public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterface
    * 
    * @return Last modified time as unix timestamp
    */
-  public long getMtime() {
-    if (mtime.contains("T") && mtime.contains("Z")) {
+  public long getLastModifiedDate() {
+    if (lastModifiedDate.contains("T") && lastModifiedDate.contains("Z")) {
       StringBuilder builder = new StringBuilder();
-      builder.append(mtime.substring(0, 4));
+      builder.append(lastModifiedDate.substring(0, 4));
       builder.append("-");
-      builder.append(mtime.substring(4, 6));
+      builder.append(lastModifiedDate.substring(4, 6));
       builder.append("-");
-      builder.append(mtime.substring(6, 11));
+      builder.append(lastModifiedDate.substring(6, 11));
       builder.append(":");
-      builder.append(mtime.substring(11, 13));
+      builder.append(lastModifiedDate.substring(11, 13));
       builder.append(":");
-      builder.append(mtime.substring(13));
+      builder.append(lastModifiedDate.substring(13));
       return ISO8601Utils.parse(builder.toString()).getTime();
     } else {
-      return Long.valueOf(mtime);
+      return Long.valueOf(lastModifiedDate);
     }
   }
 
   @Override
   public long giGetModifiedDate() {
-    return this.getMtime();
+    return this.getLastModifiedDate();
   }
 
   @Override
@@ -97,7 +99,7 @@ public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterface
     String base64data = data.substring(IDENTIFIER.length(), data.length());
 
     String json = new String(Base64.decodeBase64(base64data)).trim();
-    MT_AWS_GLACIER_B obj = new Gson().fromJson(json, MT_AWS_GLACIER_B.class);
+    MtAwsGlacierB obj = new Gson().fromJson(json, MtAwsGlacierB.class);
 
     return (IGlacierInterfaceMetadata) obj;
 
@@ -119,8 +121,8 @@ public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterface
    * @param mtime
    *          the last modified time to set
    */
-  public void setMtime(String mtime) {
-    this.mtime = mtime;
+  public void setLastModifiedDate(String mtime) {
+    this.lastModifiedDate = mtime;
   }
 
   @Override

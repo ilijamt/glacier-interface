@@ -18,11 +18,12 @@ import com.matoski.glacier.pojo.upload.MultipartUploadStatus;
  * reading the POJO to disk into a single class, that can be extended.
  * 
  * @author Ilija Matoski (ilijamt@gmail.com)
+ * 
  * @param <T>
  *          It's either {@link MultipartUploadStatus} or {@link MultipartDownloadStatus}
  *
  */
-public abstract class AbstractWritablePojo<T> {
+public class AbstractWritablePojo<T> {
 
   /**
    * Do we have an upload status or not.
@@ -39,10 +40,14 @@ public abstract class AbstractWritablePojo<T> {
   /**
    * Load the file.
    * 
+   * @param <T>
+   *          It's either {@link MultipartUploadStatus} or {@link MultipartDownloadStatus}
+   * 
    * @param file
    *          The file to load
    * @param cls
    *          The POJO class that is in the file
+   * 
    * 
    * @return The POJO class
    * 
@@ -75,6 +80,9 @@ public abstract class AbstractWritablePojo<T> {
 
   /**
    * Load the file.
+   * 
+   * @param <T>
+   *          It's either {@link MultipartUploadStatus} or {@link MultipartDownloadStatus}
    * 
    * @param file
    *          The file to load

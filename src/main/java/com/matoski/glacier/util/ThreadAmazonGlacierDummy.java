@@ -3,8 +3,7 @@ package com.matoski.glacier.util;
 import java.io.File;
 import java.util.concurrent.Callable;
 
-import com.matoski.glacier.pojo.download.DownloadPiece;
-import com.matoski.glacier.pojo.upload.UploadPiece;
+import com.matoski.glacier.pojo.Piece;
 
 /**
  * A threaded dummy, used for completion.
@@ -12,7 +11,7 @@ import com.matoski.glacier.pojo.upload.UploadPiece;
  * @author Ilija Matoski (ilijamt@gmail.com)
  * 
  * @param <T>
- *          The class we use for the thread usually {@link UploadPiece} or {@link DownloadPiece}
+ *          The class we use for the thread usually {@link Piece}
  */
 public abstract class ThreadAmazonGlacierDummy<T> implements Callable<T> {
 
@@ -40,14 +39,11 @@ public abstract class ThreadAmazonGlacierDummy<T> implements Callable<T> {
   /**
    * Override call that is used to process the dummy.
    */
-  public abstract void __call();
+  public abstract void process();
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public T call() throws Exception {
-    __call();
+    process();
     return piece;
   }
 

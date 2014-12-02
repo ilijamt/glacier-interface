@@ -13,7 +13,7 @@ import com.amazonaws.metrics.RequestMetricCollector;
 import com.amazonaws.services.glacier.model.RequestTimeoutException;
 import com.matoski.glacier.enums.MultipartPieceStatus;
 import com.matoski.glacier.errors.RegionNotSupportedException;
-import com.matoski.glacier.pojo.upload.UploadPiece;
+import com.matoski.glacier.pojo.Piece;
 
 /**
  * A threaded upload manager.
@@ -21,7 +21,7 @@ import com.matoski.glacier.pojo.upload.UploadPiece;
  * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil implements
-    Callable<UploadPiece> {
+    Callable<Piece> {
 
   /**
    * The file for the upload.
@@ -134,12 +134,9 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
     this.requestCollector = collector;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public UploadPiece call() throws Exception {
-    UploadPiece piece = null;
+  public Piece call() throws Exception {
+    Piece piece = null;
     int count = 0;
 
     System.out.println(String.format(FORMAT, requestPart + 1, requestPieces,
@@ -186,7 +183,7 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
    * @throws IOException
    * @throws RequestTimeoutException
    */
-  private UploadPiece upload(int time) throws AmazonServiceException, NoSuchAlgorithmException,
+  private Piece upload(int time) throws AmazonServiceException, NoSuchAlgorithmException,
       AmazonClientException, FileNotFoundException, IOException, RequestTimeoutException {
 
     return this.UploadMultipartPiece(requestFile, requestPieces, requestPart, requestPartSize,

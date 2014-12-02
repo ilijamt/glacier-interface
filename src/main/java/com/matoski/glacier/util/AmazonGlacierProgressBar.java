@@ -8,17 +8,17 @@ package com.matoski.glacier.util;
 public class AmazonGlacierProgressBar {
 
   /**
-   * The string to be display on the screen
+   * The string to be display on the screen.
    */
   private StringBuilder progress;
 
   /**
-   * Set total items
+   * Set total items.
    */
   private long total;
 
   /**
-   * Set transferred items
+   * Set transferred items.
    */
   private long transferred;
 
@@ -29,6 +29,9 @@ public class AmazonGlacierProgressBar {
     init();
   }
 
+  /**
+   * Inits the progress bar
+   */
   public void init() {
     this.progress = new StringBuilder(60);
     this.setTotal(0);
@@ -79,27 +82,30 @@ public class AmazonGlacierProgressBar {
   }
 
   /**
-   * Set total progress
+   * Set total progress.
    * 
    * @param total
+   *          total progress
    */
   public void setTotal(long total) {
     this.total = total;
   }
 
   /**
-   * Set transfered progress
+   * Set transfered progress.
    * 
    * @param transfered
+   *          Transfered
    */
   public void setTransferred(long transfered) {
     this.transferred = transfered;
   }
 
   /**
-   * Update the console
+   * Update the console.
    * 
    * @param transferred
+   *          transferred.
    */
   public void update(long transferred) {
 

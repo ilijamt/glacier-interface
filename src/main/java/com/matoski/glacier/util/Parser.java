@@ -5,7 +5,7 @@ import com.matoski.glacier.errors.InvalidMetadataException;
 import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
 import com.matoski.glacier.metadata.FastGlacierV2;
 import com.matoski.glacier.metadata.GenericParser;
-import com.matoski.glacier.metadata.MT_AWS_GLACIER_B;
+import com.matoski.glacier.metadata.MtAwsGlacierB;
 import com.matoski.glacier.pojo.archive.Archive;
 
 /**
@@ -42,7 +42,7 @@ public class Parser {
 
     switch (metadata) {
       case MT_AWS_GLACIER_B:
-        return (GenericParser) (new MT_AWS_GLACIER_B());
+        return (GenericParser) (new MtAwsGlacierB());
       case FAST_GLACIER_V2:
         return (GenericParser) (new FastGlacierV2());
       default:
@@ -60,7 +60,7 @@ public class Parser {
    * @param data
    *          The data to parse
    * 
-   * @return
+   * @return returns an object from which we can retrieve the data in the system
    * 
    * @throws InvalidMetadataException
    *           If invalid metadata

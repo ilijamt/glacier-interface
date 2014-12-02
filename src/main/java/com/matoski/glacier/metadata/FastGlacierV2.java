@@ -1,5 +1,6 @@
 package com.matoski.glacier.metadata;
 
+import com.google.gson.annotations.SerializedName;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.InvalidMetadataException;
 import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
@@ -15,17 +16,20 @@ public class FastGlacierV2 extends GenericParser implements IGlacierInterfaceMet
   /**
    * The version of the metadata.
    */
-  private int v = 2;
+  @SerializedName(value = "v")
+  private int version = 2;
 
   /**
    * The file name.
    */
-  private String p;
+  @SerializedName(value = "p")
+  private String filename;
 
   /**
    * The last modified date.
    */
-  private String lm;
+  @SerializedName(value = "lm")
+  private String lastModifiedDate;
 
   /**
    * Constructor.
@@ -42,28 +46,28 @@ public class FastGlacierV2 extends GenericParser implements IGlacierInterfaceMet
   /**
    * Gets the last modified entry from the metadata.
    * 
-   * @return the lm
+   * @return {@link #lastModifiedDate}
    */
-  public String getLm() {
-    return lm;
+  public String getLastModifiedDate() {
+    return lastModifiedDate;
   }
 
   /**
-   * Gets the path from the metadata.
+   * Gets the filename from the metadata.
    * 
-   * @return {@link #p}
+   * @return {@link #filename}
    */
-  public String getP() {
-    return p;
+  public String getFilename() {
+    return filename;
   }
 
   /**
-   * Gets the version of the metadata. 
+   * Gets the version of the metadata.
    * 
    * @return the v
    */
-  public int getV() {
-    return v;
+  public int getVersion() {
+    return version;
   }
 
   @Override
@@ -73,7 +77,7 @@ public class FastGlacierV2 extends GenericParser implements IGlacierInterfaceMet
 
   @Override
   public String giGetName() {
-    return this.p;
+    return this.filename;
   }
 
   @Override
@@ -86,31 +90,33 @@ public class FastGlacierV2 extends GenericParser implements IGlacierInterfaceMet
   }
 
   /**
-   * @param lm
+   * Set the last modified date.
+   * 
+   * @param lastModifiedDate
    *          the lm to set
    */
-  public void setLm(String lm) {
-    this.lm = lm;
+  public void setLastModifiedDate(String lastModifiedDate) {
+    this.lastModifiedDate = lastModifiedDate;
   }
 
   /**
-   * Sets the Path
+   * Sets the filename.
    * 
-   * @param p
+   * @param filename
    *          the p to set
    */
-  public void setP(String p) {
-    this.p = p;
+  public void setFilename(String filename) {
+    this.filename = filename;
   }
 
   /**
-   * Sets the version
+   * Sets the version.
    * 
-   * @param v
-   *          the v to set
+   * @param ver
+   *          the version to set
    */
-  public void setV(int v) {
-    this.v = v;
+  public void setVersion(int ver) {
+    this.version = ver;
   }
 
 }

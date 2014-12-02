@@ -11,7 +11,7 @@ import java.util.Date;
 public class DownloadJob {
 
   /**
-   * When was this created
+   * When was this created.
    */
   private Date created;
 
@@ -21,69 +21,75 @@ public class DownloadJob {
   private String jobId;
 
   /**
-   * The ID of the archive
+   * The ID of the archive.
    */
   private String archiveId;
 
   /**
-   * The vault name of the download
+   * The vault name of the download.
    */
   private String vaultName;
 
   /**
-   * The name of the archive
+   * The name of the archive.
    */
   private String name;
 
   /**
-   * Constructor
+   * Constructor.
    */
   public DownloadJob() {
     created = new Date();
   }
 
   /**
-   * @return the archiveId
+   * Get the archive ID.
+   * 
+   * @return {@link #archiveId}
    */
   public String getArchiveId() {
     return archiveId;
   }
 
   /**
-   * When was this created
+   * When was this created.
    * 
-   * @return
+   * @return {@link #created}
    */
   public Date getCreated() {
     return created;
   }
 
   /**
-   * Get the job Id
+   * Get the job Id.
    * 
-   * @return
+   * @return {@link #jobId}
    */
   public String getJobId() {
     return jobId;
   }
 
   /**
-   * @return the name
+   * Get the name of the job.
+   * 
+   * @return {@link #name}
    */
   public String getName() {
     return name;
   }
 
   /**
-   * Get the vault name where the job is
+   * Get the vault name where the job is.
    * 
-   * @return
+   * @return {@link #vaultName}
    */
   public String getVaultName() {
     return vaultName;
   }
 
   /**
+   * Set the archive ID.
+   * 
    * @param archiveId
    *          the archiveId to set
    */
@@ -92,6 +98,8 @@ public class DownloadJob {
   }
 
   /**
+   * Set when was this job created.
+   * 
    * @param created
    *          the created to set
    */
@@ -100,15 +108,18 @@ public class DownloadJob {
   }
 
   /**
-   * Sets the jobId
+   * Sets the jobId.
    * 
    * @param jobId
+   *          the job id
    */
   public void setJobId(String jobId) {
     this.jobId = jobId;
   }
 
   /**
+   * Set name.
+   * 
    * @param name
    *          the name to set
    */
@@ -117,9 +128,10 @@ public class DownloadJob {
   }
 
   /**
-   * Sets the vault name for the jobId
+   * Sets the vault name for the jobId.
    * 
    * @param vaultName
+   *          Vault name for the job
    */
   public void setVaultName(String vaultName) {
     this.vaultName = vaultName;

@@ -46,10 +46,10 @@ import com.matoski.glacier.errors.InvalidChecksumException;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.UploadTooManyPartsException;
 import com.matoski.glacier.pojo.Config;
+import com.matoski.glacier.pojo.Piece;
 import com.matoski.glacier.pojo.archive.Archive;
 import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.pojo.upload.MultipartUploadStatus;
-import com.matoski.glacier.pojo.upload.UploadPiece;
 import com.matoski.glacier.util.AmazonGlacierBaseUtil;
 import com.matoski.glacier.util.Parser;
 
@@ -410,7 +410,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
       IOException, RegionNotSupportedException, InstantiationException, IllegalAccessException {
 
     ExecutorService pool = Executors.newFixedThreadPool(threads);
-    HashMap<Integer, Future<UploadPiece>> map = new HashMap<Integer, Future<UploadPiece>>();
+    HashMap<Integer, Future<Piece>> map = new HashMap<Integer, Future<Piece>>();
 
     final File stateFile = new File(file, ".state");
     Archive archive = new Archive();
@@ -477,7 +477,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
       uploadStatus.setStatus(MultipartStatus.IN_PROGRESS);
     }
 
-    Callable<UploadPiece> thread;
+    Callable<Piece> thread;
 
     // 2. Upload Pieces
     for (int i = 0; i < pieces; i++) {
@@ -500,14 +500,14 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     pool.shutdown();
 
-    UploadPiece piece = null;
-    Future<UploadPiece> future;
+    Piece piece = null;
+    Future<Piece> future;
     Boolean pieceExists = false;
 
     try {
       while (!pool.awaitTermination(Constants.WAIT_TIME_THREAD_CHECK, TimeUnit.SECONDS)) {
 
-        for (Entry<Integer, Future<UploadPiece>> entry : map.entrySet()) {
+        for (Entry<Integer, Future<Piece>> entry : map.entrySet()) {
 
           future = entry.getValue();
 
@@ -540,7 +540,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     // go through them again, in case we missed them , can happen if it
     // finishes very shortly after completion
-    for (Entry<Integer, Future<UploadPiece>> entry : map.entrySet()) {
+    for (Entry<Integer, Future<Piece>> entry : map.entrySet()) {
 
       future = entry.getValue();
 
@@ -598,7 +598,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
    * @throws IOException
    * @throws RequestTimeoutException
    */
-  public UploadPiece UploadMultipartPiece(File file, int pieces, int part, int partSize,
+  public Piece UploadMultipartPiece(File file, int pieces, int part, int partSize,
       String vaultName, String uploadId) throws AmazonServiceException, NoSuchAlgorithmException,
       AmazonClientException, FileNotFoundException, IOException, InvalidChecksumException,
       RequestTimeoutException {
@@ -626,12 +626,12 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
    * @throws IOException
    * @throws RequestTimeoutException
    */
-  public UploadPiece UploadMultipartPiece(File file, int pieces, int part, int partSize,
+  public Piece UploadMultipartPiece(File file, int pieces, int part, int partSize,
       String vaultName, String uploadId, ProgressListener listener, RequestMetricCollector collector)
       throws AmazonServiceException, NoSuchAlgorithmException, AmazonClientException,
       FileNotFoundException, IOException, RequestTimeoutException {
 
-    UploadPiece ret = new UploadPiece();
+    Piece ret = new Piece();
 
     ret.setPart(part);
     ret.setId(uploadId);

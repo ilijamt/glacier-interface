@@ -68,6 +68,8 @@ public abstract class AbstractCommand<T> extends AbstractEmptyCommand<T> {
    * 
    * @param config
    *          The configuration for the system
+   * @param command
+   *          The command that we will process
    * 
    * @throws VaultNameNotPresentException
    *           No vault present in the config
