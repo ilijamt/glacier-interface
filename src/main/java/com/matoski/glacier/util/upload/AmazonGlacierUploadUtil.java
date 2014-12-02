@@ -776,6 +776,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     int position = part * (int) partSize;
 
+    @SuppressWarnings("unused")
     long skipped = stream.skip(position);
 
     if (part > pieces) {
