@@ -64,7 +64,7 @@ public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMult
     AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
     Boolean canceled = false;
 
-    List<UploadListElement> list = upload.ListMultipartUploads(command.vaultName);
+    List<UploadListElement> list = upload.listMultipartUploads(command.vaultName);
 
     System.out.println(String.format("Cancel all multipart uploads: %s", command.cancel));
     System.out.println(String.format("Total available multipart uploads: %s\n", list.size()));
@@ -73,7 +73,7 @@ public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMult
 
       if (command.full) {
 
-        ListPartsResult result = upload.GetMultipartUploadInfo(command.vaultName,
+        ListPartsResult result = upload.getMultipartUploadInfo(command.vaultName,
             element.getMultipartUploadId());
 
         System.out.println(String.format("%1$20s: %2$s", "ID", result.getMultipartUploadId()));

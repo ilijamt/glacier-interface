@@ -99,7 +99,7 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 
     try {
 
-      upload.DeleteArchive(command.vaultName, archiveId);
+      upload.deleteArchive(command.vaultName, archiveId);
 
       System.out.println("Archive deleted.\n");
 

@@ -69,7 +69,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 
 /**
- * A base glacier utility
+ * A base glacier utility.
  * 
  * @author Ilija Matoski (ilijamt@gmail.com)
  */
@@ -77,11 +77,14 @@ public class AmazonGlacierBaseUtil {
 
   /**
    * Can we split the file in the specified parts, without hitting the limit of
-   * {@link AmazonGlacierBaseUtil#MAXIMUM_UPLOAD_PARTS}
+   * {@link AmazonGlacierBaseUtil#MAXIMUM_UPLOAD_PARTS}.
    * 
    * @param file
+   *          The file to check
    * @param partSize
-   * @return
+   *          The part size
+   * 
+   * @return Is the part size valid?
    */
   public static Boolean isValidMaxParts(final File file, int partSize) {
     if (!file.exists() || !file.isFile()) {
@@ -92,9 +95,9 @@ public class AmazonGlacierBaseUtil {
   }
 
   /**
-   * Generic string format
+   * Generic string format.
    */
-  final public static String FORMAT = "[#%1$05d/#%2$05d] %3$-15s | (%4$s) %5$s";
+  public static final String FORMAT = "[#%1$05d/#%2$05d] %3$-15s | (%4$s) %5$s";
 
   /**
    * The maximum part size, in bytes, for a Glacier multipart upload.
@@ -117,106 +120,109 @@ public class AmazonGlacierBaseUtil {
   public static final long MINIMUM_PART_SIZE = 1024L * 1024;
 
   /**
-   * Threshold, in bytes, for when to use the multipart upload operations
+   * Threshold, in bytes, for when to use the multipart upload operations.
    */
   public static final long MULTIPART_UPLOAD_SIZE_THRESHOLD = 1024L * 1024L * 100;
 
   /**
-   * Service name
+   * Service name.
    */
   public static String SERVICE_NAME = "glacier";
 
   /**
-   * Service name
+   * Service name for SNS.
    */
   public static String SERVICE_SNS_NAME = "sns";
 
   /**
-   * Service name
+   * Service name for SQS.
    */
   public static String SERVICE_SQS_NAME = "sqs";
 
   /**
-   * The credentials for Amazon Glacier
+   * The credentials for Amazon Glacier.
    */
   protected final BasicAWSCredentials credentials;
 
   /**
-   * The client for Amazon Glacier
+   * The client for Amazon Glacier.
    */
   protected final AmazonGlacierClient client;
 
   /**
-   * The region for Amazon Glacier
+   * The region for Amazon Glacier.
    */
   protected final Region region;
 
   /**
-   * Do we have HTTP support?
+   * Do we have HTTP support.
    */
   protected final Boolean hasHttpEndpoint;
 
   /**
-   * Do we have HTTPS support
+   * Do we have HTTPS support.
    */
   protected final Boolean hasHttpsEndpoint;
 
   /**
-   * The client Endpoint
+   * The client endpoint.
    */
   protected final String clientEndpoint;
 
   /**
-   * Amazon SQS Client
+   * Amazon SQS Client.
    */
   protected final AmazonSQSClient sqsClient;
 
   /**
-   * Amazon SNS Client
+   * Amazon SNS Client.
    */
   protected final AmazonSNSClient snsClient;
 
   /**
-   * The SNS topic used for the job
+   * The SNS topic used for the job.
    */
-  final private static String SNS_TOPIC_NAME = "gi-sns-topic-job";
+  public static final String SNS_TOPIC_NAME = "gi-sns-topic-job";
 
   /**
-   * The SNS queue used for the job
+   * The SNS queue used for the job.
    */
-  final private static String SQS_QUEUE_NAME = "gi-sqs-queue-job";
+  public static final String SQS_QUEUE_NAME = "gi-sqs-queue-job";
 
   /**
-   * SQS Queue ARN
+   * SQS Queue ARN.
    */
-  private String sqsQueueARN;
+  private String sqsQueueArn;
 
   /**
-   * SQS Queue URL
+   * SQS Queue URL.
    */
-  private String sqsQueueURL;
+  private String sqsQueueUrl;
 
   /**
-   * SNS Topic ARN
+   * SNS Topic ARN.
    */
-  private String snsTopicARN;
+  private String snsTopicArn;
 
   /**
-   * SNS Subscription ARN
+   * SNS Subscription ARN.
    */
-  private String snsSubscriptionARN;
+  private String snsSubscriptionArn;
 
   /**
-   * How long to wait for a job to finish
+   * How long to wait for a job to finish.
    */
   public static long WAIT_FOR_JOB_SLEEP_TIME = 600;
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param credentials
+   *          The amazon credentials
    * @param client
+   *          The amazon client
    * @param region
+   *          The amazon region
    */
   public AmazonGlacierBaseUtil(BasicAWSCredentials credentials, AmazonGlacierClient client,
       Region region) {
@@ -239,13 +245,17 @@ public class AmazonGlacierBaseUtil {
   }
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param accessKey
+   *          Amazon Access Key
    * @param secretKey
+   *          Amazon Secret Key
    * @param region
+   *          Amazon Region
    * 
    * @throws RegionNotSupportedException
+   *           If the region is invalid
    */
   public AmazonGlacierBaseUtil(String accessKey, String secretKey, String region)
       throws RegionNotSupportedException {
@@ -278,49 +288,58 @@ public class AmazonGlacierBaseUtil {
   }
 
   /**
-   * Cleanup
+   * Cleanup.
    */
   public void cleanup() {
-    snsClient.unsubscribe(snsSubscriptionARN);
-    snsClient.deleteTopic(new DeleteTopicRequest(snsTopicARN));
-    sqsClient.deleteQueue(new DeleteQueueRequest(sqsQueueURL));
+    snsClient.unsubscribe(snsSubscriptionArn);
+    snsClient.deleteTopic(new DeleteTopicRequest(snsTopicArn));
+    sqsClient.deleteQueue(new DeleteQueueRequest(sqsQueueUrl));
   }
 
   /**
-   * Create a vault
+   * Create a vault.
    * 
    * @param vaultName
+   *          The vault name
    * 
    * @return
    * 
    * @throws AmazonClientException
+   *           An amazon client exception occurred
    * @throws AmazonServiceException
+   *           An amazon service exception occurred
    */
-  public CreateVaultResult CreateVault(String vaultName) throws AmazonServiceException,
+  public CreateVaultResult createVault(String vaultName) throws AmazonServiceException,
       AmazonClientException {
     CreateVaultRequest createVaultRequest = new CreateVaultRequest().withVaultName(vaultName);
     return client.createVault(createVaultRequest);
   }
 
   /**
-   * Delete an archive
+   * Delete an archive.
    * 
    * @param vaultName
+   *          The vault name
    * @param archiveId
+   *          The archive id
    */
-  public void DeleteArchive(String vaultName, String archiveId) {
-    DeleteArchive(vaultName, archiveId, null, null);
+  public void deleteArchive(String vaultName, String archiveId) {
+    deleteArchive(vaultName, archiveId, null, null);
   }
 
   /**
-   * Delete an archive
+   * Delete an archive.
    * 
    * @param vaultName
+   *          The vault name
    * @param archiveId
+   *          The archive ID
    * @param listener
+   *          Progress listener
    * @param collector
+   *          Metric collector
    */
-  public void DeleteArchive(String vaultName, String archiveId, ProgressListener listener,
+  public void deleteArchive(String vaultName, String archiveId, ProgressListener listener,
       RequestMetricCollector collector) {
 
     DeleteArchiveRequest request = new DeleteArchiveRequest().withVaultName(vaultName)
@@ -339,48 +358,61 @@ public class AmazonGlacierBaseUtil {
   }
 
   /**
-   * Delete a vault
+   * Delete a vault.
    * 
    * @param vaultName
+   *          The vault to delete
    * 
    * @throws AmazonClientException
+   *           An amazon client exception occurred
    * @throws AmazonServiceException
+   *           An amazon service exception occurred
    */
-  public void DeleteVault(String vaultName) throws AmazonServiceException, AmazonClientException {
+  public void deleteVault(String vaultName) throws AmazonServiceException, AmazonClientException {
     DeleteVaultRequest request = new DeleteVaultRequest().withVaultName(vaultName);
     client.deleteVault(request);
   }
 
   /**
-   * Describe a job
+   * Describe a job.
    * 
    * @param vaultName
+   *          The vault name
    * @param jobId
+   *          The job ID
    * 
    * @return
    * 
    * @throws AmazonClientException
+   *           An amazon client exception occurred
    * @throws AmazonServiceException
+   *           An amazon service exception occurred
    */
-  public DescribeJobResult DescribeJob(String vaultName, String jobId)
+  public DescribeJobResult describeJob(String vaultName, String jobId)
       throws AmazonServiceException, AmazonClientException {
-    return DescribeJob(vaultName, jobId, null, null);
+    return describeJob(vaultName, jobId, null, null);
   }
 
   /**
-   * Describe a job
+   * Describe a job.
    * 
    * @param vaultName
+   *          The vault name
    * @param jobId
+   *          The job ID
    * @param listener
+   *          The progress listener
    * @param collector
+   *          The metric collector
    *
    * @return
    * 
    * @throws AmazonClientException
+   *           An amazon client exception occurred
    * @throws AmazonServiceException
+   *           An amazon service exception occurred
    */
-  public DescribeJobResult DescribeJob(String vaultName, String jobId, ProgressListener listener,
+  public DescribeJobResult describeJob(String vaultName, String jobId, ProgressListener listener,
       RequestMetricCollector collector) throws AmazonServiceException, AmazonClientException {
 
     DescribeJobRequest request = new DescribeJobRequest().withVaultName(vaultName).withJobId(jobId);
@@ -399,16 +431,18 @@ public class AmazonGlacierBaseUtil {
   }
 
   /**
-   * Describe the vault
+   * Describe the vault.
    * 
    * @param vaultName
    * 
    * @return
    * 
    * @throws AmazonClientException
+   *           An amazon client exception occurred
    * @throws AmazonServiceException
+   *           An amazon service exception occurred
    */
-  public DescribeVaultResult DescribeVault(String vaultName) throws AmazonServiceException,
+  public DescribeVaultResult describeVault(String vaultName) throws AmazonServiceException,
       AmazonClientException {
     DescribeVaultRequest describeVaultRequest = new DescribeVaultRequest().withVaultName(vaultName);
     return client.describeVault(describeVaultRequest);
@@ -421,7 +455,7 @@ public class AmazonGlacierBaseUtil {
    * @param uploadId
    * @return
    */
-  public ListPartsResult GetMultipartUploadInfo(String vaultName, String uploadId) {
+  public ListPartsResult getMultipartUploadInfo(String vaultName, String uploadId) {
 
     String marker = null;
     ListPartsResult response = new ListPartsResult();
@@ -457,66 +491,66 @@ public class AmazonGlacierBaseUtil {
    */
   public void init() {
 
-    initSQS();
-    initSNS();
+    initSqs();
+    initSns();
 
   }
 
   /**
-   * Initialize SNS
+   * Initialize SNS.
    */
-  final public void initSNS() {
+  public final void initSns() {
 
     CreateTopicRequest request = new CreateTopicRequest().withName(SNS_TOPIC_NAME);
     CreateTopicResult result = snsClient.createTopic(request);
-    snsTopicARN = result.getTopicArn();
+    snsTopicArn = result.getTopicArn();
 
-    SubscribeRequest request2 = new SubscribeRequest().withTopicArn(snsTopicARN)
-        .withEndpoint(sqsQueueARN).withProtocol("sqs");
+    SubscribeRequest request2 = new SubscribeRequest().withTopicArn(snsTopicArn)
+        .withEndpoint(sqsQueueArn).withProtocol("sqs");
     SubscribeResult result2 = snsClient.subscribe(request2);
 
-    snsSubscriptionARN = result2.getSubscriptionArn();
+    snsSubscriptionArn = result2.getSubscriptionArn();
 
   }
 
   /**
-   * Initialize SQS
+   * Initialize SQS.
    */
-  final public void initSQS() {
+  public final void initSqs() {
 
     CreateQueueRequest request = new CreateQueueRequest().withQueueName(SQS_QUEUE_NAME);
     CreateQueueResult result = sqsClient.createQueue(request);
-    sqsQueueURL = result.getQueueUrl();
+    sqsQueueUrl = result.getQueueUrl();
 
-    GetQueueAttributesRequest qRequest = new GetQueueAttributesRequest().withQueueUrl(sqsQueueURL)
+    GetQueueAttributesRequest qRequest = new GetQueueAttributesRequest().withQueueUrl(sqsQueueUrl)
         .withAttributeNames("QueueArn");
 
     GetQueueAttributesResult qResult = sqsClient.getQueueAttributes(qRequest);
-    sqsQueueARN = qResult.getAttributes().get("QueueArn");
+    sqsQueueArn = qResult.getAttributes().get("QueueArn");
 
     Policy sqsPolicy = new Policy().withStatements(new Statement(Effect.Allow)
         .withPrincipals(Principal.AllUsers).withActions(SQSActions.SendMessage)
-        .withResources(new Resource(sqsQueueARN)));
+        .withResources(new Resource(sqsQueueArn)));
     Map<String, String> queueAttributes = new HashMap<String, String>();
     queueAttributes.put("Policy", sqsPolicy.toJson());
-    sqsClient.setQueueAttributes(new SetQueueAttributesRequest(sqsQueueURL, queueAttributes));
+    sqsClient.setQueueAttributes(new SetQueueAttributesRequest(sqsQueueUrl, queueAttributes));
 
   }
 
   /**
-   * Download the inventory
+   * Download the inventory.
    * 
    * @param vaultName
    * @param jobId
    * 
    * @return
    */
-  public GetJobOutputResult InventoryDownload(String vaultName, String jobId) {
-    return InventoryDownload(vaultName, jobId, null, null);
+  public GetJobOutputResult inventoryDownload(String vaultName, String jobId) {
+    return inventoryDownload(vaultName, jobId, null, null);
   }
 
   /**
-   * Download the inventory
+   * Download the inventory.
    * 
    * @param vaultName
    * @param jobId
@@ -524,7 +558,7 @@ public class AmazonGlacierBaseUtil {
    * @param collector
    * @return
    */
-  public GetJobOutputResult InventoryDownload(String vaultName, String jobId,
+  public GetJobOutputResult inventoryDownload(String vaultName, String jobId,
       ProgressListener listener, RequestMetricCollector collector) {
 
     GetJobOutputRequest request = new GetJobOutputRequest().withVaultName(vaultName).withJobId(
@@ -543,17 +577,17 @@ public class AmazonGlacierBaseUtil {
   }
 
   /**
-   * Initiate an inventory retrieval job
+   * Initiate an inventory retrieval job.
    * 
    * @param vaultName
    * @return
    */
-  public InitiateJobResult InventoryRetrieval(String vaultName) {
-    return InventoryRetrieval(vaultName, null, null, null);
+  public InitiateJobResult inventoryRetrieval(String vaultName) {
+    return inventoryRetrieval(vaultName, null, null, null);
   }
 
   /**
-   * Initiate an inventory retrieval job with an SNS topic
+   * Initiate an inventory retrieval job with an SNS topic.
    * 
    * @param vaultName
    * @param topicSNS
@@ -562,7 +596,7 @@ public class AmazonGlacierBaseUtil {
    * 
    * @return
    */
-  public InitiateJobResult InventoryRetrieval(String vaultName, String topicSNS,
+  public InitiateJobResult inventoryRetrieval(String vaultName, String topicSNS,
       ProgressListener listener, RequestMetricCollector collector) {
 
     JobParameters jobParameters = new JobParameters().withType("inventory-retrieval");
@@ -589,12 +623,12 @@ public class AmazonGlacierBaseUtil {
   }
 
   /**
-   * List all multipart uploads for a vault
+   * List all multipart uploads for a vault.
    * 
    * @param vaultName
    * @return
    */
-  public List<UploadListElement> ListMultipartUploads(String vaultName) {
+  public List<UploadListElement> listMultipartUploads(String vaultName) {
 
     String marker = null;
     List<UploadListElement> list = new ArrayList<UploadListElement>();
@@ -617,12 +651,12 @@ public class AmazonGlacierBaseUtil {
   }
 
   /**
-   * Get's a list of vault jobs
+   * Get's a list of vault jobs.
    * 
    * @param vaultName
    * @return
    */
-  public List<GlacierJobDescription> ListVaultJobs(String vaultName) {
+  public List<GlacierJobDescription> listVaultJobs(String vaultName) {
 
     String marker = null;
     List<GlacierJobDescription> list = new ArrayList<GlacierJobDescription>();
@@ -644,11 +678,11 @@ public class AmazonGlacierBaseUtil {
   }
 
   /**
-   * Get a list of vaults available in the region
+   * Get a list of vaults available in the region.
    * 
    * @return
    */
-  public List<DescribeVaultOutput> ListVaults() {
+  public List<DescribeVaultOutput> listVaults() {
 
     String marker = null;
     List<DescribeVaultOutput> list = new ArrayList<DescribeVaultOutput>();
@@ -670,7 +704,7 @@ public class AmazonGlacierBaseUtil {
   }
 
   /**
-   * Wait for the job to complete
+   * Wait for the job to complete.
    * 
    * @param jobId
    * @param sqsQueueUrl
@@ -681,7 +715,7 @@ public class AmazonGlacierBaseUtil {
    * @throws JsonParseException
    * @throws IOException
    */
-  final public Boolean WaitForJobToComplete(String jobId, String sqsQueueUrl)
+  final public Boolean waitForJobToComplete(String jobId, String sqsQueueUrl)
       throws InterruptedException, JsonParseException, IOException {
 
     Boolean messageFound = false;

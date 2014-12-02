@@ -52,7 +52,7 @@ public class VaultJobInfoCommand extends AbstractCommand<CommandVaultJobInfo> {
 
     try {
 
-      DescribeJobResult job = base.DescribeJob(command.vaultName, command.id);
+      DescribeJobResult job = base.describeJob(command.vaultName, command.id);
 
       System.out.println(String.format("%1$25s : %2$s", "Action", job.getAction()));
       System.out.println(String.format("%1$25s : %2$s", "Archive Id", job.getArchiveId()));

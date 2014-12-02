@@ -72,7 +72,7 @@ public class InventoryDownloadCommand extends AbstractCommand<CommandInventoryDo
 
       GlacierJobDescription job = null;
 
-      for (GlacierJobDescription j : upload.ListVaultJobs(command.vaultName)) {
+      for (GlacierJobDescription j : upload.listVaultJobs(command.vaultName)) {
 
         if (j.isCompleted() && j.getStatusCode().equalsIgnoreCase("Succeeded")) {
           job = j;
@@ -93,7 +93,7 @@ public class InventoryDownloadCommand extends AbstractCommand<CommandInventoryDo
 
     } else {
 
-      GetJobOutputResult result = upload.InventoryDownload(command.vaultName, jobId);
+      GetJobOutputResult result = upload.inventoryDownload(command.vaultName, jobId);
 
       System.out.println("Inventory downloaded.\n");
 

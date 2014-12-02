@@ -50,7 +50,7 @@ public class MultipartUploadInfoCommand extends AbstractCommand<CommandMultipart
 
     AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
-    ListPartsResult result = upload.GetMultipartUploadInfo(command.vaultName, command.multipartId);
+    ListPartsResult result = upload.getMultipartUploadInfo(command.vaultName, command.multipartId);
 
     System.out.println(String.format("%1$20s: %2$s", "ID", result.getMultipartUploadId()));
     System.out.println(String.format("%1$20s: %2$s", "ARN", result.getVaultARN()));

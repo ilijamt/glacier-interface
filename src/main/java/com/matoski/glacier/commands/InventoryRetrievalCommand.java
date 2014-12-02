@@ -49,7 +49,7 @@ public class InventoryRetrievalCommand extends AbstractCommand<CommandInventoryR
 
     AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
-    InitiateJobResult job = upload.InventoryRetrieval(command.vaultName);
+    InitiateJobResult job = upload.inventoryRetrieval(command.vaultName);
 
     System.out.println("Inventory retrieved.\n");
 

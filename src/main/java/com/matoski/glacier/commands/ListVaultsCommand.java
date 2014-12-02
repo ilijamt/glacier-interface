@@ -42,7 +42,7 @@ public class ListVaultsCommand extends AbstractCommand<CommandListVaults> {
 
     AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
-    List<DescribeVaultOutput> result = upload.ListVaults();
+    List<DescribeVaultOutput> result = upload.listVaults();
 
     System.out.println(String.format("Total available vaults: %s\n", result.size()));
 

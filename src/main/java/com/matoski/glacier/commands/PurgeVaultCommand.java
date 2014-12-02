@@ -80,7 +80,7 @@ public class PurgeVaultCommand extends AbstractCommand<CommandPurgeVault> {
           archive = entry.getValue();
           ids.add(archive.getId());
 
-          upload.DeleteArchive(command.vaultName, archive.getId());
+          upload.deleteArchive(command.vaultName, archive.getId());
           System.out.println(String.format("DELETED [%s] %s", archive.getId(), archive.getName()));
         } catch (Exception e) {
           System.err.println("Failed to delete the archive");

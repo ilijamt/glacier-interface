@@ -53,8 +53,8 @@ public class CreateVaultCommand extends AbstractCommand<CommandCreateVault> {
 
       AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
-      CreateVaultResult createVaultResult = upload.CreateVault(command.vaultName);
-      DescribeVaultResult describeVaultResult = upload.DescribeVault(command.vaultName);
+      CreateVaultResult createVaultResult = upload.createVault(command.vaultName);
+      DescribeVaultResult describeVaultResult = upload.describeVault(command.vaultName);
 
       System.out.println(String.format("%1$12s: %2$s%3$s", "Location",
           this.region.getServiceEndpoint("glacier"), createVaultResult.getLocation()));

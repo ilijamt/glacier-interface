@@ -117,7 +117,7 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
       throws FileAlreadyExistsException, InvalidChecksumException {
 
     // get the details about the job
-    final DescribeJobResult jobResult = DescribeJob(job.getVaultName(), job.getJobId());
+    final DescribeJobResult jobResult = describeJob(job.getVaultName(), job.getJobId());
     final long archiveSize = jobResult.getArchiveSizeInBytes();
     final String treeHashOriginal = jobResult.getSHA256TreeHash();
     final MultipartDownloadStatus status = new MultipartDownloadStatus();

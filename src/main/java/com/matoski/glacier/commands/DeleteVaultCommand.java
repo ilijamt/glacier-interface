@@ -51,7 +51,7 @@ public class DeleteVaultCommand extends AbstractCommand<CommandDeleteVault> {
 
       AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
-      upload.DeleteVault(command.vaultName);
+      upload.deleteVault(command.vaultName);
       System.out.println(String.format(
           "%s deleted. (Currently Amazon Glacier does not return error if vault does not exists)",
           command.vaultName));

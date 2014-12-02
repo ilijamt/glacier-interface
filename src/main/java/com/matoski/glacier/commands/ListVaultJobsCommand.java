@@ -54,7 +54,7 @@ public class ListVaultJobsCommand extends AbstractCommand<CommandListVaultJobs> 
 
       AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
-      List<GlacierJobDescription> jobs = upload.ListVaultJobs(command.vaultName);
+      List<GlacierJobDescription> jobs = upload.listVaultJobs(command.vaultName);
 
       if (jobs.isEmpty()) {
         System.out.println(String.format("No available jobs for vault: %s", command.vaultName));

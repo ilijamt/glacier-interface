@@ -375,7 +375,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
         if (replace && archive != null) {
           System.out.println(String.format("Cleaning, removing old archive [%s] %s", old.getId(),
               old.getName()));
-          DeleteArchive(vaultName, old.getId());
+          deleteArchive(vaultName, old.getId());
         }
 
         journal.addArchive(archive);
