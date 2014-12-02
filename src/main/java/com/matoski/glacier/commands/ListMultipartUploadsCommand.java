@@ -19,7 +19,7 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 /**
  * List's all multipart uploads
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMultipartUploads> {

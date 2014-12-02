@@ -54,7 +54,7 @@ import com.matoski.glacier.pojo.Config;
 /**
  * The main application, this is used to load the application and all the capabilities.
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class Main {
@@ -97,6 +97,7 @@ public class Main {
    * Entry point for application.
    * 
    * @param args
+   *          The command line arguments
    */
   public static void main(String[] args) {
 

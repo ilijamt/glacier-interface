@@ -10,7 +10,7 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 /**
  * Aborts a multipart upload
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class AbortMultipartUploadCommand extends AbstractCommand<CommandAbortMultipartUpload> {
 

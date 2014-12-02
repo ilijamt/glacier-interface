@@ -14,7 +14,7 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 /**
  * Delete an archive
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> {
 

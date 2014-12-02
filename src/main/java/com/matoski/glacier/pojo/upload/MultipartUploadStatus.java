@@ -17,7 +17,7 @@ import com.matoski.glacier.enums.MultipartStatus;
  * A state file, used to store the state of the uploading file, we use this to store all the
  * information necessary to continue uploading the file
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class MultipartUploadStatus extends AbstractWritablePojo<MultipartUploadStatus> {

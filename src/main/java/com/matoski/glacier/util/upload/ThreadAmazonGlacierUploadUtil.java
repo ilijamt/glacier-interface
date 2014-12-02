@@ -16,61 +16,61 @@ import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.pojo.upload.UploadPiece;
 
 /**
- * A threaded upload manager
+ * A threaded upload manager.
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil implements
     Callable<UploadPiece> {
 
   /**
-   * The file for the upload
+   * The file for the upload.
    */
   private final File requestFile;
 
   /**
-   * Total pieces
+   * Total pieces.
    */
   private final int requestPieces;
 
   /**
-   * The part to upload
+   * The part to upload.
    */
   private final int requestPart;
 
   /**
-   * The partition size
+   * The partition size.
    */
   private final int requestPartSize;
 
   /**
-   * The vault name
+   * The vault name.
    */
   private final String requestVaultName;
 
   /**
-   * The upload ID for the request
+   * The upload ID for the request.
    */
   private final String requestUploadId;
 
   /**
-   * The progress listener
+   * The progress listener.
    */
   private final ProgressListener requestListener;
 
   /**
-   * The request metric collector
+   * The request metric collector.
    */
   private final RequestMetricCollector requestCollector;
 
   /**
    * How many times to retry uploading a failed upload, either it is an error, or a
-   * {@link MultipartStatus#PIECE_CHECKSUM_MISMATCH} is present in the result
+   * {@link MultipartStatus#PIECE_CHECKSUM_MISMATCH} is present in the result.
    */
   private final int requestRetryFailedUploads;
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param retryFailedUploads
    * @param file
@@ -101,7 +101,7 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
   }
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param retryFailedUploads
    * @param file
@@ -173,9 +173,11 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
   }
 
   /**
-   * Upload
+   * Initiate an upload.
    * 
    * @param time
+   * 
+   * @return
    * 
    * @throws AmazonServiceException
    * @throws NoSuchAlgorithmException
@@ -183,8 +185,6 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
    * @throws FileNotFoundException
    * @throws IOException
    * @throws RequestTimeoutException
-   * 
-   * @return
    */
   private UploadPiece upload(int time) throws AmazonServiceException, NoSuchAlgorithmException,
       AmazonClientException, FileNotFoundException, IOException, RequestTimeoutException {

@@ -12,7 +12,7 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 /**
  * A command used to delete a vault.
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class DeleteVaultCommand extends AbstractCommand<CommandDeleteVault> {
 

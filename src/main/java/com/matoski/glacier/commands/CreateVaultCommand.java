@@ -14,7 +14,7 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 /**
  * Create a vault
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class CreateVaultCommand extends AbstractCommand<CommandCreateVault> {

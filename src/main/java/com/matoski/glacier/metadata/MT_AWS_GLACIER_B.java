@@ -12,7 +12,7 @@ import com.matoski.glacier.pojo.archive.Archive;
 /**
  * mt-aws-glacier type B metadata
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterfaceMetadata {
 

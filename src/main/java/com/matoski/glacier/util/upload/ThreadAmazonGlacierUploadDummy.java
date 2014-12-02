@@ -8,7 +8,7 @@ import com.matoski.glacier.util.ThreadAmazonGlacierDummy;
 /**
  * A threaded dummy, used for completion
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class ThreadAmazonGlacierUploadDummy extends ThreadAmazonGlacierDummy<UploadPiece> {
 

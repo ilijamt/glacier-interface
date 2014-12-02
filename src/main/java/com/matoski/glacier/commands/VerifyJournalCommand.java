@@ -17,7 +17,7 @@ import com.matoski.glacier.util.FileUtils;
 /**
  * Verify the data from the journal
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class VerifyJournalCommand extends AbstractEmptyCommand<CommandVerifyJournal> {

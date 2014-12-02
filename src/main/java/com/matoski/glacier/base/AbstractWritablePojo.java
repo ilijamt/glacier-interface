@@ -13,7 +13,7 @@ import com.google.gson.GsonBuilder;
 /**
  * Abstract writable pojo
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  * @param <T>
  *
  */

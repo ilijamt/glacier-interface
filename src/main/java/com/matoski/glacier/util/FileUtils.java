@@ -5,7 +5,7 @@ import com.matoski.glacier.Constants;
 /**
  * Generic file utils
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class FileUtils {

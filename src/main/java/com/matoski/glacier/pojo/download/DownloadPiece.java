@@ -5,7 +5,7 @@ import com.matoski.glacier.pojo.Piece;
 /**
  * Download piece
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class DownloadPiece extends Piece {
 

@@ -12,7 +12,7 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 /**
  * Show details about multipart info
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class MultipartUploadInfoCommand extends AbstractCommand<CommandMultipartUploadInfo> {

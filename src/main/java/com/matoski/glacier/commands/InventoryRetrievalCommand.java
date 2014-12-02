@@ -11,7 +11,7 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 /**
  * Initiate an inventory retrieval
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class InventoryRetrievalCommand extends AbstractCommand<CommandInventoryRetrieval> {

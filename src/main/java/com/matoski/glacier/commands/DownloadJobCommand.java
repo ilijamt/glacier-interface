@@ -19,7 +19,7 @@ import com.matoski.glacier.util.download.AmazonGlacierDownloadUtil;
 /**
  * Creates a download job
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class DownloadJobCommand extends AbstractCommand<CommandDownloadJob> {
 

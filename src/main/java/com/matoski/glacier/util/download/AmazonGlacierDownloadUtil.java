@@ -35,7 +35,7 @@ import com.amazonaws.services.glacier.model.JobParameters;
  * Contains utilities for download archives, initiation of multipart download, canceling of
  * multipart downloads
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
 

@@ -16,7 +16,7 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 /**
  * Upload archive
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> {
 

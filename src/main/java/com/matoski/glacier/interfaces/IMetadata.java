@@ -6,7 +6,7 @@ import com.matoski.glacier.pojo.archive.Archive;
 /**
  * Metadata definition
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public interface IMetadata {
 

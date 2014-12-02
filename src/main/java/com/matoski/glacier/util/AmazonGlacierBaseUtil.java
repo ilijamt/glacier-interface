@@ -71,7 +71,7 @@ import com.matoski.glacier.errors.RegionNotSupportedException;
 /**
  * A base glacier utility
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class AmazonGlacierBaseUtil {
 

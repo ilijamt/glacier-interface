@@ -19,7 +19,7 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 /**
  * Synchronizes a directory
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class SyncCommand extends AbstractCommand<CommandSync> {

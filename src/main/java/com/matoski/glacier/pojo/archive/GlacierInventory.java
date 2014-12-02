@@ -8,7 +8,7 @@ import java.util.List;
  * An object that holds all the information from the inventory, we use this to convert to any needed
  * journal
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class GlacierInventory {
@@ -16,7 +16,7 @@ public class GlacierInventory {
   /**
    * Description of an item in the archive
    * 
-   * @author ilijamt
+   * @author Ilija Matoski (ilijamt@gmail.com)
    *
    */
   public static class ArchiveItem {

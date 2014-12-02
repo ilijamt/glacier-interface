@@ -6,7 +6,7 @@ import com.matoski.glacier.pojo.archive.Archive;
  * Generic interface to the metadata, all the metadata definitions have to extend this, as this will
  * tell us how to define the required parameters by our definition
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public interface IGlacierInterfaceMetadata {

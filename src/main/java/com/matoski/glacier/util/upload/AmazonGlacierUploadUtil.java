@@ -58,7 +58,7 @@ import com.matoski.glacier.util.Parser;
  * Contains utilities for uploading archives, initiation of multipart uploads, canceling of
  * multipart uploads,
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 

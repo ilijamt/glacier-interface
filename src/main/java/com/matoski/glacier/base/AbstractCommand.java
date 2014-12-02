@@ -12,7 +12,7 @@ import com.matoski.glacier.pojo.Config;
 /**
  * A generic abstract command used as a base for all the commands related to Amazon Glacier.
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  * @param <T>
  */
 public abstract class AbstractCommand<T> extends AbstractEmptyCommand<T> {

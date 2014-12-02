@@ -8,7 +8,7 @@ import com.matoski.glacier.base.AbstractWritablePojo;
 /**
  * Download job info
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class DownloadJobInfo extends AbstractWritablePojo<DownloadJobInfo> {
 

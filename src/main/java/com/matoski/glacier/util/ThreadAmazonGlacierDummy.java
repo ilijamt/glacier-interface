@@ -6,7 +6,7 @@ import java.util.concurrent.Callable;
 /**
  * A threaded dummy, used for completion
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  * @param <T>
  */
 public abstract class ThreadAmazonGlacierDummy<T> implements Callable<T> {

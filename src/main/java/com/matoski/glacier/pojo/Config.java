@@ -16,7 +16,7 @@ import com.matoski.glacier.cli.Arguments;
 /**
  * A POJO class used to store generic information about how to connect to the system
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class Config {
 

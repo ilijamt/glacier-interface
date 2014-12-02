@@ -15,7 +15,7 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 /**
  * Lists all vault jobs
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class ListVaultJobsCommand extends AbstractCommand<CommandListVaultJobs> {

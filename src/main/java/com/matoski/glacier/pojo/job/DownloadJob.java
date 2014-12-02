@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Download job
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class DownloadJob {

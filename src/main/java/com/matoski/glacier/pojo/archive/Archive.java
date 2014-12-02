@@ -10,7 +10,7 @@ import com.matoski.glacier.enums.ArchiveState;
  * An archive element, it's used to store all the relevant information about the archive in one
  * place
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class Archive implements Cloneable {
 

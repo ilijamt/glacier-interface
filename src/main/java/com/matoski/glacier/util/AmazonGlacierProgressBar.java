@@ -3,7 +3,7 @@ package com.matoski.glacier.util;
 /**
  * Progress bar for upload to amazon glacier
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class AmazonGlacierProgressBar {
 

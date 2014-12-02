@@ -21,7 +21,7 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 /**
  * Download inventory
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class InventoryDownloadCommand extends AbstractCommand<CommandInventoryDownload> {

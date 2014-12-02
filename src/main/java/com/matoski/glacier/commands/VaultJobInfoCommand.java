@@ -13,7 +13,7 @@ import com.matoski.glacier.util.AmazonGlacierBaseUtil;
 /**
  * Show details about a vault job
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class VaultJobInfoCommand extends AbstractCommand<CommandVaultJobInfo> {

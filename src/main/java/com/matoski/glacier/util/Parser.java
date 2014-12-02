@@ -11,7 +11,7 @@ import com.matoski.glacier.pojo.archive.Archive;
 /**
  * Generic parser
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class Parser {

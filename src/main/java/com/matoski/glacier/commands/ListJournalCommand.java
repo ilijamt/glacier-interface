@@ -15,7 +15,7 @@ import com.matoski.glacier.util.FileUtils;
 /**
  * Lists items in a journal
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class ListJournalCommand extends AbstractEmptyCommand<CommandListJournal> {

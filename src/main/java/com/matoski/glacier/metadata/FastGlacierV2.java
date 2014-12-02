@@ -8,7 +8,7 @@ import com.matoski.glacier.pojo.archive.Archive;
 /**
  * mt-aws-glacier type B metadata
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class FastGlacierV2 extends GenericParser implements IGlacierInterfaceMetadata {
 

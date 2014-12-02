@@ -28,7 +28,7 @@ import com.matoski.glacier.util.Parser;
 /**
  * Journal for the vault
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class State {
 

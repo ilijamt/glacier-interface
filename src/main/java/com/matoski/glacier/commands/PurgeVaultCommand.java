@@ -18,7 +18,7 @@ import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 /**
  * Purges a vault from all files not present into the journal
  * 
- * @author ilijamt
+ * @author Ilija Matoski (ilijamt@gmail.com)
  *
  */
 public class PurgeVaultCommand extends AbstractCommand<CommandPurgeVault> {
