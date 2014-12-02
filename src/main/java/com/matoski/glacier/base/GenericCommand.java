@@ -11,32 +11,34 @@ import com.matoski.glacier.enums.CliCommands;
 public abstract class GenericCommand {
 
   /**
-   * The command name
+   * The command name.
    */
-  final private String __name;
+  private final String __name;
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param command
+   *          The command
    */
   public GenericCommand(CliCommands command) {
     this.__name = command.getPropertyName();
   }
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param name
+   *          The command
    */
   public GenericCommand(String name) {
     this.__name = name;
   }
 
   /**
-   * Get the command name
+   * Get the command name.
    * 
-   * @return
+   * @return The command
    */
   public String __getCommandName() {
     return __name;

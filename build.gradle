@@ -11,7 +11,7 @@ configure(allprojects) {
 		"http://docs.oracle.com/javaee/7/api",
 		"http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc",
 		"http://jcommander.org/apidocs",
-		"http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/index.html"
+		"http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs"
 	] as String[]
 }
 
@@ -21,7 +21,7 @@ configurations {
 
 checkstyle {
 	toolVersion = 6.1
-	showViolations = true
+	showViolations = false
 }
 
 javadoc {
