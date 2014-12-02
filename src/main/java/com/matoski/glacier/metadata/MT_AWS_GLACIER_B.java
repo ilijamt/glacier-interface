@@ -17,30 +17,27 @@ import com.matoski.glacier.pojo.archive.Archive;
 public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterfaceMetadata {
 
   /**
-   * Identifier
+   * Identifier.
    */
   public static final String IDENTIFIER = "mt2 ";
 
   /**
-   * The original filename
+   * The original filename.
    */
   private String filename;
 
   /**
-   * The last modified time
+   * The last modified time.
    */
   private String mtime;
 
   /**
-   * Constructor
+   * Constructor.
    */
   public MT_AWS_GLACIER_B() {
     super(Metadata.MT_AWS_GLACIER_B);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String encode(Archive archive) {
     this.mtime = Long.toString(archive.getModifiedDate());
@@ -50,14 +47,18 @@ public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterface
   }
 
   /**
-   * @return the filename
+   * Gets the filename from metadata.
+   * 
+   * @return {@link #filename}
    */
   public String getFilename() {
     return filename;
   }
 
   /**
-   * @return the mtime
+   * Gets the last modified time.
+   * 
+   * @return Last modified time as unix timestamp
    */
   public long getMtime() {
     if (mtime.contains("T") && mtime.contains("Z")) {
@@ -77,25 +78,16 @@ public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterface
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public long giGetModifiedDate() {
     return this.getMtime();
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String giGetName() {
     return this.getFilename();
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public IGlacierInterfaceMetadata parse(String data) throws InvalidMetadataException {
     if (!verify(data)) {
@@ -112,6 +104,8 @@ public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterface
   }
 
   /**
+   * Sets the filename.
+   * 
    * @param filename
    *          the filename to set
    */
@@ -120,16 +114,15 @@ public class MT_AWS_GLACIER_B extends GenericParser implements IGlacierInterface
   }
 
   /**
+   * Sets the last modified time.
+   * 
    * @param mtime
-   *          the mtime to set
+   *          the last modified time to set
    */
   public void setMtime(String mtime) {
     this.mtime = mtime;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean verify(String data) {
     return data.startsWith(IDENTIFIER);

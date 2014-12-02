@@ -301,7 +301,7 @@ public class Archive implements Cloneable {
   /**
    * Get the file to the archive.
    * 
-   * @return {@link File}({@link #getName()}
+   * @return {@link File}({@link #getName()})
    */
   public File getFile() {
     return new File(getName());
@@ -313,7 +313,7 @@ public class Archive implements Cloneable {
    * @param parent
    *          The parent to use for creating {@link File}
    * 
-   * @return {@link File}({@link #getName()}
+   * @return {@link File}({@link #getName()})
    */
   public File getFile(String parent) {
     return new File(parent, getName());

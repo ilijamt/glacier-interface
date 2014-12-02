@@ -12,16 +12,16 @@ import com.matoski.glacier.pojo.archive.Archive;
 public interface IGlacierInterfaceMetadata {
 
   /**
-   * Get the modified date, this goes into {@link Archive#setModifiedDate(long)}
+   * Get the modified date, this goes into {@link Archive#setModifiedDate(long)}.
    * 
-   * @return
+   * @return the last modified date from the metadata
    */
   public long giGetModifiedDate();
 
   /**
-   * Get the name of the archive, this goes into {@link Archive#setName(String)}
+   * Get the name of the archive, this goes into {@link Archive#setName(String)}.
    * 
-   * @return
+   * @return the name of the archive from the metadata
    */
   public String giGetName();
 

@@ -3,10 +3,12 @@ package com.matoski.glacier.pojo.archive;
 import java.util.List;
 
 /**
- * Amazon Glacier Inventory Metadata
+ * Amazon Glacier Inventory Metadata.
  * 
+ * <p>
  * An object that holds all the information from the inventory, we use this to convert to any needed
  * journal
+ * </p>
  * 
  * @author Ilija Matoski (ilijamt@gmail.com)
  *
@@ -14,7 +16,7 @@ import java.util.List;
 public class GlacierInventory {
 
   /**
-   * Description of an item in the archive
+   * Description of an item in the archive.
    * 
    * @author Ilija Matoski (ilijamt@gmail.com)
    *
@@ -22,27 +24,27 @@ public class GlacierInventory {
   public static class ArchiveItem {
 
     /**
-     * The ID of the archive
+     * The ID of the archive.
      */
     private String ArchiveId;
 
     /**
-     * The description of the archive
+     * The description of the archive.
      */
     private String ArchiveDescription;
 
     /**
-     * The creation date of the archive
+     * The creation date of the archive.
      */
     private String CreationDate;
 
     /**
-     * The size of the archive
+     * The size of the archive.
      */
     private long Size;
 
     /**
-     * The hash of the archive
+     * The hash of the archive.
      */
     private String SHA256TreeHash;
 

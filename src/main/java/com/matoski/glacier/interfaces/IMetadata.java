@@ -16,7 +16,7 @@ public interface IMetadata {
    * @param archive
    *          The archive
    * 
-   * @return
+   * @return The encoded data as string
    * 
    */
   public String encode(Archive archive);
@@ -27,7 +27,7 @@ public interface IMetadata {
    * @param data
    *          The data to process
    * 
-   * @return
+   * @return Objects that extend from {@link IGlacierInterfaceMetadata}
    * 
    * @throws InvalidMetadataException
    *           If the metadata doesn't exist
@@ -40,7 +40,7 @@ public interface IMetadata {
    * @param data
    *          The data to verify
    * 
-   * @return
+   * @return true if the data is valid
    * 
    */
   public boolean verify(String data);

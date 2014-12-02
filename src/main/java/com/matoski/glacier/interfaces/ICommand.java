@@ -17,7 +17,7 @@ public interface ICommand {
   /**
    * Checks if the command is valid or not.
    * 
-   * @return
+   * @return true if the command is valid
    * 
    */
   boolean valid();

@@ -13,36 +13,35 @@ import com.matoski.glacier.pojo.archive.Archive;
 public class FastGlacierV2 extends GenericParser implements IGlacierInterfaceMetadata {
 
   /**
-   * The version of the metadata
+   * The version of the metadata.
    */
   private int v = 2;
 
   /**
-   * The file name
+   * The file name.
    */
   private String p;
 
   /**
-   * The last modified date
+   * The last modified date.
    */
   private String lm;
 
   /**
-   * Constructor
+   * Constructor.
    */
   public FastGlacierV2() {
     super(Metadata.FAST_GLACIER_V2);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String encode(Archive archive) {
     return new String();
   }
 
   /**
+   * Gets the last modified entry from the metadata.
+   * 
    * @return the lm
    */
   public String getLm() {
@@ -50,38 +49,33 @@ public class FastGlacierV2 extends GenericParser implements IGlacierInterfaceMet
   }
 
   /**
-   * @return the p
+   * Gets the path from the metadata.
+   * 
+   * @return {@link #p}
    */
   public String getP() {
     return p;
   }
 
   /**
+   * Gets the version of the metadata. 
+   * 
    * @return the v
    */
   public int getV() {
     return v;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public long giGetModifiedDate() {
     return 0;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String giGetName() {
     return this.p;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public IGlacierInterfaceMetadata parse(String data) throws InvalidMetadataException {
     if (!verify(data)) {
@@ -100,6 +94,8 @@ public class FastGlacierV2 extends GenericParser implements IGlacierInterfaceMet
   }
 
   /**
+   * Sets the Path
+   * 
    * @param p
    *          the p to set
    */
@@ -108,6 +104,8 @@ public class FastGlacierV2 extends GenericParser implements IGlacierInterfaceMet
   }
 
   /**
+   * Sets the version
+   * 
    * @param v
    *          the v to set
    */
