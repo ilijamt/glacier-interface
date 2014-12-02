@@ -19,52 +19,53 @@ public class UploadPieceTest {
 
   private UploadPiece piece;
 
-  private String CalculatedChecksum;
-  private String UploadedChecksum;
-  private String Id;
-  private Integer Part;
-  private MultipartPieceStatus Status;
+  private String calculatedChecksum;
+  private String uploadedChecksum;
+  private String id;
+  private Integer part;
+  private MultipartPieceStatus status;
 
   @Before
   public void setUp() throws Exception {
 
     this.piece = new UploadPiece();
-    this.Status = MultipartPieceStatus.PIECE_COMPLETE;
-    this.Part = Integer.valueOf(RandomStringUtils.randomNumeric(3));
-    this.Id = RandomStringUtils.randomAlphanumeric(12);
-    this.UploadedChecksum = RandomStringUtils.randomAlphanumeric(64);
-    this.CalculatedChecksum = RandomStringUtils.randomAlphanumeric(64);
+    this.status = MultipartPieceStatus.PIECE_COMPLETE;
+    this.part = Integer.valueOf(RandomStringUtils.randomNumeric(3));
+    this.id = RandomStringUtils.randomAlphanumeric(12);
+    this.uploadedChecksum = RandomStringUtils.randomAlphanumeric(64);
+    this.calculatedChecksum = RandomStringUtils.randomAlphanumeric(64);
 
   }
 
   @Test
   public final void test01_CalculatedChecksum() {
-    this.piece.setCalculatedChecksum(CalculatedChecksum);
-    assertSame("set/get CalculatedChecksum", this.piece.getCalculatedChecksum(), CalculatedChecksum);
+    this.piece.setCalculatedChecksum(calculatedChecksum);
+    assertSame("set/get CalculatedChecksum", this.piece.getCalculatedChecksum(),
+        calculatedChecksum);
   }
 
   @Test
   public final void test02_Id() {
-    this.piece.setId(Id);
-    assertSame("set/get Id", this.piece.getId(), Id);
+    this.piece.setId(id);
+    assertSame("set/get Id", this.piece.getId(), id);
   }
 
   @Test
   public final void test03_Part() {
-    this.piece.setPart(Part);
-    assertEquals("set/get Part", this.piece.getPart(), Part.intValue());
+    this.piece.setPart(part);
+    assertEquals("set/get Part", this.piece.getPart(), part.intValue());
   }
 
   @Test
   public final void test04_Status() {
-    this.piece.setStatus(Status);
-    assertSame("set/get Status", this.piece.getStatus(), Status);
+    this.piece.setStatus(status);
+    assertSame("set/get Status", this.piece.getStatus(), status);
   }
 
   @Test
   public final void test05_UploadedChecksum() {
-    this.piece.setUploadedChecksum(UploadedChecksum);
-    assertSame("set/get UploadedChecksum", this.piece.getUploadedChecksum(), UploadedChecksum);
+    this.piece.setUploadedChecksum(uploadedChecksum);
+    assertSame("set/get UploadedChecksum", this.piece.getUploadedChecksum(), uploadedChecksum);
   }
 
   @Test

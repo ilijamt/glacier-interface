@@ -88,8 +88,9 @@ public class State {
    * Load the journal into memory.
    * 
    * @param file
+   *          The journal file
    * 
-   * @return
+   * @return The state
    * 
    * @throws FileNotFoundException
    *           If the journal is not present it will throw an error
@@ -122,7 +123,7 @@ public class State {
    * @param file
    *          The journal file
    * 
-   * @return
+   * @return The state
    * 
    * @throws FileNotFoundException
    *           If the journal is not present it will throw an error
@@ -144,7 +145,7 @@ public class State {
    * @param metadata
    *          The type of metadata
    * 
-   * @return
+   * @return The state
    * 
    */
   public static State parse(GlacierInventory inventory, String vault, Metadata metadata) {
@@ -163,7 +164,7 @@ public class State {
       archive.setId(archiveItem.getArchiveId());
       archive.setCreatedDate(archiveItem.getCreationDate());
       archive.setSize(archiveItem.getSize());
-      archive.setHash(archiveItem.getSHA256TreeHash());
+      archive.setHash(archiveItem.getSha256TreeHash());
 
       IGlacierInterfaceMetadata interfaceMetadata;
 
@@ -197,7 +198,7 @@ public class State {
    * @param metadata
    *          The type of metadata
    * 
-   * @return
+   * @return The state
    * 
    */
   public static State parse(GlacierInventory inventory, String vault, String metadata) {
@@ -264,7 +265,7 @@ public class State {
   /**
    * Get's all archives in the journal.
    * 
-   * @return
+   * @return The archives
    * 
    */
   public HashMap<String, Archive> getArchives() {
@@ -277,7 +278,7 @@ public class State {
    * @param id
    *          The ID of the archive to get
    * 
-   * @return
+   * @return The requested ID
    * 
    */
   public Archive getById(String id) {
@@ -301,7 +302,7 @@ public class State {
    * @param name
    *          The archive name
    * 
-   * @return
+   * @return The requested archive
    * 
    */
   public Archive getByName(String name) {
@@ -324,7 +325,7 @@ public class State {
   /**
    * Get the journal date.
    * 
-   * @return The journal date
+   * @return {@link #getDate()}
    */
   public Date getDate() {
     return journal.getDate();
@@ -333,7 +334,7 @@ public class State {
   /**
    * Get the file to use.
    * 
-   * @return
+   * @return {@link #file}
    * 
    */
   public File getFile() {
@@ -343,7 +344,7 @@ public class State {
   /**
    * Gets the journal.
    * 
-   * @return
+   * @return {@link #journal}
    * 
    */
   public FileJournal getJournal() {
@@ -353,7 +354,7 @@ public class State {
   /**
    * Get the journal metadata.
    * 
-   * @return the metadata
+   * @return Journal metadata
    */
   public Metadata getMetadata() {
     return journal.getMetadata();
@@ -362,7 +363,7 @@ public class State {
   /**
    * Get the journal name.
    * 
-   * @return the name
+   * @return Journal name
    */
   public String getName() {
     return journal.getName();
@@ -374,7 +375,7 @@ public class State {
    * @param file
    *          The file we check if it is present in the archives
    * 
-   * @return
+   * @return true if the file is present in the archive
    * 
    */
   public Boolean isFileInArchive(String file) {
@@ -452,7 +453,7 @@ public class State {
    * @param date
    *          the date to set
    * 
-   * @return
+   * @return To be able to chain
    * 
    */
   public State setDate(Date date) {
@@ -466,7 +467,7 @@ public class State {
    * @param date
    *          the date to set
    * 
-   * @return
+   * @return To be able to chain
    * 
    */
   public State setDate(String date) {
@@ -480,7 +481,7 @@ public class State {
    * @param file
    *          Which file to use for the journal
    * 
-   * @return
+   * @return To be able to chain
    * 
    */
   public State setFile(File file) {
@@ -494,7 +495,7 @@ public class State {
    * @param file
    *          Which file to use for the journal
    * 
-   * @return
+   * @return To be able to chain
    * 
    */
   public State setFile(String file) {
@@ -508,7 +509,7 @@ public class State {
    * @param metadata
    *          the metadata to set
    * 
-   * @return
+   * @return To be able to chain
    * 
    */
   public State setMetadata(Metadata metadata) {
@@ -522,7 +523,7 @@ public class State {
    * @param metadata
    *          the metadata to set
    * 
-   * @return
+   * @return To be able to chain
    * 
    */
   public State setMetadata(String metadata) {
@@ -535,9 +536,12 @@ public class State {
    * 
    * @param name
    *          the name to set
+   * 
+   * @return To be able to chain
    */
-  public void setName(String name) {
+  public State setName(String name) {
     journal.setName(name);
+    return this;
   }
 
   /**

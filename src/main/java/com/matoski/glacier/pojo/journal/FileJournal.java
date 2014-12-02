@@ -7,6 +7,17 @@ import java.util.List;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.pojo.archive.Archive;
 
+/**
+ * This is the file journal, it contains all the actions that have happened with this journal.
+ * 
+ * <p>
+ * This is used to create a real picture of the journal, as all events are replayed until we have
+ * the final state that we use in the application.
+ * </p>
+ * 
+ * @author Ilija Matoski (ilijamt@gmail.com)
+ *
+ */
 public class FileJournal {
 
   /**
@@ -16,58 +27,69 @@ public class FileJournal {
   private List<Archive> journal = new ArrayList<Archive>();
 
   /**
-   * Inventory date
+   * Inventory date.
    */
   private Date date;
 
   /**
-   * Metadata used in the inventory
+   * Metadata used in the inventory.
    */
   private Metadata metadata;
 
   /**
-   * Vault Name
+   * Vault Name.
    */
   private String name;
 
   /**
-   * Add an archive to the journal
+   * Add an archive to the journal.
    * 
    * @param archive
+   *          The archive to add to the journal
    */
   public void addArchive(Archive archive) {
     this.journal.add(archive);
   }
 
   /**
-   * @return the date
+   * Get date the journal was created.
+   * 
+   * @return {@link #date}
    */
   public Date getDate() {
     return date;
   }
 
   /**
-   * @return the journal
+   * Get the journal entries.
+   * 
+   * @return {@link #journal}
    */
   public List<Archive> getJournal() {
     return journal;
   }
 
   /**
-   * @return the metadata
+   * Get the metadata used in the journal.
+   * 
+   * @return {@link #metadata}
    */
   public Metadata getMetadata() {
     return metadata;
   }
 
   /**
-   * @return the name
+   * Get the name of the journal.
+   * 
+   * @return {@link #name}
    */
   public String getName() {
     return name;
   }
 
   /**
+   * Set the creation date.
+   * 
    * @param date
    *          the date to set
    */
@@ -76,6 +98,8 @@ public class FileJournal {
   }
 
   /**
+   * Set the journal.
+   * 
    * @param journal
    *          the journal to set
    */
@@ -84,6 +108,8 @@ public class FileJournal {
   }
 
   /**
+   * Set the metadata.
+   * 
    * @param metadata
    *          the metadata to set
    */
@@ -92,6 +118,8 @@ public class FileJournal {
   }
 
   /**
+   * Set the name of the journal.
+   * 
    * @param name
    *          the name to set
    */
@@ -100,9 +128,9 @@ public class FileJournal {
   }
 
   /**
-   * The size of the journal
+   * The size of the journal.
    * 
-   * @return
+   * @return size of the journal
    */
   public Integer size() {
     return journal.size();

@@ -95,7 +95,7 @@ public class DownloadJobCommand extends AbstractCommand<CommandDownloadJob> {
           System.out.println(String.format("[--dry-run] Skipping download for : %s [%s]",
               job.getName(), job.getArchiveId()));
         } else {
-          download.DownloadArchive(job, (long) command.partSize
+          download.downloadArchive(job, (long) command.partSize
               * AmazonGlacierBaseUtil.MINIMUM_PART_SIZE, command.overwrite);
         }
       } catch (FileAlreadyExistsException e) {

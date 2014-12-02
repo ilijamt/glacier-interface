@@ -31,19 +31,24 @@ import com.matoski.glacier.util.AmazonGlacierBaseUtil;
 /**
  * Amazon Glacier helper utilities
  * 
+ * <p>
  * Contains utilities for download archives, initiation of multipart download, canceling of
  * multipart downloads
+ * </p>
  * 
  * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param credentials
+   *          Amazon credentials
    * @param client
+   *          Amazon client
    * @param region
+   *          Amazon region
    */
   public AmazonGlacierDownloadUtil(BasicAWSCredentials credentials, AmazonGlacierClient client,
       Region region) {
@@ -51,13 +56,17 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
   }
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param accessKey
+   *          Amazon access key
    * @param secretKey
+   *          Amazon secret key
    * @param region
+   *          Amazon region
    * 
    * @throws RegionNotSupportedException
+   *           Invalid or unsupported region
    */
   public AmazonGlacierDownloadUtil(String accessKey, String secretKey, String region)
       throws RegionNotSupportedException {
@@ -65,15 +74,20 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
   }
 
   /**
-   * Create an empty file, it's used so we can write the chunks to the file at the correct positions
+   * Create an empty file, it's used so we can write the chunks to the file at the correct
+   * positions.
    * 
    * @param fileName
+   *          Filename to create
    * @param fileSize
+   *          Filename size
    * @param overwrite
+   *          Overwrite the file
    * 
    * @throws FileAlreadyExistsException
+   *           File already present in the system
    */
-  public void CreateEmptyFile(String fileName, long fileSize, boolean overwrite)
+  public void createEmptyFile(String fileName, long fileSize, boolean overwrite)
       throws FileAlreadyExistsException {
 
     File file = new File(fileName);
@@ -101,18 +115,23 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
   }
 
   /**
-   * Download archive
+   * Download archive.
    * 
    * @param job
+   *          Download Job
    * @param partSize
+   *          Part size
    * @param overwrite
+   *          Overwrite the files
    * 
    * @return
    * 
    * @throws FileAlreadyExistsException
+   *           File already present in the system
    * @throws InvalidChecksumException
+   *           Downloaded file has wrong checksum
    */
-  public MultipartDownloadStatus DownloadArchive(DownloadJob job, long partSize, boolean overwrite)
+  public MultipartDownloadStatus downloadArchive(DownloadJob job, long partSize, boolean overwrite)
       throws FileAlreadyExistsException, InvalidChecksumException {
 
     // get the details about the job
@@ -125,7 +144,7 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
     // check if the file exists, and if it exists, verify it
 
     // create an empty archive
-    CreateEmptyFile(job.getName(), archiveSize, overwrite);
+    createEmptyFile(job.getName(), archiveSize, overwrite);
 
     // get the threads and download them
     for (int i = 0; i < pieces; i++) {
@@ -149,38 +168,54 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
    * Download a chunk.
    * 
    * @param file
+   *          File that we need to download
    * @param vaultName
+   *          Vault name
    * @param jobId
+   *          Job ID
    * @param part
+   *          Which part we are processing
    * @param partSize
+   *          Part size
    * 
    * @return
    * 
    * @throws FileNotFoundException
+   *           File not found
    * @throws IOException
+   *           IO Exception
    */
-  public DownloadPiece DownloadAndWriteChunk(File file, String vaultName, String jobId, int part,
+  public DownloadPiece downloadAndWriteChunk(File file, String vaultName, String jobId, int part,
       long partSize) throws FileNotFoundException, IOException {
-    return DownloadAndWriteChunk(file, vaultName, jobId, part, partSize, null, null);
+    return downloadAndWriteChunk(file, vaultName, jobId, part, partSize, null, null);
   }
 
   /**
-   * Download a chunk
+   * Download a chunk.
    * 
    * @param file
+   *          File that we need to download
    * @param vaultName
+   *          Vault name
    * @param jobId
+   *          Job ID
    * @param part
+   *          Which part we are processing
    * @param partSize
+   *          Part size
    * @param listener
+   *          Progress listener
    * @param collector
+   *          Metric collector
    * 
    * @return
    * 
    * @throws FileNotFoundException
+   *           File not found
    * @throws IOException
+   *           IO Exception
    */
-  public DownloadPiece DownloadAndWriteChunk(File file, String vaultName, String jobId, int part,
+  public DownloadPiece downloadAndWriteChunk(File file, String vaultName, String jobId, int part,
       long partSize, ProgressListener listener, RequestMetricCollector collector)
       throws FileNotFoundException, IOException {
 
@@ -225,8 +260,8 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
       }
     }
 
-    downloadPiece.setUploadedChecksum(TreeHashGenerator.calculateTreeHash(new ByteArrayInputStream(
-        buffer)));
+    downloadPiece.setUploadedChecksum(TreeHashGenerator
+        .calculateTreeHash(new ByteArrayInputStream(buffer)));
     downloadPiece.setCalculatedChecksum(result.getChecksum());
 
     try {
@@ -251,28 +286,35 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
    * Initiate a download request for an archive.
    * 
    * @param vaultName
+   *          Vault name
    * @param archiveId
-   * @return
+   *          Archive ID
+   * 
+   * @return Details about the request
    */
-  public InitiateJobResult InitiateDownloadRequest(String vaultName, String archiveId) {
-    return InitiateDownloadRequest(vaultName, archiveId, null);
+  public InitiateJobResult initiateDownloadRequest(String vaultName, String archiveId) {
+    return initiateDownloadRequest(vaultName, archiveId, null);
   }
 
   /**
    * Initiate a download request for an archive.
    * 
    * @param vaultName
+   *          Vault name
    * @param archiveId
-   * @param snsTopicARN
-   * @return
+   *          Archive ID
+   * @param snsTopicArn
+   *          SNS Topic ARN
+   * 
+   * @return Details about the request
    */
-  public InitiateJobResult InitiateDownloadRequest(String vaultName, String archiveId,
-      String snsTopicARN) {
+  public InitiateJobResult initiateDownloadRequest(String vaultName, String archiveId,
+      String snsTopicArn) {
 
     JobParameters job = new JobParameters().withType("archive-retrieval").withArchiveId(archiveId);
 
-    if (null != snsTopicARN) {
-      job.withSNSTopic(snsTopicARN);
+    if (null != snsTopicArn) {
+      job.withSNSTopic(snsTopicArn);
     }
 
     InitiateJobRequest request = new InitiateJobRequest().withVaultName(vaultName)

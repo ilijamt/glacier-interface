@@ -26,163 +26,195 @@ public class GlacierInventory {
     /**
      * The ID of the archive.
      */
-    private String ArchiveId;
+    private String archiveId;
 
     /**
      * The description of the archive.
      */
-    private String ArchiveDescription;
+    private String archiveDescription;
 
     /**
      * The creation date of the archive.
      */
-    private String CreationDate;
+    private String creationDate;
 
     /**
      * The size of the archive.
      */
-    private long Size;
+    private long size;
 
     /**
      * The hash of the archive.
      */
-    private String SHA256TreeHash;
+    private String sha256TreeHash;
 
     /**
-     * @return the archiveDescription
+     * Get the archive description.
+     * 
+     * @return {@link #archiveDescription}
      */
     public String getArchiveDescription() {
-      return ArchiveDescription;
+      return this.archiveDescription;
     }
 
     /**
-     * @return the archiveId
+     * Get the archive id.
+     * 
+     * @return {@link #archiveId}
      */
     public String getArchiveId() {
-      return ArchiveId;
+      return this.archiveId;
     }
 
     /**
-     * @return the creationDate
+     * Get the creation date.
+     * 
+     * @return {@link #creationDate}
      */
     public String getCreationDate() {
-      return CreationDate;
+      return this.creationDate;
     }
 
     /**
-     * @return the sHA256TreeHash
+     * Get the SHA256 tree hash.
+     * 
+     * @return {@link #sha256TreeHash}
      */
-    public String getSHA256TreeHash() {
-      return SHA256TreeHash;
+    public String getSha256TreeHash() {
+      return this.sha256TreeHash;
     }
 
     /**
-     * @return the size
+     * Get the archive size.
+     * 
+     * @return {@link #size}
      */
     public long getSize() {
-      return Size;
+      return size;
     }
 
     /**
+     * Set the archive description.
+     * 
      * @param archiveDescription
      *          the archiveDescription to set
      */
     public void setArchiveDescription(String archiveDescription) {
-      ArchiveDescription = archiveDescription;
+      this.archiveDescription = archiveDescription;
     }
 
     /**
+     * Set the archive id.
+     * 
      * @param archiveId
      *          the archiveId to set
      */
     public void setArchiveId(String archiveId) {
-      ArchiveId = archiveId;
+      this.archiveId = archiveId;
     }
 
     /**
+     * Set the creation date.
+     * 
      * @param creationDate
      *          the creationDate to set
      */
     public void setCreationDate(String creationDate) {
-      CreationDate = creationDate;
+      this.creationDate = creationDate;
     }
 
     /**
-     * @param sHA256TreeHash
+     * Set the SHA256 Tree Hash.
+     * 
+     * @param hash
      *          the sHA256TreeHash to set
      */
-    public void setSHA256TreeHash(String sHA256TreeHash) {
-      SHA256TreeHash = sHA256TreeHash;
+    public void setSha256TreeHash(String hash) {
+      this.sha256TreeHash = hash;
     }
 
     /**
+     * Set the size of the archive.
+     * 
      * @param size
      *          the size to set
      */
     public void setSize(long size) {
-      Size = size;
+      this.size = size;
     }
 
   }
 
   /**
-   * The vault arn
+   * The vault arn.
    */
-  private String VaultARN;
+  private String vaultArn;
 
   /**
-   * The inventory date
+   * The inventory date.
    */
-  private String InventoryDate;
+  private String inventoryDate;
 
   /**
-   * The list of all the archives
+   * The list of all the archives.
    */
-  private List<ArchiveItem> ArchiveList;
+  private List<ArchiveItem> archiveList;
 
   /**
-   * @return the archiveList
+   * Get the archive list.
+   * 
+   * @return {@link #archiveList}
    */
   public List<ArchiveItem> getArchiveList() {
-    return ArchiveList;
+    return archiveList;
   }
 
   /**
-   * @return the inventoryDate
+   * Get the inventory date.
+   * 
+   * @return {@link #inventoryDate}
    */
   public String getInventoryDate() {
-    return InventoryDate;
+    return inventoryDate;
   }
 
   /**
-   * @return the vaultARN
+   * Get the vault ARN.
+   * 
+   * @return {@link #vaultArn}
    */
-  public String getVaultARN() {
-    return VaultARN;
+  public String getVaultArn() {
+    return vaultArn;
   }
 
   /**
+   * Set archive list.
+   * 
    * @param archiveList
    *          the archiveList to set
    */
   public void setArchiveList(List<ArchiveItem> archiveList) {
-    ArchiveList = archiveList;
+    this.archiveList = archiveList;
   }
 
   /**
+   * Set the inventory date.
+   * 
    * @param inventoryDate
    *          the inventoryDate to set
    */
   public void setInventoryDate(String inventoryDate) {
-    InventoryDate = inventoryDate;
+    this.inventoryDate = inventoryDate;
   }
 
   /**
-   * @param vaultARN
+   * Set the vault ARN.
+   * 
+   * @param vaultArn
    *          the vaultARN to set
    */
-  public void setVaultARN(String vaultARN) {
-    VaultARN = vaultARN;
+  public void setVaultArn(String vaultArn) {
+    this.vaultArn = vaultArn;
   }
 
 }

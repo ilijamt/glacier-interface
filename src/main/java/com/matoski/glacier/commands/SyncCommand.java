@@ -90,7 +90,7 @@ public class SyncCommand extends AbstractCommand<CommandSync> {
         continue;
       }
 
-      upload.UploadArchive(journal, command.vaultName, fileName, false, command.concurrent,
+      upload.uploadArchive(journal, command.vaultName, fileName, false, command.concurrent,
           command.retryFailedUpload, command.partSize, command.uploadReplaceModified,
           command.dryRun);
     }

@@ -30,7 +30,7 @@ public class AmazonGlacierProgressBar {
   }
 
   /**
-   * Inits the progress bar
+   * Inits the progress bar.
    */
   public void init() {
     this.progress = new StringBuilder(60);
@@ -39,7 +39,7 @@ public class AmazonGlacierProgressBar {
   }
 
   /**
-   * called whenever the progress bar needs to be updated. that is whenever progress was made.
+   * Called whenever the progress bar needs to be updated. that is whenever progress was made.
    *
    * @param done
    *          an int representing the work done so far

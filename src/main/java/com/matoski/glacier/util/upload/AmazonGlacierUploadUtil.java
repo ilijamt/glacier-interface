@@ -54,21 +54,26 @@ import com.matoski.glacier.util.AmazonGlacierBaseUtil;
 import com.matoski.glacier.util.Parser;
 
 /**
- * Amazon Glacier helper utilities
+ * Amazon Glacier helper utilities.
  * 
+ * <p>
  * Contains utilities for uploading archives, initiation of multipart uploads, canceling of
- * multipart uploads,
+ * multipart uploads
+ * </p>
  * 
  * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param credentials
+   *          Amazon credentials
    * @param client
+   *          Amazon client
    * @param region
+   *          Amazon region
    */
   public AmazonGlacierUploadUtil(BasicAWSCredentials credentials, AmazonGlacierClient client,
       Region region) {
@@ -76,13 +81,17 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
   }
 
   /**
-   * Constructor
+   * Constructor.
    * 
    * @param accessKey
+   *          Amazon access key
    * @param secretKey
+   *          Amazon secret key
    * @param region
+   *          Amazon region
    * 
    * @throws RegionNotSupportedException
+   *           Invalid or unsupported region
    */
   public AmazonGlacierUploadUtil(String accessKey, String secretKey, String region)
       throws RegionNotSupportedException {
@@ -90,28 +99,34 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
   }
 
   /**
-   * Cancel the multipart upload
+   * Cancel the multipart upload.
    * 
    * @param uploadId
+   *          The upload ID
    * @param vaultName
+   *          Vault name
    * 
-   * @return
+   * @return true if the upload is canceled succesfully
    */
-  public Boolean CancelMultipartUpload(String uploadId, String vaultName) {
-    return this.CancelMultipartUpload(uploadId, vaultName, null, null);
+  public Boolean cancelMultipartUpload(String uploadId, String vaultName) {
+    return this.cancelMultipartUpload(uploadId, vaultName, null, null);
   }
 
   /**
-   * Cancel the multipart upload
+   * Cancel the multipart upload.
    * 
    * @param uploadId
+   *          The upload ID
    * @param vaultName
+   *          Vault name
    * @param listener
+   *          Progress listener
    * @param collector
+   *          Metric collector
    * 
-   * @return
+   * @return true if the upload is canceled succesfully
    */
-  public Boolean CancelMultipartUpload(String uploadId, String vaultName,
+  public Boolean cancelMultipartUpload(String uploadId, String vaultName,
       ProgressListener listener, RequestMetricCollector collector) {
 
     Boolean valid = false;
@@ -139,40 +154,55 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
   }
 
   /**
-   * Complete a multipart upload
+   * Complete a multipart upload.
    * 
    * @param fileSize
+   *          The size of the upload
    * @param uploadId
+   *          The upload Id
    * @param vaultName
+   *          Vault name
    * @param checksum
+   *          Upload checksum
    * 
-   * @return
+   * @return Details about the request
    * 
    * @throws AmazonClientException
+   *           Amazon client exception
    * @throws AmazonServiceException
+   *           Amazon service exception
    */
-  public CompleteMultipartUploadResult CompleteMultipartUpload(long fileSize, String uploadId,
+  public CompleteMultipartUploadResult completeMultipartUpload(long fileSize, String uploadId,
       String vaultName, String checksum) throws AmazonClientException, AmazonServiceException {
-    return this.CompleteMultipartUpload(fileSize, uploadId, vaultName, checksum, null, null);
+    return this.completeMultipartUpload(fileSize, uploadId, vaultName, checksum, null, null);
   }
 
   /**
-   * Complete a multipart upload
+   * Complete a multipart upload.
    * 
    * @param fileSize
+   *          The size of the upload
    * @param uploadId
+   *          The upload Id
    * @param vaultName
+   *          Vault name
    * @param checksum
+   *          Upload checksum
    * @param listener
+   *          Progress listener
+   * @param collector
+   *          Metric collector
    * 
-   * @return
+   * @return Details about the request
    * 
    * @throws AmazonClientException
+   *           Amazon client exception
    * @throws AmazonServiceException
+   *           Amazon service exception
    */
-  public CompleteMultipartUploadResult CompleteMultipartUpload(long fileSize, String uploadId,
-      String vaultName, String checksum, ProgressListener listener, RequestMetricCollector collector)
-      throws AmazonClientException, AmazonServiceException {
+  public CompleteMultipartUploadResult completeMultipartUpload(long fileSize, String uploadId,
+      String vaultName, String checksum, ProgressListener listener,
+      RequestMetricCollector collector) throws AmazonClientException, AmazonServiceException {
 
     CompleteMultipartUploadRequest request = new CompleteMultipartUploadRequest()
         .withVaultName(vaultName).withUploadId(uploadId).withChecksum(checksum)
@@ -191,38 +221,50 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
   }
 
   /**
-   * Initiate a multipart upload
+   * Initiate a multipart upload.
    * 
    * @param vaultName
+   *          Vault name
    * @param archiveDescription
+   *          Archive description
    * @param partSize
+   *          Archive part
    * 
-   * @return
+   * @return Details about the request
    * 
    * @throws AmazonClientException
+   *           Amazon client exception
    * @throws AmazonServiceException
+   *           Amazon service exception
    */
-  public InitiateMultipartUploadResult InitiateMultipartUpload(String vaultName,
+  public InitiateMultipartUploadResult initiateMultipartUpload(String vaultName,
       String archiveDescription, long partSize) throws AmazonClientException,
       AmazonServiceException {
-    return this.InitiateMultipartUpload(vaultName, archiveDescription, partSize, null, null);
+    return this.initiateMultipartUpload(vaultName, archiveDescription, partSize, null, null);
   }
 
   /**
-   * Initiate a multipart upload
+   * Initiate a multipart upload.
    * 
    * @param vaultName
+   *          Vault name
    * @param archiveDescription
+   *          Archive description
    * @param partSize
+   *          Archive part
    * @param listener
+   *          Progress listener
    * @param collector
+   *          Metric collector
    * 
-   * @return
+   * @return Details about the request
    * 
    * @throws AmazonClientException
+   *           Amazon client exception
    * @throws AmazonServiceException
+   *           Amazon service exception
    */
-  public InitiateMultipartUploadResult InitiateMultipartUpload(String vaultName,
+  public InitiateMultipartUploadResult initiateMultipartUpload(String vaultName,
       String archiveDescription, long partSize, ProgressListener listener,
       RequestMetricCollector collector) throws AmazonClientException, AmazonServiceException {
 
@@ -242,21 +284,29 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
   }
 
   /**
-   * Upload an archive in a single request
+   * Upload an archive in a single request.
    * 
    * @param file
+   *          File to upload
    * @param vaultName
+   *          To which vault to upload
    * @param archiveDescription
+   *          Archive description
    * @param listener
+   *          Progress listener
    * @param collector
+   *          Metric collector
    * 
-   * @return
+   * @return Details about the request
    * 
    * @throws FileNotFoundException
+   *           Upload file not found
    * @throws AmazonServiceException
+   *           Amazon service exception
    * @throws AmazonClientException
+   *           Amazon client exception
    */
-  public UploadArchiveResult SingleUpload(File file, String vaultName, String archiveDescription,
+  public UploadArchiveResult singleUpload(File file, String vaultName, String archiveDescription,
       ProgressListener listener, RequestMetricCollector collector) throws FileNotFoundException,
       AmazonServiceException, AmazonClientException {
 
@@ -280,38 +330,58 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
   }
 
   /**
-   * Upload archive to glacier
+   * Upload archive to glacier.
    * 
    * @param journal
+   *          Journal to use
    * @param vaultName
+   *          Vault name
    * @param fileName
+   *          File name
    * @param forceUpload
+   *          Force upload if the file exists in the journal
    * @param concurrent
+   *          How many threads should be used for upload
    * @param retryFailedUpload
+   *          How many times to retry upload
    * @param partSize
+   *          Upload part size
    * @param replace
-   * @return
+   *          Replace the upload, if true it will delete the old archive
+   * 
+   * @return Details about the request
    */
-  public Archive UploadArchive(State journal, String vaultName, String fileName,
+  public Archive uploadArchive(State journal, String vaultName, String fileName,
       Boolean forceUpload, int concurrent, int retryFailedUpload, int partSize, boolean replace) {
-    return UploadArchive(journal, vaultName, fileName, forceUpload, concurrent, retryFailedUpload,
+    return uploadArchive(journal, vaultName, fileName, forceUpload, concurrent, retryFailedUpload,
         partSize, replace, false);
   }
 
   /**
-   * Uploads the archive to Glacier
+   * Upload archive to glacier.
    * 
    * @param journal
+   *          Journal to use
    * @param vaultName
+   *          Vault name
    * @param fileName
+   *          File name
    * @param forceUpload
+   *          Force upload if the file exists in the journal
    * @param concurrent
+   *          How many threads should be used for upload
    * @param retryFailedUpload
+   *          How many times to retry upload
    * @param partSize
+   *          Upload part size
+   * @param replace
+   *          Replace the upload, if true it will delete the old archive
+   * @param dryRun
+   *          Dry run, don't do anything just print out to console
    * 
-   * @return
+   * @return Details about the request
    */
-  public Archive UploadArchive(State journal, String vaultName, String fileName,
+  public Archive uploadArchive(State journal, String vaultName, String fileName,
       Boolean forceUpload, int concurrent, int retryFailedUpload, int partSize, boolean replace,
       boolean dryRun) {
 
@@ -369,7 +439,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
       try {
 
-        archive = UploadMultipartFile(fileName, new File(Config.getInstance().getDirectory(),
+        archive = uploadMultipartFile(fileName, new File(Config.getInstance().getDirectory(),
             fileName), concurrent, retryFailedUpload, partSize, vaultName, metadata);
 
         // delete the old archive if we have replace the file property
@@ -405,7 +475,38 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
   }
 
-  public Archive UploadMultipartFile(String fileName, File file, int threads, int retry,
+  /**
+   * Upload a multipart file.
+   * 
+   * @param fileName
+   *          Filename to upload
+   * @param file
+   *          A file representation of Filename
+   * @param threads
+   *          How many threads to use
+   * @param retry
+   *          How many times to retry
+   * @param partSize
+   *          Upload part size
+   * @param vaultName
+   *          Vault name
+   * @param metadata
+   *          Metadata
+   * 
+   * @return The details about the upload of the archive
+   * 
+   * @throws UploadTooManyPartsException
+   *           There are too many parts
+   * @throws IOException
+   *           IO Exception
+   * @throws RegionNotSupportedException
+   *           Invalid or unsupported region
+   * @throws InstantiationException
+   *           Cannot load the state file
+   * @throws IllegalAccessException
+   *           Invalid data in the state file
+   */
+  public Archive uploadMultipartFile(String fileName, File file, int threads, int retry,
       int partSize, String vaultName, Metadata metadata) throws UploadTooManyPartsException,
       IOException, RegionNotSupportedException, InstantiationException, IllegalAccessException {
 
@@ -447,12 +548,12 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
       if (partSize != uploadStatus.getPartSize() || pieces != uploadStatus.getParts()) {
         pieces = uploadStatus.getParts();
         partSize = uploadStatus.getPartSize();
-        System.out.println(String.format("[Overriding] Parts: %s and piece size: %s bytes", pieces,
-            partSize));
+        System.out.println(String.format("[Overriding] Parts: %s and piece size: %s bytes",
+            pieces, partSize));
       }
       System.out.println();
     } else {
-      InitiateMultipartUploadResult initiate = this.InitiateMultipartUpload(vaultName, Parser
+      InitiateMultipartUploadResult initiate = this.initiateMultipartUpload(vaultName, Parser
           .getParser(metadata).encode(archive), partSize);
 
       location = initiate.getLocation();
@@ -565,7 +666,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     uploadStatus.isFinished();
 
     // 3. Finish MultiPart Upload
-    CompleteMultipartUploadResult complete = this.CompleteMultipartUpload(fileSize, uploadId,
+    CompleteMultipartUploadResult complete = this.completeMultipartUpload(fileSize, uploadId,
         vaultName, uploadStatus.getFinalChecksum());
 
     archive.setHash(complete.getChecksum());
@@ -580,56 +681,87 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
   }
 
   /**
-   * Upload a piece of the file to amazon glacier
+   * Upload a piece of the file to amazon glacier.
    * 
    * @param file
+   *          The file to upload
    * @param pieces
+   *          How many pieces there are for the upload
    * @param part
+   *          Current part that is uploaded
    * @param partSize
+   *          The part size for the upload
    * @param vaultName
+   *          The vault name where to save the archive
    * @param uploadId
+   *          The upload ID
    * 
-   * @return
+   * @return The details about the upload of the piece
    * 
    * @throws AmazonServiceException
+   *           Amazon service exception
    * @throws NoSuchAlgorithmException
+   *           The cryptograhic algorithm doesn't exist
    * @throws AmazonClientException
+   *           Amazon client exception
    * @throws FileNotFoundException
+   *           File doesn't exists
    * @throws IOException
+   *           IO Exception
+   * @throws InvalidChecksumException
+   *           Invalid checksum during upload
    * @throws RequestTimeoutException
+   *           Timeout during request
    */
-  public Piece UploadMultipartPiece(File file, int pieces, int part, int partSize,
+  public Piece uploadMultipartPiece(File file, int pieces, int part, int partSize,
       String vaultName, String uploadId) throws AmazonServiceException, NoSuchAlgorithmException,
       AmazonClientException, FileNotFoundException, IOException, InvalidChecksumException,
       RequestTimeoutException {
-    return UploadMultipartPiece(file, pieces, part, partSize, vaultName, uploadId, null, null);
+    return uploadMultipartPiece(file, pieces, part, partSize, vaultName, uploadId, null, null);
   }
 
   /**
-   * Upload a piece of the file to amazon glacier
+   * Upload a piece of the file to amazon glacier.
    * 
    * @param file
+   *          The file to upload
    * @param pieces
+   *          How many pieces there are for the upload
    * @param part
+   *          Current part that is uploaded
    * @param partSize
+   *          The part size for the upload
    * @param vaultName
+   *          The vault name where to save the archive
    * @param uploadId
+   *          The upload ID
    * @param listener
+   *          Progress listener
    * @param collector
+   *          Metric collector
    * 
-   * @return
+   * @return The details about the upload of the piece
    * 
    * @throws AmazonServiceException
+   *           Amazon service exception
    * @throws NoSuchAlgorithmException
+   *           The cryptograhic algorithm doesn't exist
    * @throws AmazonClientException
+   *           Amazon client exception
    * @throws FileNotFoundException
+   *           File doesn't exists
    * @throws IOException
+   *           IO Exception
+   * @throws InvalidChecksumException
+   *           Invalid checksum during upload
    * @throws RequestTimeoutException
+   *           Timeout during request
    */
-  public Piece UploadMultipartPiece(File file, int pieces, int part, int partSize,
-      String vaultName, String uploadId, ProgressListener listener, RequestMetricCollector collector)
-      throws AmazonServiceException, NoSuchAlgorithmException, AmazonClientException,
-      FileNotFoundException, IOException, RequestTimeoutException {
+  public Piece uploadMultipartPiece(File file, int pieces, int part, int partSize,
+      String vaultName, String uploadId, ProgressListener listener,
+      RequestMetricCollector collector) throws AmazonServiceException, NoSuchAlgorithmException,
+      AmazonClientException, FileNotFoundException, IOException, RequestTimeoutException,
+      InvalidChecksumException {
 
     Piece ret = new Piece();
 

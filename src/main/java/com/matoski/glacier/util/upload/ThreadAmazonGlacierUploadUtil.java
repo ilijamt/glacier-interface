@@ -12,6 +12,7 @@ import com.amazonaws.event.ProgressListener;
 import com.amazonaws.metrics.RequestMetricCollector;
 import com.amazonaws.services.glacier.model.RequestTimeoutException;
 import com.matoski.glacier.enums.MultipartPieceStatus;
+import com.matoski.glacier.errors.InvalidChecksumException;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.pojo.Piece;
 
@@ -73,17 +74,28 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
    * Constructor.
    * 
    * @param retryFailedUploads
+   *          How many times to retry failed uploads
    * @param file
+   *          The file to upload
    * @param pieces
+   *          How many pieces there are for the upload
    * @param part
+   *          Current part that is uploaded
    * @param partSize
+   *          The part size for the upload
    * @param vaultName
+   *          The vault name where to save the archive
    * @param uploadId
+   *          The upload ID
    * @param accessKey
+   *          The amazon access key
    * @param secretKey
+   *          The amazon secret key
    * @param region
+   *          The region
    * 
    * @throws RegionNotSupportedException
+   *           Invalid or unsupported region
    */
   public ThreadAmazonGlacierUploadUtil(int retryFailedUploads, File file, int pieces, int part,
       int partSize, String vaultName, String uploadId, String accessKey, String secretKey,
@@ -104,19 +116,32 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
    * Constructor.
    * 
    * @param retryFailedUploads
+   *          How many times to retry failed uploads
    * @param file
+   *          The file to upload
    * @param pieces
+   *          How many pieces there are for the upload
    * @param part
+   *          Current part that is uploaded
    * @param partSize
+   *          The part size for the upload
    * @param vaultName
+   *          The vault name where to save the archive
    * @param uploadId
+   *          The upload ID
    * @param accessKey
+   *          The amazon access key
    * @param secretKey
+   *          The amazon secret key
    * @param region
+   *          The region
    * @param listener
+   *          Progress listener
    * @param collector
+   *          Metric collector
    * 
    * @throws RegionNotSupportedException
+   *           Invalid or unsupported region
    */
   public ThreadAmazonGlacierUploadUtil(int retryFailedUploads, File file, int pieces, int part,
       int partSize, String vaultName, String uploadId, String accessKey, String secretKey,
@@ -173,20 +198,30 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
    * Initiate an upload.
    * 
    * @param time
+   *          Which time is the upload started
    * 
-   * @return
+   * @return The details about the upload piece
    * 
    * @throws AmazonServiceException
+   *           Amazon service exception
    * @throws NoSuchAlgorithmException
+   *           The cryptograhic algorithm doesn't exist
    * @throws AmazonClientException
+   *           Amazon client exception
    * @throws FileNotFoundException
+   *           File doesn't exists
    * @throws IOException
+   *           IO Exception
    * @throws RequestTimeoutException
+   *           Timeout during request
+   * @throws InvalidChecksumException
+   *           Invalid checksum during upload
    */
   private Piece upload(int time) throws AmazonServiceException, NoSuchAlgorithmException,
-      AmazonClientException, FileNotFoundException, IOException, RequestTimeoutException {
+      AmazonClientException, FileNotFoundException, IOException, RequestTimeoutException,
+      InvalidChecksumException {
 
-    return this.UploadMultipartPiece(requestFile, requestPieces, requestPart, requestPartSize,
+    return this.uploadMultipartPiece(requestFile, requestPieces, requestPart, requestPartSize,
         requestVaultName, requestUploadId, requestListener, requestCollector);
 
   }

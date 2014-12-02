@@ -49,7 +49,7 @@ public class AbortMultipartUploadCommand extends AbstractCommand<CommandAbortMul
 
     AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
-    Boolean canceled = upload.CancelMultipartUpload(command.multipartId, command.vaultName);
+    Boolean canceled = upload.cancelMultipartUpload(command.multipartId, command.vaultName);
     System.out.println(String.format("Multipart upload canceled: %s\n", canceled));
 
     System.out.println("END: abort-multipart-upload");

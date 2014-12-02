@@ -138,7 +138,7 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 
       DownloadJob job = new DownloadJob();
 
-      InitiateJobResult request = download.InitiateDownloadRequest(command.vaultName, id);
+      InitiateJobResult request = download.initiateDownloadRequest(command.vaultName, id);
 
       job.setArchiveId(id);
       job.setJobId(request.getJobId());

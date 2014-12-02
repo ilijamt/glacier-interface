@@ -125,7 +125,7 @@ public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMult
       }
 
       if (command.cancel) {
-        canceled = upload.CancelMultipartUpload(element.getMultipartUploadId(), command.vaultName);
+        canceled = upload.cancelMultipartUpload(element.getMultipartUploadId(), command.vaultName);
         System.out.println(String.format("%1$20s: %2$s", "Canceled", canceled));
       }
 

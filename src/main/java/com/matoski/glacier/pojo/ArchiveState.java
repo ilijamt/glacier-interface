@@ -20,11 +20,11 @@ import com.matoski.glacier.enums.MultipartStatus;
  * 
  * @author Ilija Matoski (ilijamt@gmail.com)
  *
- * @param <TypeClass>
+ * @param <T>
  *          The class type, we can have seperate classes for Download/Upload, and add custom logic
  *          into it
  */
-public abstract class ArchiveState<TypeClass> extends AbstractWritablePojo<TypeClass> {
+public abstract class ArchiveState<T> extends AbstractWritablePojo<T> {
 
   /**
    * The checksums.

@@ -302,7 +302,7 @@ public class AmazonGlacierBaseUtil {
    * @param vaultName
    *          The vault name
    * 
-   * @return
+   * @return Request details
    * 
    * @throws AmazonClientException
    *           An amazon client exception occurred
@@ -381,7 +381,7 @@ public class AmazonGlacierBaseUtil {
    * @param jobId
    *          The job ID
    * 
-   * @return
+   * @return Request details
    * 
    * @throws AmazonClientException
    *           An amazon client exception occurred
@@ -405,7 +405,7 @@ public class AmazonGlacierBaseUtil {
    * @param collector
    *          The metric collector
    *
-   * @return
+   * @return Request details
    * 
    * @throws AmazonClientException
    *           An amazon client exception occurred
@@ -434,8 +434,9 @@ public class AmazonGlacierBaseUtil {
    * Describe the vault.
    * 
    * @param vaultName
+   *          Vault name
    * 
-   * @return
+   * @return Request details
    * 
    * @throws AmazonClientException
    *           An amazon client exception occurred
@@ -449,11 +450,14 @@ public class AmazonGlacierBaseUtil {
   }
 
   /**
-   * Get a list of the parts in the specified multipart upload id
+   * Get a list of the parts in the specified multipart upload id.
    * 
    * @param vaultName
+   *          Vault name
    * @param uploadId
-   * @return
+   *          Upload ID
+   * 
+   * @return Details about the request
    */
   public ListPartsResult getMultipartUploadInfo(String vaultName, String uploadId) {
 
@@ -487,7 +491,7 @@ public class AmazonGlacierBaseUtil {
   }
 
   /**
-   * Initialize SQS and SNS
+   * Initialize SQS and SNS.
    */
   public void init() {
 
@@ -522,11 +526,11 @@ public class AmazonGlacierBaseUtil {
     CreateQueueResult result = sqsClient.createQueue(request);
     sqsQueueUrl = result.getQueueUrl();
 
-    GetQueueAttributesRequest qRequest = new GetQueueAttributesRequest().withQueueUrl(sqsQueueUrl)
-        .withAttributeNames("QueueArn");
+    GetQueueAttributesRequest queueRequest = new GetQueueAttributesRequest().withQueueUrl(
+        sqsQueueUrl).withAttributeNames("QueueArn");
 
-    GetQueueAttributesResult qResult = sqsClient.getQueueAttributes(qRequest);
-    sqsQueueArn = qResult.getAttributes().get("QueueArn");
+    GetQueueAttributesResult queueResult = sqsClient.getQueueAttributes(queueRequest);
+    sqsQueueArn = queueResult.getAttributes().get("QueueArn");
 
     Policy sqsPolicy = new Policy().withStatements(new Statement(Effect.Allow)
         .withPrincipals(Principal.AllUsers).withActions(SQSActions.SendMessage)
@@ -541,9 +545,11 @@ public class AmazonGlacierBaseUtil {
    * Download the inventory.
    * 
    * @param vaultName
+   *          Vault name
    * @param jobId
+   *          Job Id
    * 
-   * @return
+   * @return Request details
    */
   public GetJobOutputResult inventoryDownload(String vaultName, String jobId) {
     return inventoryDownload(vaultName, jobId, null, null);
@@ -553,10 +559,15 @@ public class AmazonGlacierBaseUtil {
    * Download the inventory.
    * 
    * @param vaultName
+   *          Vault name
    * @param jobId
+   *          Job id
    * @param listener
+   *          Progress listner
    * @param collector
-   * @return
+   *          Metric collector
+   * 
+   * @return Request details
    */
   public GetJobOutputResult inventoryDownload(String vaultName, String jobId,
       ProgressListener listener, RequestMetricCollector collector) {
@@ -580,7 +591,9 @@ public class AmazonGlacierBaseUtil {
    * Initiate an inventory retrieval job.
    * 
    * @param vaultName
-   * @return
+   *          Vault name
+   * 
+   * @return Request details
    */
   public InitiateJobResult inventoryRetrieval(String vaultName) {
     return inventoryRetrieval(vaultName, null, null, null);
@@ -590,19 +603,23 @@ public class AmazonGlacierBaseUtil {
    * Initiate an inventory retrieval job with an SNS topic.
    * 
    * @param vaultName
-   * @param topicSNS
+   *          Vault name
+   * @param topicSns
+   *          Topic SNS
    * @param listener
+   *          Progress listener
    * @param collector
+   *          Metric collector
    * 
-   * @return
+   * @return Request details
    */
-  public InitiateJobResult inventoryRetrieval(String vaultName, String topicSNS,
+  public InitiateJobResult inventoryRetrieval(String vaultName, String topicSns,
       ProgressListener listener, RequestMetricCollector collector) {
 
     JobParameters jobParameters = new JobParameters().withType("inventory-retrieval");
 
-    if (null != topicSNS) {
-      jobParameters.withSNSTopic(topicSNS);
+    if (null != topicSns) {
+      jobParameters.withSNSTopic(topicSns);
     }
 
     InitiateJobRequest request = new InitiateJobRequest().withVaultName(vaultName)
@@ -626,7 +643,9 @@ public class AmazonGlacierBaseUtil {
    * List all multipart uploads for a vault.
    * 
    * @param vaultName
-   * @return
+   *          Vault name
+   * 
+   * @return Request details
    */
   public List<UploadListElement> listMultipartUploads(String vaultName) {
 
@@ -654,7 +673,9 @@ public class AmazonGlacierBaseUtil {
    * Get's a list of vault jobs.
    * 
    * @param vaultName
-   * @return
+   *          vault name
+   * 
+   * @return List of jobs
    */
   public List<GlacierJobDescription> listVaultJobs(String vaultName) {
 
@@ -680,7 +701,7 @@ public class AmazonGlacierBaseUtil {
   /**
    * Get a list of vaults available in the region.
    * 
-   * @return
+   * @return List of vault
    */
   public List<DescribeVaultOutput> listVaults() {
 
@@ -707,15 +728,20 @@ public class AmazonGlacierBaseUtil {
    * Wait for the job to complete.
    * 
    * @param jobId
+   *          Job ID
    * @param sqsQueueUrl
+   *          The SQS Queue URL
    * 
-   * @return
+   * @return true if the job wait is finished, false otherwise
    * 
    * @throws InterruptedException
+   *           Process has been interrupted
    * @throws JsonParseException
+   *           Invalid JSON
    * @throws IOException
+   *           IO Excception
    */
-  final public Boolean waitForJobToComplete(String jobId, String sqsQueueUrl)
+  public final Boolean waitForJobToComplete(String jobId, String sqsQueueUrl)
       throws InterruptedException, JsonParseException, IOException {
 
     Boolean messageFound = false;
