@@ -178,7 +178,7 @@ public class State {
       } catch (NullPointerException e) {
         System.err.println("ERROR: Invalid metadata parser");
       } catch (InvalidMetadataException e) {
-        System.err.println(String.format("ERROR: %s", e.getMessage()));
+        System.err.println(String.format("ERROR: %s", e));
       }
 
       journal.addArchive(archive);

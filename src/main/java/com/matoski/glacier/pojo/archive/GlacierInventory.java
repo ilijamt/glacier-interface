@@ -2,6 +2,8 @@ package com.matoski.glacier.pojo.archive;
 
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Amazon Glacier Inventory Metadata.
  * 
@@ -26,26 +28,31 @@ public class GlacierInventory {
     /**
      * The ID of the archive.
      */
+    @SerializedName(value = "ArchiveId")
     private String archiveId;
 
     /**
      * The description of the archive.
      */
+    @SerializedName(value = "ArchiveDescription")
     private String archiveDescription;
 
     /**
      * The creation date of the archive.
      */
+    @SerializedName(value = "CreationDate")
     private String creationDate;
 
     /**
      * The size of the archive.
      */
+    @SerializedName(value = "Size")
     private long size;
 
     /**
      * The hash of the archive.
      */
+    @SerializedName(value = "SHA256TreeHash")
     private String sha256TreeHash;
 
     /**
@@ -148,16 +155,19 @@ public class GlacierInventory {
   /**
    * The vault arn.
    */
+  @SerializedName(value = "VaultARN")
   private String vaultArn;
 
   /**
    * The inventory date.
    */
+  @SerializedName(value = "InventoryDate")
   private String inventoryDate;
 
   /**
    * The list of all the archives.
    */
+  @SerializedName(value = "ArchiveList")
   private List<ArchiveItem> archiveList;
 
   /**
