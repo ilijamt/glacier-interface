@@ -54,8 +54,8 @@ public class InitDownloadCommand extends AbstractCommand<CommandInitDownload> {
 
     final Boolean validVaultName = null != command.vaultName;
     final Boolean validVaultNameConfig = null != config.getVault();
-    final Boolean validId = (command.id.size() > 0);
-    final Boolean validName = (command.name.size() > 0);
+    final Boolean validId = command.id.size() > 0;
+    final Boolean validName = command.name.size() > 0;
 
     try {
       this.journal = State.load(command.journal);

@@ -38,7 +38,7 @@ public class DeleteVaultCommand extends AbstractCommand<CommandDeleteVault> {
       throw new VaultNameNotPresentException();
     }
 
-    if ((null == command.vaultName) || command.vaultName.isEmpty()) {
+    if (null == command.vaultName || command.vaultName.isEmpty()) {
       command.vaultName = config.getVault();
     }
 

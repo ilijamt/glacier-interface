@@ -777,7 +777,7 @@ public class AmazonGlacierBaseUtil {
         Thread.sleep(WAIT_FOR_JOB_SLEEP_TIME * 1000);
       }
     }
-    return (messageFound && jobSuccessful);
+    return messageFound && jobSuccessful;
 
   }
 }

@@ -51,7 +51,7 @@ public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMult
       throw new VaultNameNotPresentException();
     }
 
-    if ((null == command.vaultName) || command.vaultName.isEmpty()) {
+    if (null == command.vaultName || command.vaultName.isEmpty()) {
       command.vaultName = config.getVault();
     }
 
@@ -92,6 +92,7 @@ public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMult
           System.out.println(String.format("%1$20s: %2$s", "Name", metadata.giGetName()));
         } catch (NullPointerException | InvalidMetadataException e) {
           // nothing we can do, not the correct metadata
+          System.err.println(e);
         }
 
         System.out.println(String.format("Total available parts for the upload: %s", result
@@ -121,6 +122,7 @@ public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMult
           System.out.println(String.format("%1$20s: %2$s", "Name", metadata.giGetName()));
         } catch (NullPointerException | InvalidMetadataException e) {
           // nothing we can do, not the correct metadata
+          System.err.println(e);
         }
 
       }

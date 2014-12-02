@@ -45,6 +45,11 @@ public abstract class GenericCommand {
   }
 
   @Override
+  public boolean equals(Object obj) {
+    return this.genericCommandName.equals(((GenericCommand) obj).getGenericCommandName());
+  }
+
+  @Override
   public int hashCode() {
     final int prime = 31;
     int hashCode = 1;

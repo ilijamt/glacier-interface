@@ -38,7 +38,7 @@ public class InventoryRetrievalCommand extends AbstractCommand<CommandInventoryR
       throw new VaultNameNotPresentException();
     }
 
-    if ((null == command.vaultName) || command.vaultName.isEmpty()) {
+    if (null == command.vaultName || command.vaultName.isEmpty()) {
       command.vaultName = config.getVault();
     }
 

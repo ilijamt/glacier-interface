@@ -36,7 +36,7 @@ public class AbortMultipartUploadCommand extends AbstractCommand<CommandAbortMul
       throw new VaultNameNotPresentException();
     }
 
-    if ((null == command.vaultName) || command.vaultName.isEmpty()) {
+    if (null == command.vaultName || command.vaultName.isEmpty()) {
       command.vaultName = config.getVault();
     }
 
@@ -50,7 +50,7 @@ public class AbortMultipartUploadCommand extends AbstractCommand<CommandAbortMul
     AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
     Boolean canceled = upload.cancelMultipartUpload(command.multipartId, command.vaultName);
-    System.out.println(String.format("Multipart upload canceled: %s\n", canceled));
+    System.out.println(String.format("Multipart upload canceled: %s%n", canceled));
 
     System.out.println("END: abort-multipart-upload");
   }

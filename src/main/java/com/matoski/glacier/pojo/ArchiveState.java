@@ -284,7 +284,7 @@ public abstract class ArchiveState<T> extends AbstractWritablePojo<T> {
 
     // go over the elements, and compare if all the pieces are complete
     for (Entry<Integer, Piece> piece : this.pieces.entrySet()) {
-      valid &= (piece.getValue().getStatus() == MultipartPieceStatus.PIECE_COMPLETE);
+      valid &= piece.getValue().getStatus() == MultipartPieceStatus.PIECE_COMPLETE;
     }
 
     if (valid) {
@@ -466,7 +466,7 @@ public abstract class ArchiveState<T> extends AbstractWritablePojo<T> {
   public void update() {
     this.checksums.clear();
     for (Entry<Integer, Piece> entry : this.pieces.entrySet()) {
-      this.checksums.add(BinaryUtils.fromHex((entry.getValue()).getCalculatedChecksum()));
+      this.checksums.add(BinaryUtils.fromHex(entry.getValue().getCalculatedChecksum()));
     }
     this.finalChecksum = TreeHashGenerator.calculateTreeHash(checksums);
   }

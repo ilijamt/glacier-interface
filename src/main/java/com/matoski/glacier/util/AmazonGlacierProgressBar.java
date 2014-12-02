@@ -60,7 +60,7 @@ public class AmazonGlacierProgressBar {
     // calculates how much work units per cent have been completed
     int percent = (++done * 100) / total;
     // total number of # to be appended
-    int extrachars = (percent / 2) - this.progress.length();
+    int extrachars = percent / 2 - this.progress.length();
 
     // append the # to the progress bar
     while (extrachars-- > 0) {

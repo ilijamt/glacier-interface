@@ -631,6 +631,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
           } catch (TimeoutException e) {
             // we skip this item as it has not finished yet we don't
             // do anything here
+            System.err.println(e);
           }
 
         }
@@ -774,13 +775,14 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     FileInputStream stream = new FileInputStream(file);
 
     int position = part * (int) partSize;
-    stream.skip(position);
-
+    
+    long skipped = stream.skip(position);
+    
     if (part > pieces) {
       ret.setStatus(MultipartPieceStatus.PIECE_INVALID_PART);
       stream.close();
       return ret;
-    } else if (part == (pieces - 1)) {
+    } else if (part == pieces - 1) {
       bufferSize = (int) (file.length() - position);
     }
 

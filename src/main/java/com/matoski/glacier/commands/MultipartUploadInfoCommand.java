@@ -39,7 +39,7 @@ public class MultipartUploadInfoCommand extends AbstractCommand<CommandMultipart
       throw new VaultNameNotPresentException();
     }
 
-    if ((null == command.vaultName) || command.vaultName.isEmpty()) {
+    if (null == command.vaultName || command.vaultName.isEmpty()) {
       command.vaultName = config.getVault();
     }
 

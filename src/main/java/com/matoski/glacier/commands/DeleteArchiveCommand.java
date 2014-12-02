@@ -49,8 +49,8 @@ public class DeleteArchiveCommand extends AbstractCommand<CommandDeleteArchive> 
 
     final Boolean validVaultName = null != command.vaultName;
     final Boolean validVaultNameConfig = null != config.getVault();
-    final Boolean validId = (null != command.id);
-    final Boolean validName = (null != command.name);
+    final Boolean validId = null != command.id;
+    final Boolean validName = null != command.name;
 
     if (!command.ignoreJournal) {
       try {

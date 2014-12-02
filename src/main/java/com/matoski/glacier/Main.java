@@ -148,7 +148,7 @@ public class Main {
       config = Config.fromArguments(arguments);
     }
 
-    Boolean validCommand = (null != command);
+    Boolean validCommand = null != command;
     Boolean validConfig = false;
     CliCommands cliCommand = CliCommands.Help;
 

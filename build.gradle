@@ -1,6 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
 
 sourceCompatibility = 1.7
 version = 0.2
@@ -17,6 +19,16 @@ configure(allprojects) {
 
 configurations {
     doclet
+}
+
+pmd {
+	ignoreFailures = true
+}
+
+findbugs {
+    toolVersion = "3.0.0"
+    ignoreFailures = true
+    reportLevel = "low"
 }
 
 checkstyle {
@@ -78,6 +90,20 @@ dependencies {
 
 test {
     systemProperties 'property': 'value'
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+tasks.withType(Pmd) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
 }
 
 task('package', dependsOn: 'build', type: Exec) {

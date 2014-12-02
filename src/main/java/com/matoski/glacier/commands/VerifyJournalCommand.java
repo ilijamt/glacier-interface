@@ -92,10 +92,10 @@ public class VerifyJournalCommand extends AbstractEmptyCommand<CommandVerifyJour
 
       System.out.println(String.format("%1$17s : %2$s (%3$s)", "SHA256 TreeHash", validateHash,
           archive.getHash()));
-      boolean validHash = (validateHash == GenericValidateEnum.VALID)
-          || (validateHash == GenericValidateEnum.SKIP);
-      valid = (validateSize == GenericValidateEnum.VALID)
-          && (validateModified == GenericValidateEnum.VALID) && validHash;
+      boolean validHash = validateHash == GenericValidateEnum.VALID
+          || validateHash == GenericValidateEnum.SKIP;
+      valid = validateSize == GenericValidateEnum.VALID
+          && validateModified == GenericValidateEnum.VALID && validHash;
 
       System.out.println(String.format("%1$17s : %2$s", "Valid", valid));
       System.out.println();
@@ -108,7 +108,7 @@ public class VerifyJournalCommand extends AbstractEmptyCommand<CommandVerifyJour
     }
 
     System.out.println(String.format("Invalid: %s (%s bytes)",
-        FileUtils.humanReadableByteCount(size - validSize), (size - validSize)));
+        FileUtils.humanReadableByteCount(size - validSize), size - validSize));
     System.out.println(String.format("Valid: %s (%s bytes)",
         FileUtils.humanReadableByteCount(validSize), validSize));
     System.out.println(String.format("Total size: %s (%s bytes)",
