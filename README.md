@@ -36,7 +36,7 @@ Commands
 * [inventory-retrieve](#inventory-retrieve)
 * [inventory-download](#inventory-download)
 * [list-journal](#list-journal)
-* [init-download](#init-download) (TODO)
+* [init-download](#init-download)
 * [download-job](#download-job) (TODO)
 * [delete-archive](#delete-archive)
 * [upload-archive](#upload-archive)
@@ -48,7 +48,6 @@ Commands
 
 Priorities
 -----------
-* init-download
 * download-job
 
 TODO
@@ -91,7 +90,7 @@ You can also use this to download the raw data and use it to create a new metada
 It's used to list the files in a journal, it can give you a detailed information for what is in the journal.
 
 ### `init-download`
-TODO
+Creates an init download job, which then can be used to retrieve the files that you requested.
 
 ### `download-job`
 TODO 
