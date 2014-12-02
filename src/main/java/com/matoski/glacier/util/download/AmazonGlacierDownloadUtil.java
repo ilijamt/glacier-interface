@@ -124,7 +124,7 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
    * @param overwrite
    *          Overwrite the files
    * 
-   * @return
+   * @return Details about the request
    * 
    * @throws FileAlreadyExistsException
    *           File already present in the system
@@ -178,7 +178,7 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
    * @param partSize
    *          Part size
    * 
-   * @return
+   * @return Details about the request
    * 
    * @throws FileNotFoundException
    *           File not found
@@ -208,7 +208,7 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
    * @param collector
    *          Metric collector
    * 
-   * @return
+   * @return Details about the request
    * 
    * @throws FileNotFoundException
    *           File not found
