@@ -37,6 +37,9 @@ public class ArchiveTest {
 
   }
 
+  /**
+   * Test.
+   */
   public final void testCreatedConversion() {
     String date = "2014-10-12T07:45:10Z";
     archive.setCreatedDate(date);
