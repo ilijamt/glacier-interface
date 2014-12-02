@@ -251,7 +251,9 @@ public class MultipartDownloadStatus extends AbstractWritablePojo<MultipartDownl
   /**
    * Is the piece completed?
    * 
-   * <p>Compares the {@link DownloadPiece#getStatus()} to {@link MultipartStatus#PIECE_COMPLETE}</p>
+   * <p>
+   * Compares the {@link DownloadPiece#getStatus()} to {@link MultipartStatus#PIECE_COMPLETE}
+   * </p>
    * 
    * @param piece
    * @return

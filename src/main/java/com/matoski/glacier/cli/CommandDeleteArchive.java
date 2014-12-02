@@ -9,7 +9,9 @@ import com.matoski.glacier.enums.CliCommands;
 @Parameters(commandNames = "delete-archive", commandDescription = "Initiate a deletion of archive")
 public class CommandDeleteArchive extends GenericCommand {
 
-  @Parameter(names = "--vault", description = "The name of the vault from where the archive will be deleted, will be overwritten by --aws-vault if not specified")
+  @Parameter(
+      names = "--vault",
+      description = "The name of the vault from where the archive will be deleted, will be overwritten by --aws-vault if not specified")
   public String vaultName;
 
   @Parameter(names = "--metadata", description = "Available: mt2, fgv2")
@@ -24,7 +26,8 @@ public class CommandDeleteArchive extends GenericCommand {
   @Parameter(names = "--name", description = "The name of the archive")
   public String name;
 
-  @Parameter(names = "--ignore-journal", description = "Ignore the journal when deleting, you should only use this with ID")
+  @Parameter(names = "--ignore-journal",
+      description = "Ignore the journal when deleting, you should only use this with ID")
   public Boolean ignoreJournal = false;
 
   public CommandDeleteArchive() {
