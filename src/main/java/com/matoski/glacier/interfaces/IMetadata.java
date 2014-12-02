@@ -11,30 +11,33 @@ import com.matoski.glacier.pojo.archive.Archive;
 public interface IMetadata {
 
   /**
-   * Encode the data into the correct format for the metadata in question
+   * Encode the data into the correct format for the metadata in question.
    * 
-   * @param archive
+   * @param archive The archive
    * 
    * @return
+   * 
    */
   public String encode(Archive archive);
 
   /**
-   * Process the data
+   * Process the data.
    * 
-   * @param data
+   * @param data The data to process
+   * 
    * @return
    * 
-   * @throws InvalidMetadataException
+   * @throws InvalidMetadataException If the metadata doesn't exist
    */
   public IGlacierInterfaceMetadata parse(String data) throws InvalidMetadataException;
 
   /**
-   * Verify if this is the correct metadata to use
+   * Verify if this is the correct metadata to use.
    * 
-   * @param data
+   * @param data The data to verify
    * 
-   * @return
+   * @return 
+   * 
    */
   public boolean verify(String data);
 
