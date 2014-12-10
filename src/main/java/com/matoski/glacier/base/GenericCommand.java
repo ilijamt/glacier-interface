@@ -46,7 +46,17 @@ public abstract class GenericCommand {
 
   @Override
   public boolean equals(Object obj) {
-    return super.equals(obj);
+
+    if (null == obj) {
+      return false;
+    }
+
+    if (this.getClass() != obj.getClass()) {
+      return false;
+    }
+
+    return this.genericCommandName.equals(((GenericCommand) obj).getGenericCommandName());
+
   }
 
   @Override
