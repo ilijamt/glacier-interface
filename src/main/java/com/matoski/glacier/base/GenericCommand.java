@@ -4,7 +4,7 @@ import com.matoski.glacier.enums.CliCommands;
 
 /**
  * A generic command, all the cli commands need to extend from this, it can be used to autoload all
- * of them
+ * of them.
  * 
  * @author Ilija Matoski (ilijamt@gmail.com)
  */
