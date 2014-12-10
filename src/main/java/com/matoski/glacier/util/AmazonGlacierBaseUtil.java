@@ -127,17 +127,17 @@ public class AmazonGlacierBaseUtil {
   /**
    * Service name.
    */
-  public static String SERVICE_NAME = "glacier";
+  public static final String SERVICE_NAME = "glacier";
 
   /**
    * Service name for SNS.
    */
-  public static String SERVICE_SNS_NAME = "sns";
+  public static final String SERVICE_SNS_NAME = "sns";
 
   /**
    * Service name for SQS.
    */
-  public static String SERVICE_SQS_NAME = "sqs";
+  public static final String SERVICE_SQS_NAME = "sqs";
 
   /**
    * The credentials for Amazon Glacier.
@@ -212,7 +212,7 @@ public class AmazonGlacierBaseUtil {
   /**
    * How long to wait for a job to finish.
    */
-  public static long WAIT_FOR_JOB_SLEEP_TIME = 600;
+  public static final long WAIT_FOR_JOB_SLEEP_TIME = 600;
 
   /**
    * Constructor.

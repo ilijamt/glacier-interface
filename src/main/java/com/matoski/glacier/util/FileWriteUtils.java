@@ -23,13 +23,15 @@ public class FileWriteUtils {
    * @param obj
    *          Object to convert to Json
    * 
+   * @return true if we successfully wrote the JSON to file
+   * 
    * @throws IOException
    *           Cannot write the file
    */
-  public static void toJson(File file, Object obj) throws IOException {
+  public static boolean toJson(File file, Object obj) throws IOException {
 
-    if (!file.exists()) {
-      file.createNewFile();
+    if (!file.exists() && !file.createNewFile()) {
+      return false;
     }
 
     FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
@@ -39,6 +41,7 @@ public class FileWriteUtils {
     bufferedWriter.close();
     fileWriter.close();
 
+    return true;
   }
 
   /**
@@ -49,11 +52,13 @@ public class FileWriteUtils {
    * @param obj
    *          Object to convert to Json
    * 
+   * @return true if we successfully wrote the JSON to file
+   * 
    * @throws IOException
    *           Cannot write the file
    */
-  public static void toJson(String file, Object obj) throws IOException {
-    toJson(new File(file), obj);
+  public static boolean toJson(String file, Object obj) throws IOException {
+    return toJson(new File(file), obj);
   }
 
 }

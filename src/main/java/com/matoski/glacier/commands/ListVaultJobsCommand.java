@@ -104,12 +104,12 @@ public class ListVaultJobsCommand extends AbstractCommand<CommandListVaultJobs> 
           break;
         default:
           System.err.println(String.format(
-              "ERROR: Failed to retrieve the jobs for vault: %s\n\t%s", command.vaultName,
+              "ERROR: Failed to retrieve the jobs for vault: %s%n\t%s", command.vaultName,
               e.getMessage()));
           break;
       }
     } catch (AmazonClientException e) {
-      System.err.println(String.format("ERROR: Cannot connect to the amazon web services.\n\t%s",
+      System.err.println(String.format("ERROR: Cannot connect to the amazon web services.%n\t%s",
           e.getMessage()));
     }
 

@@ -84,10 +84,12 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
    * @param overwrite
    *          Overwrite the file
    * 
+   * @return true if it creates an empty file
+   * 
    * @throws FileAlreadyExistsException
    *           File already present in the system
    */
-  public void createEmptyFile(String fileName, long fileSize, boolean overwrite)
+  public boolean createEmptyFile(String fileName, long fileSize, boolean overwrite)
       throws FileAlreadyExistsException {
 
     File file = new File(fileName);
@@ -98,8 +100,8 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
 
     File parent = file.getParentFile();
 
-    if (null != parent) {
-      parent.mkdirs();
+    if (null != parent && !parent.mkdirs()) {
+      return false;
     }
 
     RandomAccessFile accessFile = null;
@@ -112,6 +114,7 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
       System.err.println(e);
     }
 
+    return true;
   }
 
   /**

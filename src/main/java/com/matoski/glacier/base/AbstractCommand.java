@@ -36,17 +36,17 @@ public abstract class AbstractCommand<T> extends AbstractEmptyCommand<T> {
   /**
    * Service name.
    */
-  public static String SERVICE_NAME = "glacier";
+  public static final String SERVICE_NAME = "glacier";
 
   /**
    * Service name for SNS.
    */
-  public static String SERVICE_SNS_NAME = "sns";
+  public static final String SERVICE_SNS_NAME = "sns";
 
   /**
    * Service name for SQS.
    */
-  public static String SERVICE_SQS_NAME = "sqs";
+  public static final String SERVICE_SQS_NAME = "sqs";
 
   /**
    * Does this service has HTTP endpoint.

@@ -46,7 +46,7 @@ public class ListVaultsCommand extends AbstractCommand<CommandListVaults> {
 
     List<DescribeVaultOutput> result = upload.listVaults();
 
-    System.out.println(String.format("Total available vaults: %s\n", result.size()));
+    System.out.println(String.format("Total available vaults: %s%n", result.size()));
 
     for (DescribeVaultOutput vault : result) {
 

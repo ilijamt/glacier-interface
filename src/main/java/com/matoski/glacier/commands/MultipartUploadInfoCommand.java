@@ -62,7 +62,7 @@ public class MultipartUploadInfoCommand extends AbstractCommand<CommandMultipart
         .println(String.format("%1$20s: %2$s", "Description", result.getArchiveDescription()));
     System.out.println();
 
-    System.out.println(String.format("Total available parts for the upload: %s\n", result
+    System.out.println(String.format("Total available parts for the upload: %s%n", result
         .getParts().size()));
 
     for (PartListElement element : result.getParts()) {

@@ -197,8 +197,8 @@ public class AbstractWritablePojo<T> {
       throw new NullPointerException();
     }
 
-    if (!file.exists()) {
-      file.createNewFile();
+    if (!file.exists() && !file.createNewFile()) {
+      return false;
     }
 
     FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());

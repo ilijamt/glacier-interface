@@ -158,16 +158,18 @@ public class Config {
    * @param filename
    *          Which filename to save the configuration to
    * 
+   * @return true if the configuration has been saved
+   * 
    * @throws IOException
    *           Cannot write to file
    */
-  public void createConfigurationFile(String filename) throws IOException {
+  public boolean createConfigurationFile(String filename) throws IOException {
     File file = new File(filename);
     FileWriter fileWriter = null;
     BufferedWriter bufferedWriter = null;
 
-    if (!file.exists()) {
-      file.createNewFile();
+    if (!file.exists() && !file.createNewFile()) {
+      return false;
     }
 
     fileWriter = new FileWriter(file.getAbsoluteFile());
@@ -176,6 +178,8 @@ public class Config {
 
     bufferedWriter.close();
     fileWriter.close();
+
+    return true;
 
   }
 

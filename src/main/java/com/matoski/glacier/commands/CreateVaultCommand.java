@@ -73,12 +73,12 @@ public class CreateVaultCommand extends AbstractCommand<CommandCreateVault> {
               .format("ERROR: Invalid credentials, check you key and secret key."));
           break;
         default:
-          System.err.println(String.format("ERROR: Failed to create a vault: %s\n\t%s",
+          System.err.println(String.format("ERROR: Failed to create a vault: %s%n\t%s",
               command.vaultName, e.getMessage()));
           break;
       }
     } catch (AmazonClientException e) {
-      System.err.println(String.format("ERROR: Cannot connect to the amazon web services.\n\t%s",
+      System.err.println(String.format("ERROR: Cannot connect to the amazon web services.%n\t%s",
           e.getMessage()));
     }
 

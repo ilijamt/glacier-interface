@@ -69,7 +69,7 @@ public class ListMultipartUploadsCommand extends AbstractCommand<CommandListMult
     List<UploadListElement> list = upload.listMultipartUploads(command.vaultName);
 
     System.out.println(String.format("Cancel all multipart uploads: %s", command.cancel));
-    System.out.println(String.format("Total available multipart uploads: %s\n", list.size()));
+    System.out.println(String.format("Total available multipart uploads: %s%n", list.size()));
 
     for (UploadListElement element : list) {
 

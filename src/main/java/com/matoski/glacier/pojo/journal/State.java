@@ -416,13 +416,15 @@ public class State {
    * @param file
    *          The file to which we save the journal
    * 
+   * @return true if it saved correctly 
+   * 
    * @throws IOException
    *           Throws an error if we can't save the journal
    */
-  public void save(File file) throws IOException {
+  public boolean save(File file) throws IOException {
 
-    if (!file.exists()) {
-      file.createNewFile();
+    if (!file.exists() && !file.createNewFile()) {
+        return false;
     }
 
     FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
@@ -431,6 +433,8 @@ public class State {
 
     bufferedWriter.close();
     fileWriter.close();
+    
+    return true;
 
   }
 
@@ -440,11 +444,13 @@ public class State {
    * @param file
    *          The file to which we save the journal
    * 
+   * @return true if it saved correctly
+   * 
    * @throws IOException
    *           Throws an error if we can't save the journal
    */
-  public void save(String file) throws IOException {
-    save(new File(file));
+  public boolean save(String file) throws IOException {
+    return save(new File(file));
   }
 
   /**
