@@ -5,6 +5,8 @@ A command line tool to interface with glacier.
 
 It's a multithreaded application, that supports multipart uploads to Amazon Glacier servers, you can specify concurrency, to speed up the upload.  
 
+**Status**: BETA
+
 Intro
 -----
 Amazon Glacier is an archive/backup service with very low storage price. However with some caveats in usage and archive retrieval prices. [Read more about Amazon Glacier](http://aws.amazon.com/glacier/)
