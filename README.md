@@ -52,6 +52,8 @@ Priorities
 
 TODO
 ----
+* FastGlacier metadata
+* download-job
 * bash auto-complete
 
 Commands Description
