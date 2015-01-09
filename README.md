@@ -283,7 +283,7 @@ You can use this to download the inventory after **inventory-retrieve** has been
 You can also use this to download the raw data and use it to create a new metadata parser.
 
 ```bash
-
+```
 
 
 ### `list-journal`
@@ -345,6 +345,25 @@ TODO
 
 ### `delete-archive`
 Delete an archive from Glacier, it can be either done by archive ID or by an archive Name, in which case you will need to supply a valid journal 
+
+```bash
+gi --config config.json delete-archive --journal TestDemo.journal --name data.log --vault TestDemo
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /home/user/workspace/java/glacier-interface
+Command: DeleteArchive
+
+START: delete-archive
+
+Archive deleted.
+
+     Vault: TestDemo
+Archive ID: royCx4abZ6CUHGnRKE_IpiQm0xiPR5MuKyb8bubNPRFNvnxvXr2RnQCjZ8TRey_CYsADE1q36a9SNjkGVnxomqInrOFvlxNIIkaL_Ou6-0ggfpyvIsfLRgljSCsRM1y-nCLqaLPi1Q
+
+END: delete-archive
+
+Finished
+```
 
 ### `upload-archive`
 Uploads an archive to Glacier server.
