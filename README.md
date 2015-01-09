@@ -89,6 +89,7 @@ Commands
 * [inventory-retrieve](#inventory-retrieve)
 * [inventory-download](#inventory-download)
 * [list-journal](#list-journal)
+* [verify-journal](#verify-journal)
 * [init-download](#init-download)
 * [download-job](#download-job) (TODO)
 * [delete-archive](#delete-archive)
@@ -206,6 +207,54 @@ You can also use this to download the raw data and use it to create a new metada
 
 ### `list-journal`
 It's used to list the files in a journal, it can give you a detailed information for what is in the journal.
+
+```bash
+$ gi --config config.json list-journal --journal TestDemo.journal 
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /home/user/workspace/java/glacier-interface
+Command: ListJournal
+
+START: list-journal
+
+Total items: 1 (in journal 1)
+
+[  5.07 MiB] data.log
+
+END: list-journal
+
+Finished
+```
+
+### `verify-journal`
+Verifies the data in the journal with the files on the disk
+
+```bash
+$ gi --config config.json verify-journal --journal TestDemo.journal 
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /home/user/workspace/java/glacier-interface
+Command: VerifyJournal
+
+START: verify-journal
+
+There are 1 files in the journal
+
+       Archive ID : royCx4abZ6CUHGnRKE_IpiQm0xiPR5MuKyb8bubNPRFNvnxvXr2RnQCjZ8TRey_CYsADE1q36a9SNjkGVnxomqInrOFvlxNIIkaL_Ou6-0ggfpyvIsfLRgljSCsRM1y-nCLqaLPi1Q
+             Name : data.log
+             Size : VALID (5.07 MiB, 5312500 bytes)
+         Modified : VALID (Sat Jan 10 00:07:02 CET 2015)
+  SHA256 TreeHash : VALID (ea10f2ffdd184f6c705e9757a3acc91afbcca02c9f653c9d54ab3f504b101052)
+            Valid : true
+
+Invalid: 0 B (0 bytes)
+Valid: 5.07 MiB (5312500 bytes)
+Total size: 5.07 MiB (5312500 bytes)
+
+END: verify-journal
+
+Finished
+```
 
 ### `init-download`
 Creates an init download job, which then can be used to retrieve the files that you requested.
