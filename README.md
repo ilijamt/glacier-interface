@@ -5,15 +5,66 @@ A command line tool to interface with glacier.
 
 It's a multithreaded application, that supports multipart uploads to Amazon Glacier servers, you can specify concurrency, to speed up the upload.  
 
+Anyone is welcome to help in development of this tool, see a bug, or a want a new feature, drop me a pull request, or create an issue and I will see what I can do.
+
 **Status: BETA**
 
 Intro
 -----
 Amazon Glacier is an archive/backup service with very low storage price. However with some caveats in usage and archive retrieval prices. [Read more about Amazon Glacier](http://aws.amazon.com/glacier/)
 
+Installation 
+------------
+
+* Debian based systems
+
+```bash
+echo "deb http://packages.matoski.com debian-gi main" | sudo tee /etc/apt/sources.list.d/debian-gi.list
+sudo wget -O /etc/apt/trusted.gpg.d/pm.gpg http://packages.matoski.com/keyring.gpg
+sudo apt-get update
+sudo apt-get -y install glacier-interface
+```
+
+* Source
+
+You can checkout the code from the repository, and build it with gradle.
+
 Usage
 -----
 glacier-interface &lt;options&gt; &lt;commands&gt; &lt;command-options&gt;
+
+Config file
+-----------
+
+The configuration file is a JSON, you can use this to skip setting some of the configuration on the command line.
+
+```json
+{
+  key: "<AMAZON KEY>",
+  secretKey: "<AMAZON SECRET KEY>",
+  region: "<REGION>"
+}
+```
+
+This file is optional, and can be used to put your parameters in a file to simplify usage and shorten the command
+
+Journal
+-------
+
+The journal is a file that keeps a list of all available files in a vault, and all the actions on it. The journal file is a JSON file.
+
+```json
+{
+  "journal": [],
+  "date": "Nov 12, 2014 7:16:55 PM",
+  "metadata": "MT_AWS_GLACIER_B",
+  "name": "Pictures"
+}
+```
+
+This is an example of how a journal will look like.
+
+If this is your initial upload you can create a new journal using the command to create a journal.
 
 Options
 -------
@@ -65,6 +116,30 @@ Shows all the available command in the system, you can take a look at [Help](HEL
 
 ### `list-vaults`
 Lists all available vaults present on Amazon Glacier servers specified by the region.
+
+```bash
+$ gi --config config.json list-vaults
+
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /home/user/workspace/java/glacier-interface
+Command: ListVaults
+
+START: list-vaults
+
+Total available vaults: 1
+
+                 ARN: arn:aws:glacier:eu-west-1:166534042608:vaults/Test
+          Vault Name: Test
+             Created: 2014-10-22T21:49:00.968Z
+      Inventory Size: 0 B (0 bytes)
+ Last Inventory Date: 2014-11-12T18:31:22.578Z
+
+END: list-vaults
+
+Finished
+
+```
 
 ### `create-vault` 
 Creates a new vault on Amazon Glacier

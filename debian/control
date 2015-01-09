@@ -3,9 +3,7 @@ Version: 0.3.4
 Section: net
 Architecture: all
 Priority: standard
-Depends: 
 Maintainer: Ilija Matoski <ilijamt@gmail.com>
-Recommends: 
 Description: Multithreaded command line application, to interface with glacier servers
  Command line tool to interface with glacier. It's a multithreaded application, 
  that supports multipart uploads to Amazon Glacier servers. Supports a lot of 
