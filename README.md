@@ -269,27 +269,27 @@ Now let's see for resuming upload
 $ gi --config config.json upload-archive --concurrent 2 --vault TestDemo --file data.log --journal TestDemo.journal
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /home/ilijamt/workspace/java/glacier-interface
+Current working directory: /home/user/workspace/java/glacier-interface
 Command: UploadArchive
 
 Creating a new journal: TestDemo.journal
 START: upload-archive
 
 Processing: data.log (size: 5312500)
-[#00001/#00006] PIECE_START     | (/home/ilijamt/workspace/java/glacier-interface/data.log) Upload started
-[#00002/#00006] PIECE_START     | (/home/ilijamt/workspace/java/glacier-interface/data.log) Upload started
-[#00002/#00006] PIECE_COMPLETE  | (/home/ilijamt/workspace/java/glacier-interface/data.log) Uploaded
-[#00003/#00006] PIECE_START     | (/home/ilijamt/workspace/java/glacier-interface/data.log) Upload started
-[#00001/#00006] PIECE_COMPLETE  | (/home/ilijamt/workspace/java/glacier-interface/data.log) Uploaded
-[#00004/#00006] PIECE_START     | (/home/ilijamt/workspace/java/glacier-interface/data.log) Upload started
-[#00004/#00006] PIECE_COMPLETE  | (/home/ilijamt/workspace/java/glacier-interface/data.log) Uploaded
-[#00005/#00006] PIECE_START     | (/home/ilijamt/workspace/java/glacier-interface/data.log) Upload started
+[#00001/#00006] PIECE_START     | (/home/user/workspace/java/glacier-interface/data.log) Upload started
+[#00002/#00006] PIECE_START     | (/home/user/workspace/java/glacier-interface/data.log) Upload started
+[#00002/#00006] PIECE_COMPLETE  | (/home/user/workspace/java/glacier-interface/data.log) Uploaded
+[#00003/#00006] PIECE_START     | (/home/user/workspace/java/glacier-interface/data.log) Upload started
+[#00001/#00006] PIECE_COMPLETE  | (/home/user/workspace/java/glacier-interface/data.log) Uploaded
+[#00004/#00006] PIECE_START     | (/home/user/workspace/java/glacier-interface/data.log) Upload started
+[#00004/#00006] PIECE_COMPLETE  | (/home/user/workspace/java/glacier-interface/data.log) Uploaded
+[#00005/#00006] PIECE_START     | (/home/user/workspace/java/glacier-interface/data.log) Upload started
 ^C
 $ gi --config config.json upload-archive --concurrent 2 --vault TestDemo --file data.log --journal TestDemo.journal
 gi --config config.json upload-archive --concurrent 2 --vault TestDemo --file data.log --journal TestDemo.journal
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /home/ilijamt/workspace/java/glacier-interface
+Current working directory: /home/user/workspace/java/glacier-interface
 Command: UploadArchive
 
 Creating a new journal: TestDemo.journal
@@ -299,15 +299,15 @@ Processing: data.log (size: 5312500)
 Upload state found for data.log, loading
 Upload already initiated with location: /166534042608/vaults/TestDemo/multipart-uploads/FsBxrBiV2DxKqzC21bBciBi25P2Z9Y3dwmm8w63_rzb9d3X7kMMRLOcXWje77fVzCooIULlCdzlUU9AGXQ8HkRBgHyJG and id: FsBxrBiV2DxKqzC21bBciBi25P2Z9Y3dwmm8w63_rzb9d3X7kMMRLOcXWje77fVzCooIULlCdzlUU9AGXQ8HkRBgHyJG
 
-[#00001/#00006] PIECE_COMPLETE  | (/home/ilijamt/workspace/java/glacier-interface/data.log) Already uploaded
-[#00002/#00006] PIECE_COMPLETE  | (/home/ilijamt/workspace/java/glacier-interface/data.log) Already uploaded
-[#00003/#00006] PIECE_START     | (/home/ilijamt/workspace/java/glacier-interface/data.log) Upload started
-[#00004/#00006] PIECE_COMPLETE  | (/home/ilijamt/workspace/java/glacier-interface/data.log) Already uploaded
-[#00005/#00006] PIECE_START     | (/home/ilijamt/workspace/java/glacier-interface/data.log) Upload started
-[#00003/#00006] PIECE_COMPLETE  | (/home/ilijamt/workspace/java/glacier-interface/data.log) Uploaded
-[#00005/#00006] PIECE_COMPLETE  | (/home/ilijamt/workspace/java/glacier-interface/data.log) Uploaded
-[#00006/#00006] PIECE_START     | (/home/ilijamt/workspace/java/glacier-interface/data.log) Upload started
-[#00006/#00006] PIECE_COMPLETE  | (/home/ilijamt/workspace/java/glacier-interface/data.log) Uploaded
+[#00001/#00006] PIECE_COMPLETE  | (/home/user/workspace/java/glacier-interface/data.log) Already uploaded
+[#00002/#00006] PIECE_COMPLETE  | (/home/user/workspace/java/glacier-interface/data.log) Already uploaded
+[#00003/#00006] PIECE_START     | (/home/user/workspace/java/glacier-interface/data.log) Upload started
+[#00004/#00006] PIECE_COMPLETE  | (/home/user/workspace/java/glacier-interface/data.log) Already uploaded
+[#00005/#00006] PIECE_START     | (/home/user/workspace/java/glacier-interface/data.log) Upload started
+[#00003/#00006] PIECE_COMPLETE  | (/home/user/workspace/java/glacier-interface/data.log) Uploaded
+[#00005/#00006] PIECE_COMPLETE  | (/home/user/workspace/java/glacier-interface/data.log) Uploaded
+[#00006/#00006] PIECE_START     | (/home/user/workspace/java/glacier-interface/data.log) Upload started
+[#00006/#00006] PIECE_COMPLETE  | (/home/user/workspace/java/glacier-interface/data.log) Uploaded
 
 END: upload-archive
 
