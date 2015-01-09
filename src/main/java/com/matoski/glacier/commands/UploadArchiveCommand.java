@@ -1,5 +1,6 @@
 package com.matoski.glacier.commands;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -95,11 +96,20 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
     } else {
 
       AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
+      File uploadFile = null;
 
       for (String fileName : command.files) {
-        upload.uploadArchive(journal, command.vaultName, fileName, command.forceUpload,
-            command.concurrent, command.retryFailedUpload, command.partSize,
-            command.uploadReplaceModified);
+
+        uploadFile = new File(Config.getInstance().getDirectory(), fileName);
+
+        if ((uploadFile.exists() && uploadFile.isFile()) || uploadFile.canRead()) {
+          upload.uploadArchive(journal, command.vaultName, fileName, command.forceUpload,
+              command.concurrent, command.retryFailedUpload, command.partSize,
+              command.uploadReplaceModified);
+        } else {
+          System.out.println(String.format("ERROR: File: %s not found",
+              uploadFile.getAbsoluteFile()));
+        }
       }
 
     }

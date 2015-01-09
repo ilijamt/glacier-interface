@@ -129,11 +129,11 @@ START: list-vaults
 
 Total available vaults: 1
 
-                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/Test
+                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
           Vault Name: Test
-             Created: 2014-10-22T21:49:00.968Z
+             Created: 2015-01-09T22:15:57.881Z
       Inventory Size: 0 B (0 bytes)
- Last Inventory Date: 2014-11-12T18:31:22.578Z
+ Last Inventory Date: 2015-01-09T22:15:57.881Z
 
 END: list-vaults
 
@@ -145,7 +145,7 @@ Finished
 Creates a new vault on Amazon Glacier
 
 ```bash
-$ gi --config config.json create-vault TestDemo
+$ gi --config config.json create-vault --vault uplTestDemo
 
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
@@ -227,15 +227,121 @@ How big of chunks should be uploaded at a time
 
 You can specify how many threads to open to use when uploading the data to amazon glacier, the more threads you have the more memory it will eat.
 
+Lets create a random file to upload
+```bash
+$ dd if=/dev/urandom of=data.log bs=53125 count=100
+100+0 records in
+100+0 records out
+5312500 bytes (5.3 MB) copied, 0.468821 s, 11.3 MB/s
+```
+
+
 ### `list-multipart-uploads`
 Lists all the multipart uploads, and they can be canceled.
 Useful for cleaning up.
 
+```bash
+$ gi --config config.json list-multipart-uploads --vault TestDemo
+
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /home/user/workspace/java/glacier-interface
+Command: ListMultipartUploads
+
+START: list-multipart-uploads
+
+Cancel all multipart uploads: false
+Total available multipart uploads: 5
+
+                  ID: 7Nr1F2JpjlRpMqYQNGbLQCccqEeIP0GaBLV8t5_NlfyZIdcXoCGtLZmfYQN5IoGPFS_4XZge9KHnU04yeJewOGelErq7
+                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
+       Creation date: 2015-01-09T22:28:21.744Z
+           Part size: 1048576
+         Description: mt2 eyJtdGltZSI6IjAifQ==
+                Name: null
+
+                  ID: uaePOwkbQDy4P8TyNRcxnEomOgNATIMiJFr7D7A6_813TbV20qMTYvCOyqwyq8x4-RCyS9-qxMwWdPbUO6PytSzZiuyf
+                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
+       Creation date: 2015-01-09T22:28:44.684Z
+           Part size: 1048576
+         Description: mt2 eyJtdGltZSI6IjAifQ==
+                Name: null
+
+                  ID: 2UVJNnEQFsSx_g4wkCsUOITW-KmSMssOK1IM9K9P-uEgKUzRV4VXv_XKGrYxnKZ9i-3o_goUP0nobN8QE7_4O9pJ0wN4
+                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
+       Creation date: 2015-01-09T22:29:25.080Z
+           Part size: 1048576
+         Description: mt2 eyJtdGltZSI6IjAifQ==
+                Name: null
+
+                  ID: wPrVOkpyB6P3ESSLwCos8TAEfJABCiUSB73YA38q2oQ-nzWNlerHab-bsKZyny021uRlRR6lE6zgbuXNYu_FYAEg1ESK
+                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
+       Creation date: 2015-01-09T22:38:32.800Z
+           Part size: 1048576
+         Description: mt2 eyJtdGltZSI6IjAifQ==
+                Name: null
+
+                  ID: flYAJrHphH1NgM0iYKhCOm_3TYKe1p4vkxecvB1B4pdlQWL_nyMs91CsbQAN_MG_2GYEV3qdL1yytt0OasNTHasJaeh7
+                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
+       Creation date: 2015-01-09T22:43:46.883Z
+           Part size: 1048576
+         Description: mt2 eyJtdGltZSI6IjAifQ==
+                Name: null
+
+END: list-multipart-uploads
+
+Finished
+
+```
+
+If you add **--cancel** to the command it will also cancel all the uploads in the list
+
 ### `multipart-upload-info`
 Information about the multipart upload
 
+```bash
+$ gi --config config.json multipart-upload-info --id wPrVOkpyB6P3ESSLwCos8TAEfJABCiUSB73YA38q2oQ-nzWNlerHab-bsKZyny021uRlRR6lE6zgbuXNYu_FYAEg1ESK --vault TestDemo
+
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /home/user/workspace/java/glacier-interface
+Command: MultipartUploadInfo
+
+START: multipart-upload-info
+
+                  ID: wPrVOkpyB6P3ESSLwCos8TAEfJABCiUSB73YA38q2oQ-nzWNlerHab-bsKZyny021uRlRR6lE6zgbuXNYu_FYAEg1ESK
+                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
+       Creation date: 2015-01-09T22:38:32.800Z
+           Part size: 1048576
+         Description: mt2 eyJtdGltZSI6IjAifQ==
+
+Total available parts for the upload: 0
+
+END: multipart-upload-info
+
+Finished
+```
+
+
 ### `abort-multipart-upload`
 Aborts a multipart upload, you need to specify the correct ID to abort
+
+```bash
+$ gi --config config.json abort-multipart-upload --id wPrVOkpyB6P3ESSLwCos8TAEfJABCiUSB73YA38q2oQ-nzWNlerHab-bsKZyny021uRlRR6lE6zgbuXNYu_FYAEg1ESK --vault TestDemo
+
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /home/user/workspace/java/glacier-interface
+Command: AbortMultipartUpload
+
+START: abort-multipart-upload
+
+Multipart upload canceled: true
+
+END: abort-multipart-upload
+
+Finished
+```
 
 ### `purge-vault`
 Purges the vault of all files present in the journal, it can be used to empty a vault of all archives

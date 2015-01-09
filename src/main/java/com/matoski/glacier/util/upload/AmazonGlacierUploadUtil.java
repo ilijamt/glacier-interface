@@ -390,7 +390,8 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     boolean upload = true;
     Boolean exists = journal.isFileInArchive(fileName);
     Archive old = exists ? journal.getByName(fileName) : null;
-
+    File uploadFile = new File(Config.getInstance().getDirectory(), fileName);
+    
     // check if this file exists in the journal
     if (exists && (forceUpload || replace)) {
 
@@ -434,13 +435,11 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     if (upload && !dryRun) {
 
-      System.out.println(String.format("Processing: %s (size: %s)", fileName, new File(Config
-          .getInstance().getDirectory(), fileName).length()));
+      System.out.println(String.format("Processing: %s (size: %s)", fileName, uploadFile.length()));
 
       try {
 
-        archive = uploadMultipartFile(fileName, new File(Config.getInstance().getDirectory(),
-            fileName), concurrent, retryFailedUpload, partSize, vaultName, metadata);
+        archive = uploadMultipartFile(fileName, uploadFile, concurrent, retryFailedUpload, partSize, vaultName, metadata);
 
         // delete the old archive if we have replace the file property
         if (replace && archive != null) {
