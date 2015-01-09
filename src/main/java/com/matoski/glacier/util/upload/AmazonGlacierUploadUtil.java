@@ -391,7 +391,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     Boolean exists = journal.isFileInArchive(fileName);
     Archive old = exists ? journal.getByName(fileName) : null;
     File uploadFile = new File(Config.getInstance().getDirectory(), fileName);
-    
+
     // check if this file exists in the journal
     if (exists && (forceUpload || replace)) {
 
@@ -435,11 +435,13 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     if (upload && !dryRun) {
 
-      System.out.println(String.format("Processing: %s (size: %s)", fileName, uploadFile.length()));
+      System.out
+          .println(String.format("Processing: %s (size: %s)", fileName, uploadFile.length()));
 
       try {
 
-        archive = uploadMultipartFile(fileName, uploadFile, concurrent, retryFailedUpload, partSize, vaultName, metadata);
+        archive = uploadMultipartFile(fileName, uploadFile, concurrent, retryFailedUpload,
+            partSize, vaultName, metadata);
 
         // delete the old archive if we have replace the file property
         if (replace && archive != null) {
@@ -512,7 +514,8 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     ExecutorService pool = Executors.newFixedThreadPool(threads);
     HashMap<Integer, Future<Piece>> map = new HashMap<Integer, Future<Piece>>();
 
-    final File stateFile = new File(file, ".state");
+    final File stateFile = new File(file.getAbsoluteFile() + ".state");
+
     Archive archive = new Archive();
     final long fileSize = file.length();
     int pieces = (int) Math.ceil(fileSize / (double) partSize);
@@ -562,7 +565,8 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
       uploadStatus.setPartSize(partSize);
       uploadStatus.setParts(pieces);
       uploadStatus.setInitiated(true);
-      uploadStatus.setFile(file);
+      uploadStatus.setArchive(file.getAbsolutePath());
+      uploadStatus.setFile(stateFile);
       uploadStatus.setId(uploadId);
       uploadStatus.setLocation(location);
       uploadStatus.setStarted(new Date());
@@ -630,7 +634,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
           } catch (TimeoutException e) {
             // we skip this item as it has not finished yet we don't
             // do anything here
-            System.err.println(e);
+            // System.err.println(e);
           }
 
         }

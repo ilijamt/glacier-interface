@@ -42,6 +42,11 @@ public abstract class ArchiveState<T> extends AbstractWritablePojo<T> {
   private String location;
 
   /**
+   * The location of the archive that we are uploading
+   */
+  private String archive;
+
+  /**
    * Is the transfer initiated.
    */
   private boolean initiated = false;
@@ -92,25 +97,6 @@ public abstract class ArchiveState<T> extends AbstractWritablePojo<T> {
   /**
    * Add a piece that has been processed.
    * 
-   * @param piece
-   *          The piece that was processed
-   * 
-   * @throws IOException
-   *           We cannot write the data to IO
-   */
-  public void addPiece(Piece piece) throws NullPointerException, IOException {
-    setDirty();
-    if (!this.pieces.containsKey(piece.getPart())) {
-      this.pieces.put(piece.getPart(), piece);
-      this.lastUpdate = new Date();
-      update();
-      this.write();
-    }
-  }
-
-  /**
-   * Add a piece that has been processed.
-   * 
    * @param part
    *          Which part is this piece
    * 
@@ -133,6 +119,25 @@ public abstract class ArchiveState<T> extends AbstractWritablePojo<T> {
   }
 
   /**
+   * Add a piece that has been processed.
+   * 
+   * @param piece
+   *          The piece that was processed
+   * 
+   * @throws IOException
+   *           We cannot write the data to IO
+   */
+  public void addPiece(Piece piece) throws NullPointerException, IOException {
+    setDirty();
+    if (!this.pieces.containsKey(piece.getPart())) {
+      this.pieces.put(piece.getPart(), piece);
+      this.lastUpdate = new Date();
+      update();
+      this.write();
+    }
+  }
+
+  /**
    * Do we actually have the {@link Piece} already in {@link #pieces}.
    * 
    * @param piece
@@ -142,6 +147,13 @@ public abstract class ArchiveState<T> extends AbstractWritablePojo<T> {
    */
   public Boolean exists(Piece piece) {
     return this.pieces.containsValue(piece);
+  }
+
+  /**
+   * @return the archive
+   */
+  public String getArchive() {
+    return archive;
   }
 
   /**
@@ -339,6 +351,14 @@ public abstract class ArchiveState<T> extends AbstractWritablePojo<T> {
     }
 
     return file.delete();
+  }
+
+  /**
+   * @param archive
+   *          the archive to set
+   */
+  public void setArchive(String archive) {
+    this.archive = archive;
   }
 
   /**
