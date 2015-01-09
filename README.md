@@ -192,18 +192,87 @@ Finished
 ### `list-vault-jobs`
 Gives you a list of all available vault jobs
 
+```bash
+gi --config config.json list-vault-jobs --vault TestDemo
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /home/user/workspace/java/glacier-interface
+Command: ListVaultJobs
+
+START: list-vault-jobs
+
+2015-01-09T23:40:50.228Z [Action: InventoryRetrieval] InProgress (Completed: false, On: null) ID: hxQoO7pBT5AXYssvVnoj8h0WmNqDKQPRjQ9Y5IGOOWmJt9iZhQHSzE3RX8F2qRd9kkGqJeM9xq6q7o7OgnqQNEZRqPP0
+
+END: list-vault-jobs
+
+Finished
+```
+
 ### `vault-job-info`
 Gives a detailed information about a vault job
+
+```bash
+$ gi --config config.json vault-job-info --id hxQoO7pBT5AXYssvVnoj8h0WmNqDKQPRjQ9Y5IGOOWmJt9iZhQHSzE3RX8F2qRd9kkGqJeM9xq6q7o7OgnqQNEZRqPP0 --vault TestDemo
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /home/user/workspace/java/glacier-interface
+Command: VaultJobInfo
+
+START: vault-job-info
+
+                   Action : InventoryRetrieval
+               Archive Id : null
+    Archive Size In Bytes : null
+                Completed : false
+           CompletionDate : null
+             CreationDate : 2015-01-09T23:40:50.228Z
+  Inventory Size In Bytes : null
+          Job Description : null
+                   Job Id : hxQoO7pBT5AXYssvVnoj8h0WmNqDKQPRjQ9Y5IGOOWmJt9iZhQHSzE3RX8F2qRd9kkGqJeM9xq6q7o7OgnqQNEZRqPP0
+         SHA256 Tree Hash : null
+                SNS Topic : null
+              Status Code : InProgress
+           Status Message : null
+                Vault ARN : arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
+
+
+END: vault-job-info
+
+Finished
+```
 
 ### `inventory-retrieve`
 If you lose your journal you will need to request and **inventory-retrieve** from Glacier and wait for about 4 hours until you can download it.
 
 This gives you a list of all available archives in the system
 
+```bash
+$  gi --config config.json inventory-retrieve --vault Test
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /home/user/workspace/java/glacier-interface
+Command: InventoryRetrieve
+
+START: inventory-retrieve
+
+Inventory retrieved.
+
+    Job ID: hxQoO7pBT5AXYssvVnoj8h0WmNqDKQPRjQ9Y5IGOOWmJt9iZhQHSzE3RX8F2qRd9kkGqJeM9xq6q7o7OgnqQNEZRqPP0
+     Vault: TestDemo
+
+END: inventory-retrieve
+
+Finished
+```
+
 ### `inventory-download`
 You can use this to download the inventory after **inventory-retrieve** has been completed. You will also need to specify the metadata used to store the archives, so we can parse it correctly.
 
 You can also use this to download the raw data and use it to create a new metadata parser.
+
+```bash
+
+
 
 ### `list-journal`
 It's used to list the files in a journal, it can give you a detailed information for what is in the journal.
@@ -346,7 +415,7 @@ START: upload-archive
 
 Processing: data.log (size: 5312500)
 Upload state found for data.log, loading
-Upload already initiated with location: /166534042608/vaults/TestDemo/multipart-uploads/FsBxrBiV2DxKqzC21bBciBi25P2Z9Y3dwmm8w63_rzb9d3X7kMMRLOcXWje77fVzCooIULlCdzlUU9AGXQ8HkRBgHyJG and id: FsBxrBiV2DxKqzC21bBciBi25P2Z9Y3dwmm8w63_rzb9d3X7kMMRLOcXWje77fVzCooIULlCdzlUU9AGXQ8HkRBgHyJG
+Upload already initiated with location: /<uid>/vaults/TestDemo/multipart-uploads/FsBxrBiV2DxKqzC21bBciBi25P2Z9Y3dwmm8w63_rzb9d3X7kMMRLOcXWje77fVzCooIULlCdzlUU9AGXQ8HkRBgHyJG and id: FsBxrBiV2DxKqzC21bBciBi25P2Z9Y3dwmm8w63_rzb9d3X7kMMRLOcXWje77fVzCooIULlCdzlUU9AGXQ8HkRBgHyJG
 
 [#00001/#00006] PIECE_COMPLETE  | (/home/user/workspace/java/glacier-interface/data.log) Already uploaded
 [#00002/#00006] PIECE_COMPLETE  | (/home/user/workspace/java/glacier-interface/data.log) Already uploaded
