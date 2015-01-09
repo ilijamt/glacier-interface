@@ -51,6 +51,18 @@ This file is optional, and can be used to put your parameters in a file to simpl
 Journal
 -------
 
+Journal is a file in local filesystem, which contains list of all files, uploaded to Amazon Glacier. Strictly saying, this file contains a list of operations (list of records), performed with Amazon Glacier vault. 
+
+Main operations are 
+
+* CREATE
+* DELETE
+* DOWNLOAD
+
+All items except **DELETE** are present in the journal for usage, even though they are present in the journal file, they are not available for usage as they have been deleted, and so removed from the active journal.
+
+The reason why it's present in the file is so we can have it as history.
+
 The journal is a file that keeps a list of all available files in a vault, and all the actions on it. The journal file is a JSON file.
 
 ```json
@@ -545,20 +557,6 @@ Purges the vault of all files present in the journal, it can be used to empty a 
 ### `sync`
 Synchronizes a directory to Glacier
 
-Journal
--------
-
-Journal is a file in local filesystem, which contains list of all files, uploaded to Amazon Glacier. Strictly saying, this file contains a list of operations (list of records), performed with Amazon Glacier vault. 
-
-Main operations are 
-
-* CREATE
-* DELETE
-* DOWNLOAD
-
-All items except **DELETE** are present in the journal for usage, even though they are present in the journal file, they are not available for usage as they have been deleted, and so removed from the active journal.
-
-The reason why it's present in the file is so we can have it as history.
 
 Minimum Amazon Glacier permissions:
 -----------------------------------
