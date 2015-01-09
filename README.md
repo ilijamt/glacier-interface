@@ -129,7 +129,7 @@ START: list-vaults
 
 Total available vaults: 1
 
-                 ARN: arn:aws:glacier:eu-west-1:166534042608:vaults/Test
+                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/Test
           Vault Name: Test
              Created: 2014-10-22T21:49:00.968Z
       Inventory Size: 0 B (0 bytes)
@@ -144,10 +144,49 @@ Finished
 ### `create-vault` 
 Creates a new vault on Amazon Glacier
 
+```bash
+$ gi --config config.json create-vault TestDemo
+
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /home/user/workspace/java/glacier-interface
+Command: CreateVault
+
+START: create-vault
+
+    Location: glacier.eu-west-1.amazonaws.com/<uid>/vaults/TestDemo
+         ARN: arn:aws:glacier:eu-west-1:uid:vaults/TestDemo
+  Vault Name: TestDemo
+     Created: 2015-01-09T22:15:57.881Z
+
+END: create-vault
+
+Finished
+
+```
+
 ### `delete-vault`
 Deletes a vault on Amazon Glacier, just a not that you cannot delete a non empty vault, you will have to delete all the archives first and then you can delete the vault after 24 hours.
 
 You can use [purge-vault)(#purge-vault) to empty the vault from all the archives.
+
+```bash
+$ gi --config config.json delete-vault --vault TestDemo
+
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /home/user/workspace/java/glacier-interface
+Command: DeleteVault
+
+START: delete-vault
+
+TestDemo deleted. (Currently Amazon Glacier does not return error if vault does not exists)
+
+END: delete-vault
+
+Finished
+
+```
   
 ### `list-vault-jobs`
 Gives you a list of all available vault jobs
