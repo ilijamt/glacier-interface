@@ -205,7 +205,7 @@ Finished
 Gives you a list of all available vault jobs
 
 ```bash
-gi --config config.json list-vault-jobs --vault TestDemo
+$ gi --config config.json list-vault-jobs --vault TestDemo
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
 Current working directory: /home/user/workspace/java/glacier-interface
@@ -213,7 +213,7 @@ Command: ListVaultJobs
 
 START: list-vault-jobs
 
-2015-01-09T23:40:50.228Z [Action: InventoryRetrieval] InProgress (Completed: false, On: null) ID: hxQoO7pBT5AXYssvVnoj8h0WmNqDKQPRjQ9Y5IGOOWmJt9iZhQHSzE3RX8F2qRd9kkGqJeM9xq6q7o7OgnqQNEZRqPP0
+2015-01-11T10:57:15.889Z [Action: InventoryRetrieval] InProgress (Completed: false, On: null) ID: v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21
 
 END: list-vault-jobs
 
@@ -224,7 +224,7 @@ Finished
 Gives a detailed information about a vault job
 
 ```bash
-$ gi --config config.json vault-job-info --id hxQoO7pBT5AXYssvVnoj8h0WmNqDKQPRjQ9Y5IGOOWmJt9iZhQHSzE3RX8F2qRd9kkGqJeM9xq6q7o7OgnqQNEZRqPP0 --vault TestDemo
+$ gi --config config.json vault-job-info --id v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21 --vault TestDemo
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
 Current working directory: /home/user/workspace/java/glacier-interface
@@ -237,20 +237,25 @@ START: vault-job-info
     Archive Size In Bytes : null
                 Completed : false
            CompletionDate : null
-             CreationDate : 2015-01-09T23:40:50.228Z
+             CreationDate : 2015-01-11T10:57:15.889Z
   Inventory Size In Bytes : null
           Job Description : null
-                   Job Id : hxQoO7pBT5AXYssvVnoj8h0WmNqDKQPRjQ9Y5IGOOWmJt9iZhQHSzE3RX8F2qRd9kkGqJeM9xq6q7o7OgnqQNEZRqPP0
+                   Job Id : v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21
          SHA256 Tree Hash : null
                 SNS Topic : null
               Status Code : InProgress
            Status Message : null
-                Vault ARN : arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
+                Vault ARN : arn:aws:glacier:eu-west-1:166534042608:vaults/TestDemo
 
 
 END: vault-job-info
 
 Finished
+```
+
+Now after the job has been completed, ~4 hours later.
+```bash
+gi --config config.json vault-job-info --id v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21 --vault TestDemo
 ```
 
 ### `inventory-retrieve`
@@ -259,7 +264,7 @@ If you lose your journal you will need to request and **inventory-retrieve** fro
 This gives you a list of all available archives in the system
 
 ```bash
-$  gi --config config.json inventory-retrieve --vault Test
+$  gi --config config.json inventory-retrieve --vault TestDemo
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
 Current working directory: /home/user/workspace/java/glacier-interface
@@ -269,7 +274,7 @@ START: inventory-retrieve
 
 Inventory retrieved.
 
-    Job ID: hxQoO7pBT5AXYssvVnoj8h0WmNqDKQPRjQ9Y5IGOOWmJt9iZhQHSzE3RX8F2qRd9kkGqJeM9xq6q7o7OgnqQNEZRqPP0
+    Job ID: v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21
      Vault: TestDemo
 
 END: inventory-retrieve
