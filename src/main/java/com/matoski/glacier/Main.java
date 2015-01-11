@@ -3,6 +3,7 @@ package com.matoski.glacier;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 import com.beust.jcommander.JCommander;
@@ -66,6 +67,11 @@ public class Main {
   private static final HashMap<Integer, Object> commands = new HashMap<Integer, Object>();
 
   /**
+   * The commander parser
+   */
+  private static JCommander commander = null;
+
+  /**
    * Initializes the applications commands, this creates a list of available commands that can be
    * used.
    */
@@ -93,6 +99,35 @@ public class Main {
 
   }
 
+  public static void processHelp() {
+    processHelp(CliCommands.Help.getPropertyName());
+  }
+
+  public static void processHelp(String command) {
+
+    CliCommands cmd = CliCommands.from(command);
+
+    switch (cmd) {
+      case Help:
+        CommandHelp help = (CommandHelp) commands.get(CliCommands.Help.ordinal());
+        if (help.command.isEmpty()) {
+          // No extra commands supplied so we display the whole help
+          commander.usage();
+        } else {
+          Iterator<String> iterator = help.command.iterator();
+          while (iterator.hasNext()) {
+            commander.usage(iterator.next());
+          }
+        }
+        break;
+
+      default:
+        commander.usage(command);
+        break;
+    }
+
+  }
+
   /**
    * Entry point for application.
    * 
@@ -105,9 +140,9 @@ public class Main {
         Constants.VERSION));
     System.out.println();
 
-    JCommander commander = null;
     Arguments arguments = new Arguments();
-
+    String command = CliCommands.Help.getPropertyName();
+    
     init();
 
     try {
@@ -118,9 +153,10 @@ public class Main {
       }
 
       commander.parse(args);
+      command = commander.getParsedCommand();
 
     } catch (Exception e) {
-      commander.usage();
+      commander.usage(commander.getParsedCommand());
       System.err.print("ERROR: ");
       System.err.println(e.getMessage());
       System.exit(1);
@@ -128,7 +164,6 @@ public class Main {
 
     Config config = null;
     Boolean hasConfig = !(null == arguments.config);
-    String command = commander.getParsedCommand();
 
     if (hasConfig) {
       try {
@@ -173,7 +208,7 @@ public class Main {
 
     if (!validCommand || !validConfig) {
 
-      commander.usage();
+      processHelp(command);
 
       if (cliCommand != CliCommands.Help && !validConfig) {
 
@@ -199,7 +234,7 @@ public class Main {
         switch (cliCommand) {
 
           case Help:
-            commander.usage();
+            processHelp();
             break;
 
           case ListJournal:

@@ -5,7 +5,7 @@ A command line tool to interface with glacier.
 
 It's a multithreaded application, that supports multipart uploads to Amazon Glacier servers, you can specify concurrency, to speed up the upload.  
 
-Anyone is welcome to help in development of this tool, see a bug, or a want a new feature, drop me a pull request, or create an issue and I will see what I can do.
+Anyone is welcome to help in development of this tool, see a bug, or a want a new feature, send me a pull request, or create an issue and I will see what I can do.
 
 **Status: BETA**
 
@@ -126,6 +126,31 @@ Commands Description
 -------------------
 ### `help`
 Shows all the available command in the system, you can take a look at [Help](HELP)
+
+If you want to show the help for a specific command just execute.
+
+```bash
+$ gi help list-vaults create-vault
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /home/ilijamt/workspace/java/glacier-interface
+Command: Help
+
+List the available vaults in the system
+Usage: list-vaults [options]
+
+Creates a new vault on Amazon Glacier
+Usage: create-vault [options]
+  Options:
+        --vault
+       The name of the vault to be created, will be overwritten by --aws-vault
+       if not specified
+
+
+Finished
+```
+
+Also while running a command, if some required parameters are missing, then it will display the help for that command.
 
 ### `list-vaults`
 Lists all available vaults present on Amazon Glacier servers specified by the region.
@@ -255,7 +280,7 @@ Finished
 
 Now after the job has been completed, ~4 hours later.
 ```bash
-gi --config config.json vault-job-info --id v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21 --vault TestDemo
+$ gi --config config.json vault-job-info --id v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21 --vault TestDemo
 ```
 
 ### `inventory-retrieve`
