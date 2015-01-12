@@ -1,4 +1,4 @@
-Sync
+sync
 ====
 
 Let's create a couple of files that we can sync
