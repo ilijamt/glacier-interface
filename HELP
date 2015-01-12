@@ -28,7 +28,7 @@ Usage: <main class> [options] [command] [command options]
        directory is set to the current working directory
   Commands:
     help      Show the help page
-      Usage: help [options]
+      Usage: help [options] The command you want to display help for
 
     list-vaults      List the available vaults in the system
       Usage: list-vaults [options]
@@ -142,7 +142,7 @@ Usage: <main class> [options] [command] [command options]
               --part-size
              How big chunks of data to download from amazon glacier during one
              request, the part size has to be multiple of 2, like 1MB, 2MB, 4MB, 8MB, ...
-             Default: 1
+             Default: 8
 
     delete-archive      Initiate a deletion of archive
       Usage: delete-archive [options]
@@ -170,7 +170,7 @@ Usage: <main class> [options] [command] [command options]
              How many threads to open to use when uploading the data to amazon
              glacier, the more threads you have the more memory it will eat. The memory
              requirements will be partSize * concurrent
-             Default: 1
+             Default: 2
         *     --file
              The file(s) to be uploaded, you can specify this parameter multiple
              times
@@ -187,7 +187,7 @@ Usage: <main class> [options] [command] [command options]
               --part-size
              How big chunks of data to upload to amazon glacier during one
              request, the part size has to be multiple of 2, like 1MB, 2MB, 4MB, 8MB, ...
-             Default: 1
+             Default: 8
               --replaced-modified
              Replaces the modified file with a new one, and the old one is
              deleted from glacier and the journal
@@ -250,7 +250,7 @@ Usage: <main class> [options] [command] [command options]
              How many threads to open to use when uploading the data to amazon
              glacier, the more threads you have the more memory it will eat. The memory
              requirements will be partSize * concurrent
-             Default: 1
+             Default: 2
               --dry-run
              Do not upload the files, just go through the process
              Default: false
@@ -268,8 +268,8 @@ Usage: <main class> [options] [command] [command options]
               --part-size
              How big chunks of data to upload to amazon glacier during one
              request, the part size has to be multiple of 2, like 1MB, 2MB, 4MB, 8MB, ...
-             Default: 1
-              --replaced-modified
+             Default: 8
+              --replace-modified
              Replaces the modified file with a new one, and the old one is
              deleted from glacier and the journal
              Default: false
