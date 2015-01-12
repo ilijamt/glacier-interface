@@ -671,7 +671,7 @@ Finished
 ### `sync`
 Synchronizes a directory to Glacier, this can be useful to sync a whole directory and it's contents.
 
-[docs/sync.md](Example)
+[Example](docs/sync.md)
 
 Minimum Amazon Glacier permissions:
 -----------------------------------
