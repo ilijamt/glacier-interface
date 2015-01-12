@@ -365,7 +365,7 @@ If you wish you can download the journal raw, not in the format that this applic
 It's used to list the files in a journal, it can give you a detailed information for what is in the journal.
 
 ```bash
-$ gi --config config.json list-journal --journal TestDemo.journal 
+$ gi list-journal --journal TestDemo.journal 
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
 Current working directory: /tmp/demo-glacer-interface
@@ -386,7 +386,7 @@ Finished
 Verifies the data in the journal with the files on the disk
 
 ```bash
-$ gi --config config.json verify-journal --journal TestDemo.journal 
+$ gi verify-journal --journal TestDemo.journal 
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
 Current working directory: /tmp/demo-glacer-interface
