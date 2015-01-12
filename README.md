@@ -183,8 +183,12 @@ Verifies the data in the journal with the files on the disk
 ### `init-download`
 Creates an init download job, which then can be used to retrieve the files that you requested.
 
-### `download-job`
-TODO 
+[Example](docs/init-download.md)
+
+### `download-job` (TODO)
+Downloads the current data, that is initiated by [init-download](#init-download)
+
+[Example](docs/download-job.md)
 
 ### `delete-archive`
 Delete an archive from Glacier, it can be either done by archive ID or by an archive Name, in which case you will need to supply a valid journal 
