@@ -27,6 +27,9 @@ Usage: <main class> [options] [command] [command options]
        The base directory from which we start, if not specified then the
        directory is set to the current working directory
   Commands:
+    version      Show the version of the application
+      Usage: version [options]
+
     help      Show the help page
       Usage: help [options] The command you want to display help for
 
@@ -225,24 +228,6 @@ Usage: <main class> [options] [command] [command options]
              The name of the vault from which the multipart upload info will be
              retrieved, will be overwritten by --aws-vault if not specified
 
-    abort-multipart-upload      Aborts a multipart upload
-      Usage: abort-multipart-upload [options]
-        Options:
-        *     --id
-             The multipart id we need to abort
-              --vault
-             The name of the vault from which the multipart upload will be
-             aborted, will be overwritten by --aws-vault if not specified
-
-    purge-vault      Purge the data from the vault
-      Usage: purge-vault [options]
-        Options:
-        *     --journal
-             Journal
-              --vault
-             The name of the vault from where the archive will be purged, will
-             be overwritten by --aws-vault if not specified
-
     sync      Sync a folder contents to amazon glacier
       Usage: sync [options]
         Options:
@@ -281,6 +266,15 @@ Usage: <main class> [options] [command] [command options]
              The name of the vault to where the archives will be synced, will be
              overwritten by --aws-vault if not specified
 
+    abort-multipart-upload      Aborts a multipart upload
+      Usage: abort-multipart-upload [options]
+        Options:
+        *     --id
+             The multipart id we need to abort
+              --vault
+             The name of the vault from which the multipart upload will be
+             aborted, will be overwritten by --aws-vault if not specified
+
     verify-journal      Verifies the data in the journal with the files on the disk
       Usage: verify-journal [options]
         Options:
@@ -289,6 +283,15 @@ Usage: <main class> [options] [command] [command options]
               --skip-hash
              Skip the hash checking
              Default: false
+
+    purge-vault      Purge the data from the vault
+      Usage: purge-vault [options]
+        Options:
+        *     --journal
+             Journal
+              --vault
+             The name of the vault from where the archive will be purged, will
+             be overwritten by --aws-vault if not specified
 
 
 
