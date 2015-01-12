@@ -24,13 +24,13 @@ public class Constants {
   public static final String MAX_VALID_UPLOAD_TIME = "+1 day";
 
   /** Default part size, used for upload and download. */
-  public static final Integer DEFAULT_PART_SIZE = 1;
+  public static final Integer DEFAULT_PART_SIZE = 8;
 
   /** How many times to retry failed upload. */
   public static final Integer DEFAULT_RETRY_FAILED_UPLOAD = 2;
 
   /** How many threads to run at the same time, for upload and download. */
-  public static final Integer DEFAULT_CONCURRENT_THREADS = 1;
+  public static final Integer DEFAULT_CONCURRENT_THREADS = 2;
 
   /** Parser: mt-aws-glacier. */
   public static final String PARSER_MT_AWS_GLACIER = "mt2";

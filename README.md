@@ -125,292 +125,60 @@ TODO
 Commands Description
 -------------------
 ### `help`
-Shows all the available command in the system, you can take a look at [Help](HELP)
+Shows all the available command in the system, you can take a look at [Help](HELP) for all the available commands
 
-If you want to show the help for a specific command just execute.
+If you want to show the help for a specific command just execute. Also while running a command, if some required parameters are missing, then it will display the help for that command.
 
-```bash
-$ gi help list-vaults create-vault
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: Help
-
-List the available vaults in the system
-Usage: list-vaults [options]
-
-Creates a new vault on Amazon Glacier
-Usage: create-vault [options]
-  Options:
-        --vault
-       The name of the vault to be created, will be overwritten by --aws-vault
-       if not specified
-
-
-Finished
-```
-
-Also while running a command, if some required parameters are missing, then it will display the help for that command.
+Or you can take a look [here](docs/help.md) for various examples.
 
 ### `list-vaults`
 Lists all available vaults present on Amazon Glacier servers specified by the region.
 
-```bash
-$ gi --config config.json list-vaults
-
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: ListVaults
-
-START: list-vaults
-
-Total available vaults: 1
-
-                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
-          Vault Name: Test
-             Created: 2015-01-09T22:15:57.881Z
-      Inventory Size: 0 B (0 bytes)
- Last Inventory Date: 2015-01-09T22:15:57.881Z
-
-END: list-vaults
-
-Finished
-
-```
+[Example](docs/list-vaults.md)
 
 ### `create-vault` 
 Creates a new vault on Amazon Glacier
 
-```bash
-$ gi --config config.json create-vault --vault uplTestDemo
-
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: CreateVault
-
-START: create-vault
-
-    Location: glacier.eu-west-1.amazonaws.com/<uid>/vaults/TestDemo
-         ARN: arn:aws:glacier:eu-west-1:uid:vaults/TestDemo
-  Vault Name: TestDemo
-     Created: 2015-01-09T22:15:57.881Z
-
-END: create-vault
-
-Finished
-
-```
+[Example](docs/create-vaults.md)
 
 ### `delete-vault`
 Deletes a vault on Amazon Glacier, just a not that you cannot delete a non empty vault, you will have to delete all the archives first and then you can delete the vault after 24 hours.
 
-You can use [purge-vault)(#purge-vault) to empty the vault from all the archives.
+You can use [purge-vault](#purge-vault) to empty the vault from all the archives.
 
-```bash
-$ gi --config config.json delete-vault --vault TestDemo
+[Example](docs/delete-vault.md)
 
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: DeleteVault
-
-START: delete-vault
-
-TestDemo deleted. (Currently Amazon Glacier does not return error if vault does not exists)
-
-END: delete-vault
-
-Finished
-
-```
-  
 ### `list-vault-jobs`
 Gives you a list of all available vault jobs
 
-```bash
-$ gi --config config.json list-vault-jobs --vault TestDemo
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: ListVaultJobs
-
-START: list-vault-jobs
-
-2015-01-11T10:57:15.889Z [Action: InventoryRetrieval] InProgress (Completed: false, On: null) ID: v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21
-
-END: list-vault-jobs
-
-Finished
-```
+[Example](docs/list-vault-jobs.md)
 
 ### `vault-job-info`
 Gives a detailed information about a vault job
 
-```bash
-$ gi --config config.json vault-job-info --id v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21 --vault TestDemo
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: VaultJobInfo
-
-START: vault-job-info
-
-                   Action : InventoryRetrieval
-               Archive Id : null
-    Archive Size In Bytes : null
-                Completed : false
-           CompletionDate : null
-             CreationDate : 2015-01-11T10:57:15.889Z
-  Inventory Size In Bytes : null
-          Job Description : null
-                   Job Id : v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21
-         SHA256 Tree Hash : null
-                SNS Topic : null
-              Status Code : InProgress
-           Status Message : null
-                Vault ARN : arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
-
-
-END: vault-job-info
-
-Finished
-```
-
-Now after the job has been completed, ~4+ hours later.
-```bash
-$ gi --config config.json vault-job-info --id v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21 --vault TestDemo
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: VaultJobInfo
-
-START: vault-job-info
-
-                   Action : InventoryRetrieval
-               Archive Id : null
-    Archive Size In Bytes : null
-                Completed : true
-           CompletionDate : 2015-01-11T15:14:18.402Z
-             CreationDate : 2015-01-11T10:57:15.889Z
-  Inventory Size In Bytes : 1484
-          Job Description : null
-                   Job Id : v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21
-         SHA256 Tree Hash : null
-                SNS Topic : null
-              Status Code : Succeeded
-           Status Message : Succeeded
-                Vault ARN : arn:aws:glacier:eu-west-1:166534042608:vaults/TestDemo
-
-
-END: vault-job-info
-
-Finished
-```
+[Example](docs/vault-job-info.md)
 
 ### `inventory-retrieve`
 If you lose your journal you will need to request and **inventory-retrieve** from Glacier and wait for about 4 hours until you can download it.
 
-This gives you a list of all available archives in the system
+This will query a request on the amazon glacier servers which gives you a list of all available archives in the system to download with [inventory-download](#inventory-download)
 
-```bash
-$  gi --config config.json inventory-retrieve --vault TestDemo
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: InventoryRetrieve
-
-START: inventory-retrieve
-
-Inventory retrieved.
-
-    Job ID: v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21
-     Vault: TestDemo
-
-END: inventory-retrieve
-
-Finished
-```
+[Example](docs/inventory-retrieve.md)
 
 ### `inventory-download`
 You can use this to download the inventory after **inventory-retrieve** has been completed. You will also need to specify the metadata used to store the archives, so we can parse it correctly.
 
-You can also use this to download the raw data and use it to create a new metadata parser.
-
-```bash
-gi --config glacier-interface/config.json inventory-download --id v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21 --journal TestDemo.journal --vault TestDemo
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: InventoryDownload
-
-START: inventory-download
-
-Inventory downloaded.
-
-    Job ID: v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21
-     Vault: TestDemo
-
-
-END: inventory-download
-
-Finished
-```
-
-If you wish you can download the journal raw, not in the format that this application uses, by adding the **-raw** switch, this is very useful if you want to create a new metadata based on how the data was encoded in the description value.
-
+[Example](docs/inventory-download.md)
 
 ### `list-journal`
 It's used to list the files in a journal, it can give you a detailed information for what is in the journal.
 
-```bash
-$ gi list-journal --journal TestDemo.journal 
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: ListJournal
-
-START: list-journal
-
-Total items: 1 (in journal 1)
-
-[  5.07 MiB] data.log
-
-END: list-journal
-
-Finished
-```
+[Example](docs/list-journal.md)
 
 ### `verify-journal`
 Verifies the data in the journal with the files on the disk
 
-```bash
-$ gi verify-journal --journal TestDemo.journal 
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: VerifyJournal
-
-START: verify-journal
-
-There are 1 files in the journal
-
-       Archive ID : royCx4abZ6CUHGnRKE_IpiQm0xiPR5MuKyb8bubNPRFNvnxvXr2RnQCjZ8TRey_CYsADE1q36a9SNjkGVnxomqInrOFvlxNIIkaL_Ou6-0ggfpyvIsfLRgljSCsRM1y-nCLqaLPi1Q
-             Name : data.log
-             Size : VALID (5.07 MiB, 5312500 bytes)
-         Modified : VALID (Sat Jan 10 00:07:02 CET 2015)
-  SHA256 TreeHash : VALID (ea10f2ffdd184f6c705e9757a3acc91afbcca02c9f653c9d54ab3f504b101052)
-            Valid : true
-
-Invalid: 0 B (0 bytes)
-Valid: 5.07 MiB (5312500 bytes)
-Total size: 5.07 MiB (5312500 bytes)
-
-END: verify-journal
-
-Finished
-```
+[Example](docs/verify-journal.md)
 
 ### `init-download`
 Creates an init download job, which then can be used to retrieve the files that you requested.
@@ -421,24 +189,7 @@ TODO
 ### `delete-archive`
 Delete an archive from Glacier, it can be either done by archive ID or by an archive Name, in which case you will need to supply a valid journal 
 
-```bash
-gi --config config.json delete-archive --journal TestDemo.journal --name data.log --vault TestDemo
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: DeleteArchive
-
-START: delete-archive
-
-Archive deleted.
-
-     Vault: TestDemo
-Archive ID: royCx4abZ6CUHGnRKE_IpiQm0xiPR5MuKyb8bubNPRFNvnxvXr2RnQCjZ8TRey_CYsADE1q36a9SNjkGVnxomqInrOFvlxNIIkaL_Ou6-0ggfpyvIsfLRgljSCsRM1y-nCLqaLPi1Q
-
-END: delete-archive
-
-Finished
-```
+[Example](docs/delete-archive.md)
 
 ### `upload-archive`
 Uploads an archive to Glacier server.
@@ -451,199 +202,23 @@ How big of chunks should be uploaded at a time
 
 You can specify how many threads to open to use when uploading the data to amazon glacier, the more threads you have the more memory it will eat.
 
-Lets create a random file to upload
-```bash
-$ dd if=/dev/urandom of=data.log bs=53125 count=100
-100+0 records in
-100+0 records out
-5312500 bytes (5.3 MB) copied, 0.468821 s, 11.3 MB/s
-```
-
-Now for upload
-```bash
-$ gi --config config.json upload-archive --concurrent 2 --vault TestDemo --file data.log --journal TestDemo.journal
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: UploadArchive
-
-START: upload-archive
-
-Processing: data.log (size: 5312500)
-[#00001/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-[#00002/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-[#00002/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
-[#00003/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-[#00001/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
-[#00004/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-[#00003/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
-[#00005/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-[#00004/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
-[#00006/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-[#00005/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
-[#00006/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
-
-END: upload-archive
-
-Finished
-```
-
-Now let's see for resuming upload
-```bash
-$ gi --config config.json upload-archive --concurrent 2 --vault TestDemo --file data.log --journal TestDemo.journal
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: UploadArchive
-
-Creating a new journal: TestDemo.journal
-START: upload-archive
-
-Processing: data.log (size: 5312500)
-[#00001/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-[#00002/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-[#00002/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
-[#00003/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-[#00001/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
-[#00004/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-[#00004/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
-[#00005/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-^C
-$ gi --config config.json upload-archive --concurrent 2 --vault TestDemo --file data.log --journal TestDemo.journal
-gi --config config.json upload-archive --concurrent 2 --vault TestDemo --file data.log --journal TestDemo.journal
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: UploadArchive
-
-Creating a new journal: TestDemo.journal
-START: upload-archive
-
-Processing: data.log (size: 5312500)
-Upload state found for data.log, loading
-Upload already initiated with location: /<uid>/vaults/TestDemo/multipart-uploads/FsBxrBiV2DxKqzC21bBciBi25P2Z9Y3dwmm8w63_rzb9d3X7kMMRLOcXWje77fVzCooIULlCdzlUU9AGXQ8HkRBgHyJG and id: FsBxrBiV2DxKqzC21bBciBi25P2Z9Y3dwmm8w63_rzb9d3X7kMMRLOcXWje77fVzCooIULlCdzlUU9AGXQ8HkRBgHyJG
-
-[#00001/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Already uploaded
-[#00002/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Already uploaded
-[#00003/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-[#00004/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Already uploaded
-[#00005/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-[#00003/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
-[#00005/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
-[#00006/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
-[#00006/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
-
-END: upload-archive
-
-Finished
-```
+[Example](docs/upload-archive.md)
 
 ### `list-multipart-uploads`
 Lists all the multipart uploads, and they can be canceled.
 Useful for cleaning up.
 
-```bash
-$ gi --config config.json list-multipart-uploads --vault TestDemo
-
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: ListMultipartUploads
-
-START: list-multipart-uploads
-
-Cancel all multipart uploads: false
-Total available multipart uploads: 5
-
-                  ID: 7Nr1F2JpjlRpMqYQNGbLQCccqEeIP0GaBLV8t5_NlfyZIdcXoCGtLZmfYQN5IoGPFS_4XZge9KHnU04yeJewOGelErq7
-                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
-       Creation date: 2015-01-09T22:28:21.744Z
-           Part size: 1048576
-         Description: mt2 eyJtdGltZSI6IjAifQ==
-                Name: null
-
-                  ID: uaePOwkbQDy4P8TyNRcxnEomOgNATIMiJFr7D7A6_813TbV20qMTYvCOyqwyq8x4-RCyS9-qxMwWdPbUO6PytSzZiuyf
-                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
-       Creation date: 2015-01-09T22:28:44.684Z
-           Part size: 1048576
-         Description: mt2 eyJtdGltZSI6IjAifQ==
-                Name: null
-
-                  ID: 2UVJNnEQFsSx_g4wkCsUOITW-KmSMssOK1IM9K9P-uEgKUzRV4VXv_XKGrYxnKZ9i-3o_goUP0nobN8QE7_4O9pJ0wN4
-                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
-       Creation date: 2015-01-09T22:29:25.080Z
-           Part size: 1048576
-         Description: mt2 eyJtdGltZSI6IjAifQ==
-                Name: null
-
-                  ID: wPrVOkpyB6P3ESSLwCos8TAEfJABCiUSB73YA38q2oQ-nzWNlerHab-bsKZyny021uRlRR6lE6zgbuXNYu_FYAEg1ESK
-                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
-       Creation date: 2015-01-09T22:38:32.800Z
-           Part size: 1048576
-         Description: mt2 eyJtdGltZSI6IjAifQ==
-                Name: null
-
-                  ID: flYAJrHphH1NgM0iYKhCOm_3TYKe1p4vkxecvB1B4pdlQWL_nyMs91CsbQAN_MG_2GYEV3qdL1yytt0OasNTHasJaeh7
-                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
-       Creation date: 2015-01-09T22:43:46.883Z
-           Part size: 1048576
-         Description: mt2 eyJtdGltZSI6IjAifQ==
-                Name: null
-
-END: list-multipart-uploads
-
-Finished
-
-```
-
-If you add **--cancel** to the command it will also cancel all the uploads in the list
+[Example](docs/list-multipart-uploads.md)
 
 ### `multipart-upload-info`
 Information about the multipart upload
 
-```bash
-$ gi --config config.json multipart-upload-info --id wPrVOkpyB6P3ESSLwCos8TAEfJABCiUSB73YA38q2oQ-nzWNlerHab-bsKZyny021uRlRR6lE6zgbuXNYu_FYAEg1ESK --vault TestDemo
-
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: MultipartUploadInfo
-
-START: multipart-upload-info
-
-                  ID: wPrVOkpyB6P3ESSLwCos8TAEfJABCiUSB73YA38q2oQ-nzWNlerHab-bsKZyny021uRlRR6lE6zgbuXNYu_FYAEg1ESK
-                 ARN: arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
-       Creation date: 2015-01-09T22:38:32.800Z
-           Part size: 1048576
-         Description: mt2 eyJtdGltZSI6IjAifQ==
-
-Total available parts for the upload: 0
-
-END: multipart-upload-info
-
-Finished
-```
-
+[Example](docs/multipart-upload-info.md)
 
 ### `abort-multipart-upload`
 Aborts a multipart upload, you need to specify the correct ID to abort
 
-```bash
-$ gi --config config.json abort-multipart-upload --id wPrVOkpyB6P3ESSLwCos8TAEfJABCiUSB73YA38q2oQ-nzWNlerHab-bsKZyny021uRlRR6lE6zgbuXNYu_FYAEg1ESK --vault TestDemo
-
-Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
-
-Current working directory: /tmp/demo-glacier-interface
-Command: AbortMultipartUpload
-
-START: abort-multipart-upload
-
-Multipart upload canceled: true
-
-END: abort-multipart-upload
-
-Finished
-```
+[Example](docs/abort-multipart-upload.md)
 
 ### `purge-vault`
 Purges the vault of all files present in the journal, it can be used to empty a vault of all archives.

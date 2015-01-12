@@ -327,8 +327,6 @@ END: verify-journal
 Finished
 ```
 
-If you take a look at the journal, you will see theres is an entry for the deleted file.
-
 And here is the journal
 ```json
 {
