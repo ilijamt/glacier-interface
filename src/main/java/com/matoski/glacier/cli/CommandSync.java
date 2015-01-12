@@ -37,7 +37,7 @@ public class CommandSync extends GenericCommand {
   public Integer concurrent = Constants.DEFAULT_CONCURRENT_THREADS;
 
   @Parameter(
-      names = "--replaced-modified",
+      names = "--replace-modified",
       description = "Replaces the modified file with a new one, and the old one is deleted from glacier and the journal")
   public Boolean uploadReplaceModified = false;
 

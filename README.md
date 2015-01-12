@@ -669,8 +669,142 @@ Finished
 ```
 
 ### `sync`
-Synchronizes a directory to Glacier
+Synchronizes a directory to Glacier, this can be useful to sync a whole directory and it's contents.
 
+Let's create a couple of files that we can sync
+```bash
+ dd if=/dev/urandom of=data.log bs=53125 count=100
+ dd if=/dev/urandom of=data2.log bs=63125 count=100
+ dd if=/dev/urandom of=data12.log bs=43125 count=100
+ dd if=/dev/urandom of=data15.log bs=93125 count=100
+```
+
+Now let's sync everything
+```bash
+$ gi --config /tmp/config.json sync --journal /tmp/TestDemo.journal --concurrent 2 --replace-modified --vault TestDemo
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /tmp/demo-glacier-interface
+Command: Sync
+
+Creating a new journal: ../TestDemo.journal
+START: sync
+
+4 files found
+Processing: data15.log (size: 9312500)
+[#00001/#00009] PIECE_START     | (/tmp/demo-glacier-interface/data15.log) Upload started
+[#00002/#00009] PIECE_START     | (/tmp/demo-glacier-interface/data15.log) Upload started
+[#00002/#00009] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data15.log) Uploaded
+[#00003/#00009] PIECE_START     | (/tmp/demo-glacier-interface/data15.log) Upload started
+[#00001/#00009] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data15.log) Uploaded
+[#00004/#00009] PIECE_START     | (/tmp/demo-glacier-interface/data15.log) Upload started
+[#00003/#00009] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data15.log) Uploaded
+[#00005/#00009] PIECE_START     | (/tmp/demo-glacier-interface/data15.log) Upload started
+[#00004/#00009] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data15.log) Uploaded
+[#00006/#00009] PIECE_START     | (/tmp/demo-glacier-interface/data15.log) Upload started
+[#00005/#00009] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data15.log) Uploaded
+[#00007/#00009] PIECE_START     | (/tmp/demo-glacier-interface/data15.log) Upload started
+[#00006/#00009] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data15.log) Uploaded
+[#00008/#00009] PIECE_START     | (/tmp/demo-glacier-interface/data15.log) Upload started
+[#00007/#00009] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data15.log) Uploaded
+[#00009/#00009] PIECE_START     | (/tmp/demo-glacier-interface/data15.log) Upload started
+[#00008/#00009] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data15.log) Uploaded
+[#00009/#00009] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data15.log) Uploaded
+Processing: data.log (size: 5312500)
+[#00001/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00002/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00001/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00003/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00002/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00004/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00004/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00005/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00003/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00006/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00006/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00005/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+Processing: data2.log (size: 6312500)
+[#00001/#00007] PIECE_START     | (/tmp/demo-glacier-interface/data2.log) Upload started
+[#00002/#00007] PIECE_START     | (/tmp/demo-glacier-interface/data2.log) Upload started
+[#00001/#00007] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data2.log) Uploaded
+[#00003/#00007] PIECE_START     | (/tmp/demo-glacier-interface/data2.log) Upload started
+[#00002/#00007] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data2.log) Uploaded
+[#00004/#00007] PIECE_START     | (/tmp/demo-glacier-interface/data2.log) Upload started
+[#00003/#00007] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data2.log) Uploaded
+[#00005/#00007] PIECE_START     | (/tmp/demo-glacier-interface/data2.log) Upload started
+[#00004/#00007] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data2.log) Uploaded
+[#00006/#00007] PIECE_START     | (/tmp/demo-glacier-interface/data2.log) Upload started
+[#00005/#00007] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data2.log) Uploaded
+[#00007/#00007] PIECE_START     | (/tmp/demo-glacier-interface/data2.log) Upload started
+[#00006/#00007] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data2.log) Uploaded
+[#00007/#00007] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data2.log) Uploaded
+Processing: data12.log (size: 4312500)
+[#00001/#00005] PIECE_START     | (/tmp/demo-glacier-interface/data12.log) Upload started
+[#00002/#00005] PIECE_START     | (/tmp/demo-glacier-interface/data12.log) Upload started
+[#00001/#00005] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data12.log) Uploaded
+[#00003/#00005] PIECE_START     | (/tmp/demo-glacier-interface/data12.log) Upload started
+[#00002/#00005] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data12.log) Uploaded
+[#00004/#00005] PIECE_START     | (/tmp/demo-glacier-interface/data12.log) Upload started
+[#00004/#00005] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data12.log) Uploaded
+[#00005/#00005] PIECE_START     | (/tmp/demo-glacier-interface/data12.log) Upload started
+[#00003/#00005] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data12.log) Uploaded
+[#00005/#00005] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data12.log) Uploaded
+
+END: sync
+
+Finished
+```
+
+As we can see everything is uploaded, now let's run it again to see if it's gonna upload again or not.
+
+```bash
+$ gi --config /tmp/config.json sync --journal /tmp/TestDemo.journal --concurrent 2 --replace-modified --vault TestDemo
+
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /tmp/demo-glacier-interface
+Command: Sync
+
+START: sync
+
+4 files found
+data15.log is already present in the journal
+Verifying ...
+data15.log size is VALID
+data15.log modified date is VALID
+Verifying hash, this may take a while depending on the file size ...
+Hash is: VALID
+
+ Skipping upload for data15.log
+data.log is already present in the journal
+Verifying ...
+data.log size is VALID
+data.log modified date is VALID
+Verifying hash, this may take a while depending on the file size ...
+Hash is: VALID
+
+ Skipping upload for data.log
+data2.log is already present in the journal
+Verifying ...
+data2.log size is VALID
+data2.log modified date is VALID
+Verifying hash, this may take a while depending on the file size ...
+Hash is: VALID
+
+ Skipping upload for data2.log
+data12.log is already present in the journal
+Verifying ...
+data12.log size is VALID
+data12.log modified date is VALID
+Verifying hash, this may take a while depending on the file size ...
+Hash is: VALID
+
+ Skipping upload for data12.log
+
+END: sync
+
+Finished
+```
 
 Minimum Amazon Glacier permissions:
 -----------------------------------

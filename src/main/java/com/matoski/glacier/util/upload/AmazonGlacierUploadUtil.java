@@ -444,7 +444,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
             partSize, vaultName, metadata);
 
         // delete the old archive if we have replace the file property
-        if (replace && archive != null) {
+        if (replace && archive != null && exists) {
           System.out.println(String.format("Cleaning, removing old archive [%s] %s", old.getId(),
               old.getName()));
           deleteArchive(vaultName, old.getId());
@@ -642,6 +642,8 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     } catch (InterruptedException e) {
       System.err.println(String.format("ERROR: %s", e.getMessage()));
     }
+    
+    uploadStatus.write();
 
     // go through them again, in case we missed them , can happen if it
     // finishes very shortly after completion

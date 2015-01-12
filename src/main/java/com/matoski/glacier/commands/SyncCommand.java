@@ -10,10 +10,12 @@ import org.apache.commons.io.FileUtils;
 
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandSync;
+import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
 import com.matoski.glacier.pojo.Config;
 import com.matoski.glacier.pojo.journal.State;
+import com.matoski.glacier.util.AmazonGlacierBaseUtil;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
 /**
@@ -35,6 +37,11 @@ public class SyncCommand extends AbstractCommand<CommandSync> {
   private State journal;
 
   /**
+   * Metadata.
+   */
+  protected Metadata metadata;
+
+  /**
    * Constructor.
    * 
    * @param config
@@ -50,6 +57,23 @@ public class SyncCommand extends AbstractCommand<CommandSync> {
   public SyncCommand(Config config, CommandSync command) throws VaultNameNotPresentException,
       RegionNotSupportedException {
     super(config, command);
+
+    Boolean validVaultName = null != command.vaultName;
+    Boolean validVaultNameConfig = null != config.getVault();
+
+    if (!validVaultName && !validVaultNameConfig) {
+      throw new VaultNameNotPresentException();
+    }
+    
+    if (validVaultNameConfig) {
+      command.vaultName = config.getVault();
+    }
+    
+    if (command.partSize % 2 != 0 && command.partSize != 1) {
+      throw new IllegalArgumentException("Part size has to be a multiple of 2");
+    }
+    
+    command.partSize = command.partSize * (int) AmazonGlacierBaseUtil.MINIMUM_PART_SIZE;
 
     try {
       this.journal = State.load(command.journal);
