@@ -420,7 +420,6 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
         GenericValidateEnum validTreeHash = State.archiveValidateTreeHash(testArchive);
 
         System.out.println(String.format("Hash is: %s", validTreeHash));
-        System.out.println();
 
         upload = validSize != GenericValidateEnum.VALID
             || validModifiedDate != GenericValidateEnum.VALID
@@ -448,6 +447,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
           System.out.println(String.format("Cleaning, removing old archive [%s] %s", old.getId(),
               old.getName()));
           deleteArchive(vaultName, old.getId());
+          journal.deleteArchive(old.getId());
         }
 
         journal.addArchive(archive);
@@ -467,10 +467,12 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     } else {
 
-      System.out.println(String.format("%s Skipping upload for %s", dryRun ? "[--dry-run]" : "",
+      System.out.println(String.format("%sSkipping upload for %s", dryRun ? "[--dry-run] " : "",
           fileName));
 
     }
+    
+    System.out.println(); 
 
     return archive;
 

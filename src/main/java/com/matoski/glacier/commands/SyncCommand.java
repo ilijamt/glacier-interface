@@ -102,7 +102,7 @@ public class SyncCommand extends AbstractCommand<CommandSync> {
       files.add(file.getAbsolutePath().replace(config.getDirectory() + "/", ""));
     }
 
-    System.out.println(String.format("%s files found", files.size()));
+    System.out.println(String.format("%s files found%n", files.size()));
 
     for (String fileName : files) {
 

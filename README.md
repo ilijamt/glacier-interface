@@ -759,7 +759,6 @@ As we can see everything is uploaded, now let's run it again to see if it's gonn
 
 ```bash
 $ gi --config /tmp/config.json sync --journal /tmp/TestDemo.journal --concurrent 2 --replace-modified --vault TestDemo
-
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
 Current working directory: /tmp/demo-glacier-interface
@@ -805,6 +804,84 @@ END: sync
 
 Finished
 ```
+
+Now lets create a new file and modify an old one and run it again.
+
+```bash
+dd if=/dev/urandom of=data12.log bs=43125 count=100
+dd if=/dev/urandom of=data45.log bs=23125 count=100
+``` 
+
+And now running the sync again.
+
+```bash
+$ gi --config /tmp/config.json sync --journal /tmp/TestDemo.journal --concurrent 2 --replace-modified --vault TestDemo
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /tmp/demo-glacier-interface
+Command: Sync
+
+START: sync
+
+5 files found
+data15.log is already present in the journal
+Verifying ...
+data15.log size is VALID
+data15.log modified date is VALID
+Verifying hash, this may take a while depending on the file size ...
+Hash is: VALID
+Skipping upload for data15.log
+
+data.log is already present in the journal
+Verifying ...
+data.log size is VALID
+data.log modified date is VALID
+Verifying hash, this may take a while depending on the file size ...
+Hash is: VALID
+Skipping upload for data.log
+
+data2.log is already present in the journal
+Verifying ...
+data2.log size is VALID
+data2.log modified date is VALID
+Verifying hash, this may take a while depending on the file size ...
+Hash is: VALID
+Skipping upload for data2.log
+
+data12.log is already present in the journal
+Verifying ...
+data12.log size is VALID
+data12.log modified date is INVALID
+Verifying hash, this may take a while depending on the file size ...
+Hash is: INVALID
+Processing: data12.log (size: 4312500)
+[#00001/#00005] PIECE_START     | (/tmp/demo-glacier-interface/data12.log) Upload started
+[#00002/#00005] PIECE_START     | (/tmp/demo-glacier-interface/data12.log) Upload started
+[#00002/#00005] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data12.log) Uploaded
+[#00003/#00005] PIECE_START     | (/tmp/demo-glacier-interface/data12.log) Upload started
+[#00001/#00005] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data12.log) Uploaded
+[#00004/#00005] PIECE_START     | (/tmp/demo-glacier-interface/data12.log) Upload started
+[#00003/#00005] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data12.log) Uploaded
+[#00005/#00005] PIECE_START     | (/tmp/demo-glacier-interface/data12.log) Upload started
+[#00004/#00005] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data12.log) Uploaded
+[#00005/#00005] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data12.log) Uploaded
+Cleaning, removing old archive [OBi2CErfrPdnucr1UyLZWic4-QBBdKavbfiau-xW27H2Up2GdesKvX6eNo49TJD9A6iRlX140UQw2uGErIztAqF9aQJxQpIqTLLuQYB5DClxoVOf6ITgKLPxjz1bjyeJqsW6CZUYLQ] data12.log
+Processing: data45.log (size: 2312500)
+[#00001/#00003] PIECE_START     | (/tmp/demo-glacier-interface/data45.log) Upload started
+[#00002/#00003] PIECE_START     | (/tmp/demo-glacier-interface/data45.log) Upload started
+[#00001/#00003] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data45.log) Uploaded
+[#00003/#00003] PIECE_START     | (/tmp/demo-glacier-interface/data45.log) Upload started
+[#00003/#00003] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data45.log) Uploaded
+[#00002/#00003] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data45.log) Uploaded
+
+END: sync
+
+Finished
+```
+
+And there we go, the modified file and the new file are uploaded on glacier, and we can run verify-journal if you want to test.
+
+If you take a look at the journal, you will see theres is an entry for the deleted file.
 
 Minimum Amazon Glacier permissions:
 -----------------------------------
