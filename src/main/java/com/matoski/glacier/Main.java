@@ -164,7 +164,7 @@ public class Main {
     } catch (Exception e) {
 
       if (commander.getParsedCommand() == null) {
-        System.err.println(String.format("ERROR: Unknown command: %s", command));
+        System.err.println(String.format("ERROR: Unknown command, try help"));
       } else {
         commander.usage(commander.getParsedCommand());
         System.err.print("ERROR: ");
