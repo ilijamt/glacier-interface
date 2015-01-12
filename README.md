@@ -648,7 +648,7 @@ Finished
 ### `purge-vault`
 Purges the vault of all files present in the journal, it can be used to empty a vault of all archives.
 
-
+[Example](docs/sync.md)
 
 ### `sync`
 Synchronizes a directory to Glacier, this can be useful to sync a whole directory and it's contents.

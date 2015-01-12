@@ -211,6 +211,122 @@ Finished
 
 And there we go, the modified file and the new file are uploaded on glacier, and we can run verify-journal if you want to test.
 
+Now we can run it again to see if everything was succesfull.
+
+```bash
+$ gi --config /tmp/config.json sync --journal /tmp/TestDemo.journal --concurrent 2 --replace-modified --vault TestDemo
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /tmp/demo-glacier-interface
+Command: Sync
+
+START: sync
+
+5 files found
+
+data15.log is already present in the journal
+Verifying ...
+data15.log size is VALID
+data15.log modified date is VALID
+Verifying hash, this may take a while depending on the file size ...
+Hash is: VALID
+Skipping upload for data15.log
+
+data.log is already present in the journal
+Verifying ...
+data.log size is VALID
+data.log modified date is VALID
+Verifying hash, this may take a while depending on the file size ...
+Hash is: VALID
+Skipping upload for data.log
+
+data2.log is already present in the journal
+Verifying ...
+data2.log size is VALID
+data2.log modified date is VALID
+Verifying hash, this may take a while depending on the file size ...
+Hash is: VALID
+Skipping upload for data2.log
+
+data12.log is already present in the journal
+Verifying ...
+data12.log size is VALID
+data12.log modified date is VALID
+Verifying hash, this may take a while depending on the file size ...
+Hash is: VALID
+Skipping upload for data12.log
+
+data45.log is already present in the journal
+Verifying ...
+data45.log size is VALID
+data45.log modified date is VALID
+Verifying hash, this may take a while depending on the file size ...
+Hash is: VALID
+Skipping upload for data45.log
+
+
+END: sync
+
+Finished
+```
+
+And we can also run verify on the journal to see if everything is OK
+
+```
+$ gi verify-journal --journal /tmp/TestDemo.journal 
+Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
+
+Current working directory: /tmp/demo-glacier-interface
+Command: VerifyJournal
+
+START: verify-journal
+
+There are 5 files in the journal
+
+       Archive ID : 1w4mqsjq2m_68ApdI_AqFgMpqxCj93Dw2bf8eM--iCzBKO8Iojx5EuayKy6RaX4ffWlg_5A5KHwH7mXC5U1g0Pux07bT-oZHZE069w9sDwin_mjkP7q6IAaMVmsdsEHeuGHEXFDY9Q
+             Name : data2.log
+             Size : VALID (6.02 MiB, 6312500 bytes)
+         Modified : VALID (Mon Jan 12 14:51:03 CET 2015)
+  SHA256 TreeHash : VALID (e4310e8a310221bbb34884c2392ce7a29eeaed35200603bc49f00d209943870a)
+            Valid : true
+
+       Archive ID : xOOE3X6jmAQ_cPHrHFIydk8FUFMVedsA3Wvz6DDlanAIj8m7xRY5mHfRmEd4AW4Wn-0m7Gdd8IFlTfk29ADQCRWw3m04ziFrMeL5M_lBPZHpyiwJMZdpYBCM0LTx7PkCJ-xbNV_qEg
+             Name : data12.log
+             Size : VALID (4.11 MiB, 4312500 bytes)
+         Modified : VALID (Mon Jan 12 15:30:37 CET 2015)
+  SHA256 TreeHash : VALID (a79ecb298c145e7283283d7bf7316fb24157d0a14c6e8bc989d78d400af39e91)
+            Valid : true
+
+       Archive ID : yzmJvaqivZN3dPL2UMmmObeVAUgQCcNms-nefTDHDrc0cpuD_dFfbNxPt8j6BZP1QkW1X-T82PSw_X_mg2v0qanNcv5FWeG7h7dPv-3-xtBpTfJ3W1l_TMD6Lmli00Fk9Xyd1zCvVw
+             Name : data15.log
+             Size : VALID (8.88 MiB, 9312500 bytes)
+         Modified : VALID (Mon Jan 12 14:51:17 CET 2015)
+  SHA256 TreeHash : VALID (5b038a5e2236cb55918df399aa98daae0b272e29e2753909571b271d186ef7da)
+            Valid : true
+
+       Archive ID : 24ad4IV3_IqA8lOB6qL2e7wjt93JhALiBHP25LTK-QUfjkOmqSyTqR0wKy021ZX8rr3rai-2stmtddL1zVolHbunImFrxBvTA1tiTZGd16ZVLQ0J3eSb3LS5hJyuNv0IyvYd2Aj4Vg
+             Name : data45.log
+             Size : VALID (2.21 MiB, 2312500 bytes)
+         Modified : VALID (Mon Jan 12 15:30:37 CET 2015)
+  SHA256 TreeHash : VALID (7cfc948786bafdc3f44fd8600c71ff12bb3c0370a05e4a4960054c9f2024abbb)
+            Valid : true
+
+       Archive ID : m1MVZ1yzi2mj51kyp99pkhPsmQGSHD_O3586xmj3o3NQH_mwp86bWLCybBlSx_CG_wM8jXgO1Fuwqtg7uz69KSqKwbjV7W3zzm2dWcOFRxFElLRV82wi5rz7XCzkDK6nG_pv2YgZLg
+             Name : data.log
+             Size : VALID (5.07 MiB, 5312500 bytes)
+         Modified : VALID (Mon Jan 12 14:50:55 CET 2015)
+  SHA256 TreeHash : VALID (fab0982c625cd1e865d2622b65e5def9ea75b42016ae42a8b76d51f1f905c72e)
+            Valid : true
+
+Invalid: 0 B (0 bytes)
+Valid: 26.29 MiB (27562500 bytes)
+Total size: 26.29 MiB (27562500 bytes)
+
+END: verify-journal
+
+Finished
+```
+
 If you take a look at the journal, you will see theres is an entry for the deleted file.
 
 And here is the journal
