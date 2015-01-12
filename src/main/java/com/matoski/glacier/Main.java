@@ -29,6 +29,7 @@ import com.matoski.glacier.cli.CommandSync;
 import com.matoski.glacier.cli.CommandUploadArchive;
 import com.matoski.glacier.cli.CommandVaultJobInfo;
 import com.matoski.glacier.cli.CommandVerifyJournal;
+import com.matoski.glacier.cli.CommandVersion;
 import com.matoski.glacier.commands.AbortMultipartUploadCommand;
 import com.matoski.glacier.commands.CreateVaultCommand;
 import com.matoski.glacier.commands.DeleteArchiveCommand;
@@ -47,6 +48,7 @@ import com.matoski.glacier.commands.SyncCommand;
 import com.matoski.glacier.commands.UploadArchiveCommand;
 import com.matoski.glacier.commands.VaultJobInfoCommand;
 import com.matoski.glacier.commands.VerifyJournalCommand;
+import com.matoski.glacier.commands.VersionCommand;
 import com.matoski.glacier.enums.CliCommands;
 import com.matoski.glacier.errors.RegionNotSupportedException;
 import com.matoski.glacier.errors.VaultNameNotPresentException;
@@ -77,6 +79,7 @@ public class Main {
    */
   public static void init() {
 
+    commands.put(CliCommands.Version.ordinal(), new CommandVersion());
     commands.put(CliCommands.Help.ordinal(), new CommandHelp());
     commands.put(CliCommands.ListJournal.ordinal(), new CommandListJournal());
     commands.put(CliCommands.ListVaults.ordinal(), new CommandListVaults());
@@ -159,9 +162,15 @@ public class Main {
       command = commander.getParsedCommand();
 
     } catch (Exception e) {
-      commander.usage(commander.getParsedCommand());
-      System.err.print("ERROR: ");
-      System.err.println(e.getMessage());
+
+      if (commander.getParsedCommand() == null) {
+        System.err.println(String.format("ERROR: Unknown command: %s", command));
+      } else {
+        commander.usage(commander.getParsedCommand());
+        System.err.print("ERROR: ");
+        System.err.println(e.getMessage());
+      }
+      
       System.exit(1);
     }
 
@@ -194,6 +203,7 @@ public class Main {
       cliCommand = CliCommands.from(command);
       switch (cliCommand) {
         case Help:
+        case Version:
         case ListJournal:
         case VerifyJournal:
           validConfig = true;
@@ -234,99 +244,103 @@ public class Main {
 
       try {
 
+        final int commandOrdinal = cliCommand.ordinal();
+
         switch (cliCommand) {
+
+          case Version:
+            new VersionCommand(config, (CommandVersion) commands.get(commandOrdinal)).run();
+            break;
 
           case Help:
             processHelp();
             break;
 
           case ListJournal:
-            new ListJournalCommand(config, (CommandListJournal) commands.get(cliCommand.ordinal()))
+            new ListJournalCommand(config, (CommandListJournal) commands.get(commandOrdinal))
                 .run();
             break;
 
           case ListVaults:
-            new ListVaultsCommand(config, (CommandListVaults) commands.get(cliCommand.ordinal()))
-                .run();
+            new ListVaultsCommand(config, (CommandListVaults) commands.get(commandOrdinal)).run();
             break;
 
           case CreateVault:
-            new CreateVaultCommand(config, (CommandCreateVault) commands.get(cliCommand.ordinal()))
+            new CreateVaultCommand(config, (CommandCreateVault) commands.get(commandOrdinal))
                 .run();
             break;
 
           case DeleteVault:
-            new DeleteVaultCommand(config, (CommandDeleteVault) commands.get(cliCommand.ordinal()))
+            new DeleteVaultCommand(config, (CommandDeleteVault) commands.get(commandOrdinal))
                 .run();
             break;
 
           case ListVaultJobs:
-            new ListVaultJobsCommand(config, (CommandListVaultJobs) commands.get(cliCommand
-                .ordinal())).run();
+            new ListVaultJobsCommand(config, (CommandListVaultJobs) commands.get(commandOrdinal))
+                .run();
             break;
 
           case VaultJobInfo:
-            new VaultJobInfoCommand(config, (CommandVaultJobInfo) commands.get(cliCommand
-                .ordinal())).run();
+            new VaultJobInfoCommand(config, (CommandVaultJobInfo) commands.get(commandOrdinal))
+                .run();
             break;
 
           case InventoryRetrieve:
             new InventoryRetrievalCommand(config,
-                (CommandInventoryRetrieval) commands.get(cliCommand.ordinal())).run();
+                (CommandInventoryRetrieval) commands.get(commandOrdinal)).run();
             break;
 
           case InventoryDownload:
             new InventoryDownloadCommand(config,
-                (CommandInventoryDownload) commands.get(cliCommand.ordinal())).run();
+                (CommandInventoryDownload) commands.get(commandOrdinal)).run();
             break;
 
           case DeleteArchive:
-            new DeleteArchiveCommand(config, (CommandDeleteArchive) commands.get(cliCommand
-                .ordinal())).run();
+            new DeleteArchiveCommand(config, (CommandDeleteArchive) commands.get(commandOrdinal))
+                .run();
             break;
 
           case UploadArchive:
-            new UploadArchiveCommand(config, (CommandUploadArchive) commands.get(cliCommand
-                .ordinal())).run();
+            new UploadArchiveCommand(config, (CommandUploadArchive) commands.get(commandOrdinal))
+                .run();
             break;
 
           case ListMultipartUploads:
             new ListMultipartUploadsCommand(config,
-                (CommandListMultipartUploads) commands.get(cliCommand.ordinal())).run();
+                (CommandListMultipartUploads) commands.get(commandOrdinal)).run();
             break;
 
           case MultipartUploadInfo:
             new MultipartUploadInfoCommand(config,
-                (CommandMultipartUploadInfo) commands.get(cliCommand.ordinal())).run();
+                (CommandMultipartUploadInfo) commands.get(commandOrdinal)).run();
             break;
 
           case AbortMultipartUpload:
             new AbortMultipartUploadCommand(config,
-                (CommandAbortMultipartUpload) commands.get(cliCommand.ordinal())).run();
+                (CommandAbortMultipartUpload) commands.get(commandOrdinal)).run();
             break;
 
           case DownloadJob:
-            new DownloadJobCommand(config, (CommandDownloadJob) commands.get(cliCommand.ordinal()))
+            new DownloadJobCommand(config, (CommandDownloadJob) commands.get(commandOrdinal))
                 .run();
             break;
 
           case InitDownload:
-            new InitDownloadCommand(config, (CommandInitDownload) commands.get(cliCommand
-                .ordinal())).run();
-            break;
-
-          case PurgeVault:
-            new PurgeVaultCommand(config, (CommandPurgeVault) commands.get(cliCommand.ordinal()))
+            new InitDownloadCommand(config, (CommandInitDownload) commands.get(commandOrdinal))
                 .run();
             break;
 
+          case PurgeVault:
+            new PurgeVaultCommand(config, (CommandPurgeVault) commands.get(commandOrdinal)).run();
+            break;
+
           case Sync:
-            new SyncCommand(config, (CommandSync) commands.get(cliCommand.ordinal())).run();
+            new SyncCommand(config, (CommandSync) commands.get(commandOrdinal)).run();
             break;
 
           case VerifyJournal:
-            new VerifyJournalCommand(config, (CommandVerifyJournal) commands.get(cliCommand
-                .ordinal())).run();
+            new VerifyJournalCommand(config, (CommandVerifyJournal) commands.get(commandOrdinal))
+                .run();
             break;
 
           default:

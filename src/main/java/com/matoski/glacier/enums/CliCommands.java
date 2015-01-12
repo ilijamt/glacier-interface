@@ -7,6 +7,8 @@ package com.matoski.glacier.enums;
  *
  */
 public enum CliCommands {
+  
+  Version("version"),
 
   /**
    * Triggers the help command.
