@@ -139,7 +139,7 @@ Lists all available vaults present on Amazon Glacier servers specified by the re
 ### `create-vault` 
 Creates a new vault on Amazon Glacier
 
-[Example](docs/create-vaults.md)
+[Example](docs/create-vault.md)
 
 ### `delete-vault`
 Deletes a vault on Amazon Glacier, just a not that you cannot delete a non empty vault, you will have to delete all the archives first and then you can delete the vault after 24 hours.
@@ -223,7 +223,7 @@ Aborts a multipart upload, you need to specify the correct ID to abort
 ### `purge-vault`
 Purges the vault of all files present in the journal, it can be used to empty a vault of all archives.
 
-[Example](docs/sync.md)
+[Example](docs/purge-vault.md)
 
 ### `sync`
 Synchronizes a directory to Glacier, this can be useful to sync a whole directory and it's contents.

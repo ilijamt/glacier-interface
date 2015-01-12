@@ -54,7 +54,7 @@ START: vault-job-info
                 SNS Topic : null
               Status Code : Succeeded
            Status Message : Succeeded
-                Vault ARN : arn:aws:glacier:eu-west-1:166534042608:vaults/TestDemo
+                Vault ARN : arn:aws:glacier:eu-west-1:<uid>:vaults/TestDemo
 
 
 END: vault-job-info
