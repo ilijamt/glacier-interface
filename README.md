@@ -185,7 +185,7 @@ Creates an init download job, which then can be used to retrieve the files that 
 
 [Example](docs/init-download.md)
 
-### `download-job` (TODO)
+### `download-job`
 Downloads the current data, that is initiated by [init-download](#init-download)
 
 [Example](docs/download-job.md)
