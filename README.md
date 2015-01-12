@@ -129,71 +129,71 @@ Shows all the available command in the system, you can take a look at [Help](HEL
 
 If you want to show the help for a specific command just execute. Also while running a command, if some required parameters are missing, then it will display the help for that command.
 
-Or you can take a look [here](examples/docs/help.md) for various examples.
+Or you can take a look [here](docs/examples/help.md) for various examples.
 
 ### `list-vaults`
 Lists all available vaults present on Amazon Glacier servers specified by the region.
 
-[Example](examples/docs/list-vaults.md)
+[Example](docs/examples/list-vaults.md)
 
 ### `create-vault` 
 Creates a new vault on Amazon Glacier
 
-[Example](examples/docs/create-vault.md)
+[Example](docs/examples/create-vault.md)
 
 ### `delete-vault`
 Deletes a vault on Amazon Glacier, just a not that you cannot delete a non empty vault, you will have to delete all the archives first and then you can delete the vault after 24 hours.
 
 You can use [purge-vault](#purge-vault) to empty the vault from all the archives.
 
-[Example](examples/docs/delete-vault.md)
+[Example](docs/examples/delete-vault.md)
 
 ### `list-vault-jobs`
 Gives you a list of all available vault jobs
 
-[Example](examples/docs/list-vault-jobs.md)
+[Example](docs/examples/list-vault-jobs.md)
 
 ### `vault-job-info`
 Gives a detailed information about a vault job
 
-[Example](examples/docs/vault-job-info.md)
+[Example](docs/examples/vault-job-info.md)
 
 ### `inventory-retrieve`
 If you lose your journal you will need to request and **inventory-retrieve** from Glacier and wait for about 4 hours until you can download it.
 
 This will query a request on the amazon glacier servers which gives you a list of all available archives in the system to download with [inventory-download](#inventory-download)
 
-[Example](examples/docs/inventory-retrieve.md)
+[Example](docs/examples/inventory-retrieve.md)
 
 ### `inventory-download`
 You can use this to download the inventory after **inventory-retrieve** has been completed. You will also need to specify the metadata used to store the archives, so we can parse it correctly.
 
-[Example](examples/docs/inventory-download.md)
+[Example](docs/examples/inventory-download.md)
 
 ### `list-journal`
 It's used to list the files in a journal, it can give you a detailed information for what is in the journal.
 
-[Example](examples/docs/list-journal.md)
+[Example](docs/examples/list-journal.md)
 
 ### `verify-journal`
 Verifies the data in the journal with the files on the disk
 
-[Example](examples/docs/verify-journal.md)
+[Example](docs/examples/verify-journal.md)
 
 ### `init-download`
 Creates an init download job, which then can be used to retrieve the files that you requested.
 
-[Example](examples/docs/init-download.md)
+[Example](docs/examples/init-download.md)
 
 ### `download-job`
 Downloads the current data, that is initiated by [init-download](#init-download)
 
-[Example](examples/docs/download-job.md)
+[Example](docs/examples/download-job.md)
 
 ### `delete-archive`
 Delete an archive from Glacier, it can be either done by archive ID or by an archive Name, in which case you will need to supply a valid journal 
 
-[Example](examples/docs/delete-archive.md)
+[Example](docs/examples/delete-archive.md)
 
 ### `upload-archive`
 Uploads an archive to Glacier server.
@@ -206,33 +206,33 @@ How big of chunks should be uploaded at a time
 
 You can specify how many threads to open to use when uploading the data to amazon glacier, the more threads you have the more memory it will eat.
 
-[Example](examples/docs/upload-archive.md)
+[Example](docs/examples/upload-archive.md)
 
 ### `list-multipart-uploads`
 Lists all the multipart uploads, and they can be canceled.
 Useful for cleaning up.
 
-[Example](examples/docs/list-multipart-uploads.md)
+[Example](docs/examples/list-multipart-uploads.md)
 
 ### `multipart-upload-info`
 Information about the multipart upload
 
-[Example](examples/docs/multipart-upload-info.md)
+[Example](docs/examples/multipart-upload-info.md)
 
 ### `abort-multipart-upload`
 Aborts a multipart upload, you need to specify the correct ID to abort
 
-[Example](examples/docs/abort-multipart-upload.md)
+[Example](docs/examples/abort-multipart-upload.md)
 
 ### `purge-vault`
 Purges the vault of all files present in the journal, it can be used to empty a vault of all archives.
 
-[Example](examples/docs/purge-vault.md)
+[Example](docs/examples/purge-vault.md)
 
 ### `sync`
 Synchronizes a directory to Glacier, this can be useful to sync a whole directory and it's contents.
 
-[Example](examples/docs/sync.md)
+[Example](docs/examples/sync.md)
 
 Minimum Amazon Glacier permissions:
 -----------------------------------
