@@ -133,7 +133,7 @@ If you want to show the help for a specific command just execute.
 $ gi help list-vaults create-vault
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: Help
 
 List the available vaults in the system
@@ -160,7 +160,7 @@ $ gi --config config.json list-vaults
 
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: ListVaults
 
 START: list-vaults
@@ -187,7 +187,7 @@ $ gi --config config.json create-vault --vault uplTestDemo
 
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: CreateVault
 
 START: create-vault
@@ -213,7 +213,7 @@ $ gi --config config.json delete-vault --vault TestDemo
 
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: DeleteVault
 
 START: delete-vault
@@ -233,7 +233,7 @@ Gives you a list of all available vault jobs
 $ gi --config config.json list-vault-jobs --vault TestDemo
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: ListVaultJobs
 
 START: list-vault-jobs
@@ -252,7 +252,7 @@ Gives a detailed information about a vault job
 $ gi --config config.json vault-job-info --id v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21 --vault TestDemo
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: VaultJobInfo
 
 START: vault-job-info
@@ -283,7 +283,7 @@ Now after the job has been completed, ~4+ hours later.
 $ gi --config config.json vault-job-info --id v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21 --vault TestDemo
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: VaultJobInfo
 
 START: vault-job-info
@@ -318,7 +318,7 @@ This gives you a list of all available archives in the system
 $  gi --config config.json inventory-retrieve --vault TestDemo
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: InventoryRetrieve
 
 START: inventory-retrieve
@@ -342,7 +342,7 @@ You can also use this to download the raw data and use it to create a new metada
 gi --config glacier-interface/config.json inventory-download --id v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21 --journal TestDemo.journal --vault TestDemo
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: InventoryDownload
 
 START: inventory-download
@@ -368,7 +368,7 @@ It's used to list the files in a journal, it can give you a detailed information
 $ gi list-journal --journal TestDemo.journal 
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: ListJournal
 
 START: list-journal
@@ -389,7 +389,7 @@ Verifies the data in the journal with the files on the disk
 $ gi verify-journal --journal TestDemo.journal 
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: VerifyJournal
 
 START: verify-journal
@@ -425,7 +425,7 @@ Delete an archive from Glacier, it can be either done by archive ID or by an arc
 gi --config config.json delete-archive --journal TestDemo.journal --name data.log --vault TestDemo
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: DeleteArchive
 
 START: delete-archive
@@ -464,24 +464,24 @@ Now for upload
 $ gi --config config.json upload-archive --concurrent 2 --vault TestDemo --file data.log --journal TestDemo.journal
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: UploadArchive
 
 START: upload-archive
 
 Processing: data.log (size: 5312500)
-[#00001/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
-[#00002/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
-[#00002/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Uploaded
-[#00003/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
-[#00001/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Uploaded
-[#00004/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
-[#00003/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Uploaded
-[#00005/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
-[#00004/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Uploaded
-[#00006/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
-[#00005/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Uploaded
-[#00006/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Uploaded
+[#00001/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00002/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00002/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00003/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00001/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00004/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00003/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00005/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00004/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00006/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00005/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00006/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
 
 END: upload-archive
 
@@ -493,27 +493,27 @@ Now let's see for resuming upload
 $ gi --config config.json upload-archive --concurrent 2 --vault TestDemo --file data.log --journal TestDemo.journal
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: UploadArchive
 
 Creating a new journal: TestDemo.journal
 START: upload-archive
 
 Processing: data.log (size: 5312500)
-[#00001/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
-[#00002/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
-[#00002/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Uploaded
-[#00003/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
-[#00001/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Uploaded
-[#00004/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
-[#00004/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Uploaded
-[#00005/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
+[#00001/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00002/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00002/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00003/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00001/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00004/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00004/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00005/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
 ^C
 $ gi --config config.json upload-archive --concurrent 2 --vault TestDemo --file data.log --journal TestDemo.journal
 gi --config config.json upload-archive --concurrent 2 --vault TestDemo --file data.log --journal TestDemo.journal
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: UploadArchive
 
 Creating a new journal: TestDemo.journal
@@ -523,15 +523,15 @@ Processing: data.log (size: 5312500)
 Upload state found for data.log, loading
 Upload already initiated with location: /<uid>/vaults/TestDemo/multipart-uploads/FsBxrBiV2DxKqzC21bBciBi25P2Z9Y3dwmm8w63_rzb9d3X7kMMRLOcXWje77fVzCooIULlCdzlUU9AGXQ8HkRBgHyJG and id: FsBxrBiV2DxKqzC21bBciBi25P2Z9Y3dwmm8w63_rzb9d3X7kMMRLOcXWje77fVzCooIULlCdzlUU9AGXQ8HkRBgHyJG
 
-[#00001/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Already uploaded
-[#00002/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Already uploaded
-[#00003/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
-[#00004/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Already uploaded
-[#00005/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
-[#00003/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Uploaded
-[#00005/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Uploaded
-[#00006/#00006] PIECE_START     | (/tmp/demo-glacer-interface/data.log) Upload started
-[#00006/#00006] PIECE_COMPLETE  | (/tmp/demo-glacer-interface/data.log) Uploaded
+[#00001/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Already uploaded
+[#00002/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Already uploaded
+[#00003/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00004/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Already uploaded
+[#00005/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00003/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00005/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
+[#00006/#00006] PIECE_START     | (/tmp/demo-glacier-interface/data.log) Upload started
+[#00006/#00006] PIECE_COMPLETE  | (/tmp/demo-glacier-interface/data.log) Uploaded
 
 END: upload-archive
 
@@ -547,7 +547,7 @@ $ gi --config config.json list-multipart-uploads --vault TestDemo
 
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: ListMultipartUploads
 
 START: list-multipart-uploads
@@ -606,7 +606,7 @@ $ gi --config config.json multipart-upload-info --id wPrVOkpyB6P3ESSLwCos8TAEfJA
 
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: MultipartUploadInfo
 
 START: multipart-upload-info
@@ -633,7 +633,7 @@ $ gi --config config.json abort-multipart-upload --id wPrVOkpyB6P3ESSLwCos8TAEfJ
 
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: AbortMultipartUpload
 
 START: abort-multipart-upload
@@ -653,7 +653,7 @@ Purges the vault of all files present in the journal, it can be used to empty a 
 gi --config glacier-interface/config.json purge-vault --journal TestDemo.journal --vault TestDemo
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /tmp/demo-glacer-interface
+Current working directory: /tmp/demo-glacier-interface
 Command: PurgeVault
 
 START: purge-vault
