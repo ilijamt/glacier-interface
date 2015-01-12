@@ -105,7 +105,10 @@ public class Main {
 
   public static void processHelp(String command) {
 
-    CliCommands cmd = CliCommands.from(command);
+    CliCommands cmd = CliCommands.Help;
+    if (command != null) {
+      cmd = CliCommands.from(command);
+    }
 
     switch (cmd) {
       case Help:
@@ -142,7 +145,7 @@ public class Main {
 
     Arguments arguments = new Arguments();
     String command = CliCommands.Help.getPropertyName();
-    
+
     init();
 
     try {
