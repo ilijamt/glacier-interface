@@ -133,7 +133,7 @@ If you want to show the help for a specific command just execute.
 $ gi help list-vaults create-vault
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /home/ilijamt/workspace/java/glacier-interface
+Current working directory: /home/user/workspace/java/glacier-interface
 Command: Help
 
 List the available vaults in the system
@@ -283,7 +283,7 @@ Now after the job has been completed, ~4+ hours later.
 $ gi --config config.json vault-job-info --id v3tylJllMtsziPfJ9lmqVOfz0QqSZNYIKHpTtEmwO3kAYFSm56ttsmEOoNdUoqqXlL2xLaHCRkf-_L_JrwfmzQtpYz21 --vault TestDemo
 Glacier Interface (v0.3.4), Copyright 2014, Ilija Matoski
 
-Current working directory: /home/ilijamt/workspace/java/glacier-interface
+Current working directory: /home/user/workspace/java/glacier-interface
 Command: VaultJobInfo
 
 START: vault-job-info
