@@ -92,6 +92,7 @@ Options
 Commands
 --------
 
+* [version](#version)
 * [help](#help)
 * [list-vaults](#list-vaults)
 * [create-vault](#create-vault)
@@ -124,6 +125,11 @@ TODO
 
 Commands Description
 -------------------
+### `version`
+Prints out all the details about the version of the application and the current java system details.
+
+[Example](docs/examples/version.md)
+
 ### `help`
 Shows all the available command in the system, you can take a look at [Help](HELP) for all the available commands
 
@@ -233,6 +239,19 @@ Purges the vault of all files present in the journal, it can be used to empty a 
 Synchronizes a directory to Glacier, this can be useful to sync a whole directory and it's contents.
 
 [Example](docs/examples/sync.md)
+
+Issues
+-------
+If you want to report an issue, make sure you include the content of 
+
+```bash
+$ gi version
+```
+
+This will give the all the details needed about the application.
+
+Also if possible include a way to replicate the issue too, it would simplify the solution.
+
 
 Minimum Amazon Glacier permissions:
 -----------------------------------
