@@ -1,5 +1,7 @@
 package com.matoski.glacier.commands;
 
+import java.io.IOException;
+
 import com.matoski.glacier.Constants;
 import com.matoski.glacier.base.AbstractEmptyCommand;
 import com.matoski.glacier.cli.CommandVersion;
@@ -33,7 +35,11 @@ public class VersionCommand extends AbstractEmptyCommand<CommandVersion> {
     
     System.out.println();
     System.out.println("> Java");
-    System.getProperties().list(System.out);
+    try {
+      System.getProperties().store(System.out, "System properties");
+    } catch (IOException e) {
+      System.getProperties().list(System.out);
+    }
     
     System.out.println("\nEND: version");
   }

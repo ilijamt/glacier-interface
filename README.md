@@ -248,7 +248,7 @@ If you want to report an issue, make sure you include the content of
 $ gi version
 ```
 
-This will give the all the details needed about the application.
+This will give the all the details needed about the application, you should also remove any personal information if present.
 
 Also if possible include a way to replicate the issue too, it would simplify the solution.
 
