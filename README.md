@@ -31,7 +31,7 @@ You can checkout the code from the repository, and build it with gradle.
 
 Usage
 -----
-glacier-interface &lt;options&gt; &lt;commands&gt; &lt;command-options&gt;
+gi &lt;options&gt; &lt;commands&gt; &lt;command-options&gt;
 
 Config file
 -----------
