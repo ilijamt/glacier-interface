@@ -9,7 +9,7 @@ package com.matoski.glacier;
 public class Constants {
 
   /** Application version. */
-  public static final String VERSION = "0.3.4";
+  public static final String VERSION = "0.3.5";
 
   /** Human readable digits, used when displaying data. */
   public static final Integer DEFAULT_HUMAN_READABLE_DIGITS = 2;
