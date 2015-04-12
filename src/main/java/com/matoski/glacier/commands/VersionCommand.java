@@ -19,6 +19,7 @@ public class VersionCommand extends AbstractEmptyCommand<CommandVersion> {
 
     System.out.println("> Glacier Interface");
     System.out.println(String.format("VERSION: %s", Constants.VERSION));
+    System.out.println(String.format("FILE_STATE_EXTENSION: %s", Constants.FILE_STATE_EXTENSION));    
     System.out.println(String.format("DEFAULT_PART_SIZE: %d MB", Constants.DEFAULT_PART_SIZE));
     System.out.println(String.format("DEFAULT_CONCURRENT_THREADS: %d", Constants.DEFAULT_CONCURRENT_THREADS));
     System.out.println(String.format("DEFAULT_HUMAN_READABLE_DIGITS: %s", Constants.DEFAULT_HUMAN_READABLE_DIGITS));
