@@ -48,6 +48,8 @@ The configuration file is a JSON, you can use this to skip setting some of the c
 
 This file is optional, and can be used to put your parameters in a file to simplify usage and shorten the command
 
+If you put this file in your home directory named **.gi.config.json** then you don't need to supply the config parameter to the command line as it will be automatically loaded from that file, this will only happen if you use the wrapper **gi** for calling the application.
+
 Journal
 -------
 

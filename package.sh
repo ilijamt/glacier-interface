@@ -40,6 +40,7 @@ rm "$TMP_DIR/DEBIAN/changelog" "$TMP_DIR/DEBIAN/compat" "$TMP_DIR/DEBIAN/copyrig
 PACKAGE_SIZE=`du -bs "$TMP_DIR" | cut -f 1`
 PACKAGE_SIZE=$((PACKAGE_SIZE/1024))
 echo "Installed-Size: $PACKAGE_SIZE" >> "$TMP_DIR/DEBIAN/control"
+sed -i "s/%version%/$PKG_VERSION/g" "$TMP_DIR/DEBIAN/control"
 
 fakeroot chown -R root "$TMP_DIR"
 fakeroot chgrp -R root "$TMP_DIR"

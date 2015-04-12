@@ -12,6 +12,15 @@ if [ ! -f $JAR ]; then
 	die "The main application is not found, please reinstall"
 fi
 
-java -jar $JAR $@
+# Defaults
+DEFAULT_CONFIG="$HOME/.gi.config.json"
+EXTRAS=""
+
+# Append config if the default base config file exist
+if [ -r "$DEFAULT_CONFIG" ] && [[ ! "$@" == *"--config"* ]]; then
+	EXTRAS="--config $DEFAULT_CONFIG"
+fi
+
+java -jar $JAR $EXTRAS $@
 
 exit 0

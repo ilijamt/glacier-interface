@@ -1,4 +1,16 @@
-glacier-interface (0.2-1) unstable; urgency=low
+debian glacier-interface (0.3.5-1) unstable; urgency=low
+
+  * Some fixes for the bash script
+  
+ -- Ilija Matoski <ilijamt@gmail.com>  Sun, 12 Apr 2015 21:09:23 +0100
+ 
+debian glacier-interface (0.3.4-1) unstable; urgency=low
+
+  * Almost everything is implemented except the download job functionality
+
+ -- Ilija Matoski <ilijamt@gmail.com>  Sun, 10 Mar 2014 20:19:23 +0100  
+  
+debian glacier-interface (0.2-1) unstable; urgency=low
 
   * Initial release
   

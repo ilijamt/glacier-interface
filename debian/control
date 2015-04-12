@@ -1,5 +1,5 @@
 Package: glacier-interface
-Version: 0.3.4
+Version: %version%
 Section: net
 Architecture: all
 Priority: standard
