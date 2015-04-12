@@ -1,6 +1,7 @@
 package com.matoski.glacier.base;
 
 import com.amazonaws.ClientConfiguration;
+import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -32,6 +33,11 @@ public abstract class AbstractCommand<T> extends AbstractEmptyCommand<T> {
    * The region used for all operations with Amazon Glacier.
    */
   protected Region region = null;
+
+  /**
+   * Default protocol
+   */
+  protected Protocol protocol = Protocol.HTTPS;
 
   /**
    * Service name.
@@ -79,13 +85,12 @@ public abstract class AbstractCommand<T> extends AbstractEmptyCommand<T> {
   public AbstractCommand(Config config, T command) throws VaultNameNotPresentException,
       RegionNotSupportedException {
     super(config, command);
-
+    
+    this.setProtocol();
     this.region = Region.getRegion(Regions.fromName(config.getRegion()));
     this.credentials = new BasicAWSCredentials(config.getKey(), config.getSecretKey());
 
-    ClientConfiguration configuration = new ClientConfiguration();
-    configuration.setConnectionTimeout(70 * 1000);
-    this.client = new AmazonGlacierClient(this.credentials, configuration);
+    this.client = new AmazonGlacierClient(this.credentials, this.generateConfiguration());
 
     if (!this.region.isServiceSupported(SERVICE_NAME)) {
       throw new RegionNotSupportedException();
@@ -98,6 +103,15 @@ public abstract class AbstractCommand<T> extends AbstractEmptyCommand<T> {
     this.client.setRegion(this.region);
     this.client.setEndpoint(this.serviceEndpoint);
 
+  }
+
+  public void setProtocol() {}
+
+  public ClientConfiguration generateConfiguration() {
+    final ClientConfiguration configuration = new ClientConfiguration();
+    configuration.setConnectionTimeout(70 * 1000);
+    configuration.setProtocol(this.protocol);
+    return configuration;
   }
 
 }

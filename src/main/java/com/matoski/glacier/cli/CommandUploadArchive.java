@@ -51,6 +51,10 @@ public class CommandUploadArchive extends GenericCommand {
       description = "Replaces the modified file with a new one, and the old one is deleted from glacier and the journal")
   public Boolean uploadReplaceModified = false;
 
+  @Parameter(names = "--force-http",
+      description = "Forces the connection to be made with HTTP protocol instead of HTTPS")
+  public Boolean forceHttpConnection = false;
+
   public CommandUploadArchive() {
     super(CliCommands.UploadArchive);
   }

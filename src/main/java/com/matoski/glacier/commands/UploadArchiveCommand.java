@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+import com.amazonaws.Protocol;
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandUploadArchive;
 import com.matoski.glacier.enums.Metadata;
@@ -84,6 +85,13 @@ public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> 
 
     command.partSize = command.partSize * (int) AmazonGlacierBaseUtil.MINIMUM_PART_SIZE;
 
+  }
+
+  @Override
+  public void setProtocol() {
+    if (this.command.forceHttpConnection) {
+      protocol = Protocol.HTTP;
+    }
   }
 
   @Override

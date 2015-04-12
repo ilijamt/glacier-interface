@@ -9,7 +9,7 @@ package com.matoski.glacier;
 public class Constants {
 
   /** Application version. */
-  public static final String VERSION = "0.3.5";
+  public static final String VERSION = "0.3.6";
 
   /** Human readable digits, used when displaying data. */
   public static final Integer DEFAULT_HUMAN_READABLE_DIGITS = 2;
@@ -41,4 +41,6 @@ public class Constants {
   /** Default parser. */
   public static final String DEFAULT_PARSER_METADATA = PARSER_MT_AWS_GLACIER;
 
+  /** State extension, used to filter this out */
+  public static final String FILE_STATE_EXTENSION = ".state";
 }

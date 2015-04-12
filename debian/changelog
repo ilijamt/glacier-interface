@@ -1,3 +1,10 @@
+debian glacier-interface (0.3.6-1) unstable; urgency=low
+
+  * Crashes on very big files
+  * add --force-http option 
+  
+ -- Ilija Matoski <ilijamt@gmail.com>  Sun, 12 Apr 2015 21:09:23 +0100
+
 debian glacier-interface (0.3.5-1) unstable; urgency=low
 
   * Some fixes for the bash script

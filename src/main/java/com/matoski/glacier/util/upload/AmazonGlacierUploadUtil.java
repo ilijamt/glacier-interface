@@ -36,6 +36,9 @@ import com.amazonaws.services.glacier.model.UploadArchiveRequest;
 import com.amazonaws.services.glacier.model.UploadArchiveResult;
 import com.amazonaws.services.glacier.model.UploadMultipartPartRequest;
 import com.amazonaws.services.glacier.model.UploadMultipartPartResult;
+import com.google.common.primitives.UnsignedBytes;
+import com.google.common.primitives.UnsignedLong;
+import com.google.common.primitives.UnsignedLongs;
 import com.matoski.glacier.Constants;
 import com.matoski.glacier.enums.ArchiveState;
 import com.matoski.glacier.enums.GenericValidateEnum;
@@ -471,8 +474,8 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
           fileName));
 
     }
-    
-    System.out.println(); 
+
+    System.out.println();
 
     return archive;
 
@@ -516,7 +519,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     ExecutorService pool = Executors.newFixedThreadPool(threads);
     HashMap<Integer, Future<Piece>> map = new HashMap<Integer, Future<Piece>>();
 
-    final File stateFile = new File(file.getAbsoluteFile() + ".state");
+    final File stateFile = new File(file.getAbsoluteFile() + Constants.FILE_STATE_EXTENSION);
 
     Archive archive = new Archive();
     final long fileSize = file.length();
@@ -644,7 +647,7 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
     } catch (InterruptedException e) {
       System.err.println(String.format("ERROR: %s", e.getMessage()));
     }
-    
+
     uploadStatus.write();
 
     // go through them again, in case we missed them , can happen if it
@@ -781,7 +784,10 @@ public class AmazonGlacierUploadUtil extends AmazonGlacierBaseUtil {
 
     FileInputStream stream = new FileInputStream(file);
 
-    int position = part * (int) partSize;
+    UnsignedLong uPosition = UnsignedLong.valueOf(partSize);
+    uPosition = uPosition.times(UnsignedLong.valueOf(part));
+
+    long position = uPosition.longValue();
 
     @SuppressWarnings("unused")
     long skipped = stream.skip(position);

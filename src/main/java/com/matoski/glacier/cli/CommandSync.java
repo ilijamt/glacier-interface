@@ -50,6 +50,10 @@ public class CommandSync extends GenericCommand {
       description = "Do not upload the files, just go through the process")
   public Boolean dryRun = false;
 
+  @Parameter(names = "--force-http",
+      description = "Forces the connection to be made with HTTP protocol instead of HTTPS")
+  public Boolean forceHttpConnection = false;
+
   public CommandSync() {
     super(CliCommands.Sync);
   }
