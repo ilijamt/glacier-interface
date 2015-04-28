@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.Protocol;
 import com.amazonaws.event.ProgressListener;
 import com.amazonaws.metrics.RequestMetricCollector;
 import com.amazonaws.services.glacier.model.RequestTimeoutException;
@@ -93,14 +94,16 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
    *          The amazon secret key
    * @param region
    *          The region
-   * 
+   * @param protocol
+   *          The protocol used to connect to the Amazon Glacier servers
+   *          
    * @throws RegionNotSupportedException
    *           Invalid or unsupported region
    */
   public ThreadAmazonGlacierUploadUtil(int retryFailedUploads, File file, int pieces, int part,
       int partSize, String vaultName, String uploadId, String accessKey, String secretKey,
-      String region) throws RegionNotSupportedException {
-    super(accessKey, secretKey, region);
+      String region, Protocol protocol) throws RegionNotSupportedException {
+    super(accessKey, secretKey, region, protocol);
     this.requestRetryFailedUploads = retryFailedUploads;
     this.requestFile = file;
     this.requestPieces = pieces;
@@ -139,15 +142,17 @@ public class ThreadAmazonGlacierUploadUtil extends AmazonGlacierUploadUtil imple
    *          Progress listener
    * @param collector
    *          Metric collector
+   * @param protocol
+   *          The protocol used to connect to the Amazon Glacier servers
    * 
    * @throws RegionNotSupportedException
    *           Invalid or unsupported region
    */
   public ThreadAmazonGlacierUploadUtil(int retryFailedUploads, File file, int pieces, int part,
       int partSize, String vaultName, String uploadId, String accessKey, String secretKey,
-      String region, ProgressListener listener, RequestMetricCollector collector)
+      String region, ProgressListener listener, RequestMetricCollector collector, Protocol protocol)
       throws RegionNotSupportedException {
-    super(accessKey, secretKey, region);
+    super(accessKey, secretKey, region, protocol);
     this.requestRetryFailedUploads = retryFailedUploads;
     this.requestFile = file;
     this.requestPieces = pieces;

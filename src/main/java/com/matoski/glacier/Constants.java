@@ -1,5 +1,7 @@
 package com.matoski.glacier;
 
+import com.amazonaws.Protocol;
+
 /**
  * Default constants for the application
  * 
@@ -10,6 +12,9 @@ public class Constants {
 
   /** Application version. */
   public static final String VERSION = "0.3.6";
+  
+  /** Default protocol we use in the application */
+  public static final Protocol DEFAULT_PROTOCOL = Protocol.HTTPS;
 
   /** Human readable digits, used when displaying data. */
   public static final Integer DEFAULT_HUMAN_READABLE_DIGITS = 2;

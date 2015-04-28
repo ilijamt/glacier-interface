@@ -10,6 +10,7 @@ import java.util.Map;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ClientConfiguration;
+import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Principal;
@@ -253,15 +254,18 @@ public class AmazonGlacierBaseUtil {
    *          Amazon Secret Key
    * @param region
    *          Amazon Region
+   * @param protocol
+   *          The protocol used to connect to the Amazon Glacier servers
    * 
    * @throws RegionNotSupportedException
    *           If the region is invalid
    */
-  public AmazonGlacierBaseUtil(String accessKey, String secretKey, String region)
+  public AmazonGlacierBaseUtil(String accessKey, String secretKey, String region, Protocol protocol)
       throws RegionNotSupportedException {
 
     ClientConfiguration clientConfiguration = new ClientConfiguration();
     clientConfiguration.setConnectionTimeout(70 * 1000);
+    clientConfiguration.setProtocol(protocol);
 
     this.region = Region.getRegion(Regions.fromName(region));
     this.credentials = new BasicAWSCredentials(accessKey, secretKey);

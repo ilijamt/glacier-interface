@@ -1,6 +1,7 @@
 package com.matoski.glacier.cli;
 
 import com.beust.jcommander.Parameter;
+import com.matoski.glacier.Constants;
 
 public class Arguments {
 
@@ -36,5 +37,10 @@ public class Arguments {
       names = "--directory",
       description = "The base directory from which we start, if not specified then the directory is set to the current working directory")
   public String directory;
+
+  @Parameter(
+      names = "--protocol",
+      description = "What protocol to use when connecting to Amazon Glacier servers, you can use http or https")
+  public String protocol = Constants.DEFAULT_PROTOCOL.toString();
 
 }

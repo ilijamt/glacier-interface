@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.FileAlreadyExistsException;
 
+import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.event.ProgressListener;
 import com.amazonaws.metrics.RequestMetricCollector;
@@ -64,13 +65,15 @@ public class AmazonGlacierDownloadUtil extends AmazonGlacierBaseUtil {
    *          Amazon secret key
    * @param region
    *          Amazon region
+   * @param protocol
+   *          The protocol used to connect to the Amazon Glacier servers
    * 
    * @throws RegionNotSupportedException
    *           Invalid or unsupported region
    */
-  public AmazonGlacierDownloadUtil(String accessKey, String secretKey, String region)
-      throws RegionNotSupportedException {
-    super(accessKey, secretKey, region);
+  public AmazonGlacierDownloadUtil(String accessKey, String secretKey, String region,
+      Protocol protocol) throws RegionNotSupportedException {
+    super(accessKey, secretKey, region, protocol);
   }
 
   /**
