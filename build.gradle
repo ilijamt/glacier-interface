@@ -4,6 +4,7 @@ apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'signing'
 
 buildscript {
   repositories {
