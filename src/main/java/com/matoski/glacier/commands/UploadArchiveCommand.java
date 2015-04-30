@@ -1,9 +1,5 @@
 package com.matoski.glacier.commands;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-
 import com.amazonaws.Protocol;
 import com.matoski.glacier.base.AbstractCommand;
 import com.matoski.glacier.cli.CommandUploadArchive;
@@ -15,113 +11,112 @@ import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.AmazonGlacierBaseUtil;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+
 /**
  * Upload archive
- * 
+ *
  * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class UploadArchiveCommand extends AbstractCommand<CommandUploadArchive> {
 
-  /**
-   * Metadata.
-   */
-  protected Metadata metadata;
+    /**
+     * Metadata.
+     */
+    protected Metadata metadata;
 
-  /**
-   * The helper utility for uploading.
-   */
-  protected AmazonGlacierUploadUtil upload;
+    /**
+     * The helper utility for uploading.
+     */
+    protected AmazonGlacierUploadUtil upload;
 
-  /**
-   * The journal, we use this for storing the data.
-   */
-  protected State journal;
+    /**
+     * The journal, we use this for storing the data.
+     */
+    protected State journal;
 
-  /**
-   * Constructor.
-   * 
-   * @param config
-   *          Application config
-   * @param command
-   *          The command configuration
-   * 
-   * @throws VaultNameNotPresentException
-   *           Vault not present in config
-   * @throws RegionNotSupportedException
-   *           Region not supported
-   */
-  public UploadArchiveCommand(Config config, CommandUploadArchive command)
-      throws VaultNameNotPresentException, RegionNotSupportedException {
-    super(config, command);
+    /**
+     * Constructor.
+     *
+     * @param config  Application config
+     * @param command The command configuration
+     * @throws VaultNameNotPresentException Vault not present in config
+     * @throws RegionNotSupportedException  Region not supported
+     */
+    public UploadArchiveCommand(Config config, CommandUploadArchive command)
+            throws VaultNameNotPresentException, RegionNotSupportedException {
+        super(config, command);
 
-    Boolean validVaultName = null != command.vaultName;
-    Boolean validVaultNameConfig = null != config.getVault();
+        Boolean validVaultName = null != command.vaultName;
+        Boolean validVaultNameConfig = null != config.getVault();
 
-    if (!validVaultName && !validVaultNameConfig) {
-      throw new VaultNameNotPresentException();
-    }
-
-    if (validVaultNameConfig) {
-      command.vaultName = config.getVault();
-    }
-
-    if (command.partSize % 2 != 0 && command.partSize != 1) {
-      throw new IllegalArgumentException("Part size has to be a multiple of 2");
-    }
-
-    this.metadata = Metadata.from(command.metadata);
-    this.upload = new AmazonGlacierUploadUtil(credentials, client, region);
-
-    try {
-      this.journal = State.load(command.journal);
-    } catch (IOException e) {
-      System.out.println(String.format("Creating a new journal: %s", command.journal));
-      this.journal = new State();
-      this.journal.setMetadata(metadata);
-      this.journal.setName(command.vaultName);
-      this.journal.setDate(new Date());
-      this.journal.setFile(command.journal);
-    }
-
-    command.partSize = command.partSize * (int) AmazonGlacierBaseUtil.MINIMUM_PART_SIZE;
-
-  }
-
-  @Override
-  public void setProtocol() {
-    if (this.command.forceHttpConnection) {
-      protocol = Protocol.HTTP;
-    }
-  }
-
-  @Override
-  public void run() {
-
-    System.out.println("START: upload-archive\n");
-
-    if (command.files.isEmpty()) {
-      System.out.println("ERROR: No files specified");
-    } else {
-
-      AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
-      File uploadFile = null;
-
-      for (String fileName : command.files) {
-
-        uploadFile = new File(Config.getInstance().getDirectory(), fileName);
-
-        if ((uploadFile.exists() && uploadFile.isFile()) || uploadFile.canRead()) {
-          upload.uploadArchive(journal, command.vaultName, fileName, command.forceUpload,
-              command.concurrent, command.retryFailedUpload, command.partSize,
-              command.uploadReplaceModified);
-        } else {
-          System.out.println(String.format("ERROR: File: %s not found",
-              uploadFile.getAbsoluteFile()));
+        if (!validVaultName && !validVaultNameConfig) {
+            throw new VaultNameNotPresentException();
         }
-      }
+
+        if (validVaultNameConfig) {
+            command.vaultName = config.getVault();
+        }
+
+        if (command.partSize % 2 != 0 && command.partSize != 1) {
+            throw new IllegalArgumentException("Part size has to be a multiple of 2");
+        }
+
+        this.metadata = Metadata.from(command.metadata);
+        this.upload = new AmazonGlacierUploadUtil(credentials, client, region);
+
+        try {
+            this.journal = State.load(command.journal);
+        } catch (IOException e) {
+            System.out.println(String.format("Creating a new journal: %s", command.journal));
+            this.journal = new State();
+            this.journal.setMetadata(metadata);
+            this.journal.setName(command.vaultName);
+            this.journal.setDate(new Date());
+            this.journal.setFile(command.journal);
+        }
+
+        command.partSize = command.partSize * (int) AmazonGlacierBaseUtil.MINIMUM_PART_SIZE;
 
     }
 
-    System.out.println("\nEND: upload-archive");
-  }
+    @Override
+    public void setProtocol() {
+        if (this.command.forceHttpConnection) {
+            protocol = Protocol.HTTP;
+        }
+    }
+
+    @Override
+    public void run() {
+
+        System.out.println("START: upload-archive\n");
+
+        if (command.files.isEmpty()) {
+            System.out.println("ERROR: No files specified");
+        } else {
+
+            AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
+            File uploadFile = null;
+
+            for (String fileName : command.files) {
+
+                uploadFile = new File(Config.getInstance().getDirectory(), fileName);
+
+                if ((uploadFile.exists() && uploadFile.isFile()) || uploadFile.canRead()) {
+                    upload.uploadArchive(journal, command.vaultName, fileName, command.forceUpload,
+                            command.concurrent, command.retryFailedUpload, command.partSize,
+                            command.uploadReplaceModified);
+                } else {
+                    System.out.println(String.format("ERROR: File: %s not found",
+                            uploadFile.getAbsoluteFile()));
+                }
+            }
+
+        }
+
+        System.out.println("\nEND: upload-archive");
+    }
 }

@@ -1,9 +1,5 @@
 package com.matoski.glacier.commands;
 
-import java.io.IOException;
-
-import org.apache.commons.io.IOUtils;
-
 import com.amazonaws.services.glacier.model.GetJobOutputResult;
 import com.amazonaws.services.glacier.model.GlacierJobDescription;
 import com.google.gson.Gson;
@@ -17,112 +13,109 @@ import com.matoski.glacier.pojo.archive.GlacierInventory;
 import com.matoski.glacier.pojo.journal.State;
 import com.matoski.glacier.util.FileWriteUtils;
 import com.matoski.glacier.util.upload.AmazonGlacierUploadUtil;
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
 
 /**
  * Download inventory
- * 
- * @author Ilija Matoski (ilijamt@gmail.com)
  *
+ * @author Ilija Matoski (ilijamt@gmail.com)
  */
 public class InventoryDownloadCommand extends AbstractCommand<CommandInventoryDownload> {
 
-  /**
-   * Metadata used.
-   */
-  protected Metadata metadata;
+    /**
+     * Metadata used.
+     */
+    protected Metadata metadata;
 
-  /**
-   * Constructor.
-   * 
-   * @param config
-   *          Application config
-   * @param command
-   *          The command configuration
-   * 
-   * @throws VaultNameNotPresentException
-   *           Vault not present in config
-   * @throws RegionNotSupportedException
-   *           Region not supported
-   */
-  public InventoryDownloadCommand(Config config, CommandInventoryDownload command)
-      throws VaultNameNotPresentException, RegionNotSupportedException {
-    super(config, command);
+    /**
+     * Constructor.
+     *
+     * @param config  Application config
+     * @param command The command configuration
+     * @throws VaultNameNotPresentException Vault not present in config
+     * @throws RegionNotSupportedException  Region not supported
+     */
+    public InventoryDownloadCommand(Config config, CommandInventoryDownload command)
+            throws VaultNameNotPresentException, RegionNotSupportedException {
+        super(config, command);
 
-    if ((null == command.vaultName || command.vaultName.isEmpty())
-        && (null == config.getVault() || config.getVault().isEmpty())) {
-      throw new VaultNameNotPresentException();
-    }
-
-    if (null == command.vaultName || command.vaultName.isEmpty()) {
-      command.vaultName = config.getVault();
-    }
-
-    this.metadata = Metadata.from(command.metadata);
-
-  }
-
-  @Override
-  public void run() {
-
-    System.out.println("START: inventory-download\n");
-
-    AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
-
-    String jobId = null;
-
-    if (null == command.id || command.id.isEmpty()) {
-
-      GlacierJobDescription job = null;
-
-      for (GlacierJobDescription j : upload.listVaultJobs(command.vaultName)) {
-
-        if (j.isCompleted() && j.getStatusCode().equalsIgnoreCase("Succeeded")) {
-          job = j;
-          jobId = job.getJobId();
+        if ((null == command.vaultName || command.vaultName.isEmpty())
+                && (null == config.getVault() || config.getVault().isEmpty())) {
+            throw new VaultNameNotPresentException();
         }
 
-      }
+        if (null == command.vaultName || command.vaultName.isEmpty()) {
+            command.vaultName = config.getVault();
+        }
 
-    } else {
-
-      jobId = command.id;
+        this.metadata = Metadata.from(command.metadata);
 
     }
 
-    if (null == jobId) {
+    @Override
+    public void run() {
 
-      System.out.println("ERROR: No completed InventoryJobs available");
+        System.out.println("START: inventory-download\n");
 
-    } else {
+        AmazonGlacierUploadUtil upload = new AmazonGlacierUploadUtil(credentials, client, region);
 
-      GetJobOutputResult result = upload.inventoryDownload(command.vaultName, jobId);
+        String jobId = null;
 
-      System.out.println("Inventory downloaded.\n");
+        if (null == command.id || command.id.isEmpty()) {
 
-      System.out.println(String.format("%1$10s: %2$s", "Job ID", jobId));
-      System.out.println(String.format("%1$10s: %2$s", "Vault", command.vaultName));
+            GlacierJobDescription job = null;
 
-      System.out.println();
-      GlacierInventory inventory = null;
+            for (GlacierJobDescription j : upload.listVaultJobs(command.vaultName)) {
 
-      try {
-        String json = IOUtils.toString(result.getBody());
-        inventory = new Gson().fromJson(json, GlacierInventory.class);
+                if (j.isCompleted() && j.getStatusCode().equalsIgnoreCase("Succeeded")) {
+                    job = j;
+                    jobId = job.getJobId();
+                }
 
-        if (command.raw) {
-          FileWriteUtils.toJson(command.journal, inventory);
+            }
+
         } else {
-          State journal = State.parse(inventory, command.vaultName, metadata);
-          journal.setFile(command.journal);
-          journal.save();
+
+            jobId = command.id;
+
         }
 
-      } catch (IOException e) {
-        System.err.println("ERROR: " + e.getMessage());
-      }
+        if (null == jobId) {
 
+            System.out.println("ERROR: No completed InventoryJobs available");
+
+        } else {
+
+            GetJobOutputResult result = upload.inventoryDownload(command.vaultName, jobId);
+
+            System.out.println("Inventory downloaded.\n");
+
+            System.out.println(String.format("%1$10s: %2$s", "Job ID", jobId));
+            System.out.println(String.format("%1$10s: %2$s", "Vault", command.vaultName));
+
+            System.out.println();
+            GlacierInventory inventory = null;
+
+            try {
+                String json = IOUtils.toString(result.getBody());
+                inventory = new Gson().fromJson(json, GlacierInventory.class);
+
+                if (command.raw) {
+                    FileWriteUtils.toJson(command.journal, inventory);
+                } else {
+                    State journal = State.parse(inventory, command.vaultName, metadata);
+                    journal.setFile(command.journal);
+                    journal.save();
+                }
+
+            } catch (IOException e) {
+                System.err.println("ERROR: " + e.getMessage());
+            }
+
+        }
+
+        System.out.println("\nEND: inventory-download");
     }
-
-    System.out.println("\nEND: inventory-download");
-  }
 }

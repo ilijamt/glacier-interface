@@ -6,20 +6,20 @@ import com.matoski.glacier.base.GenericCommand;
 import com.matoski.glacier.enums.CliCommands;
 
 @Parameters(commandNames = "multipart-upload-info",
-    commandDescription = "Gets detailed info about a multipart upload")
+        commandDescription = "Gets detailed info about a multipart upload")
 public class CommandMultipartUploadInfo extends GenericCommand {
 
-  @Parameter(
-      names = "--vault",
-      description = "The name of the vault from which the multipart upload info will be retrieved, will be overwritten by --aws-vault if not specified")
-  public String vaultName;
+    @Parameter(
+            names = "--vault",
+            description = "The name of the vault from which the multipart upload info will be retrieved, will be overwritten by --aws-vault if not specified")
+    public String vaultName;
 
-  @Parameter(required = true, names = "--id",
-      description = "The multipart Id for whom we need to retrieve the details")
-  public String multipartId;
+    @Parameter(required = true, names = "--id",
+            description = "The multipart Id for whom we need to retrieve the details")
+    public String multipartId;
 
-  public CommandMultipartUploadInfo() {
-    super(CliCommands.MultipartUploadInfo);
-  }
+    public CommandMultipartUploadInfo() {
+        super(CliCommands.MultipartUploadInfo);
+    }
 
 }

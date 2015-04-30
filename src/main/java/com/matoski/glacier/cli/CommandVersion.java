@@ -7,8 +7,8 @@ import com.matoski.glacier.enums.CliCommands;
 @Parameters(commandNames = "version", commandDescription = "Show the version of the application")
 public class CommandVersion extends GenericCommand {
 
-  public CommandVersion() {
-    super(CliCommands.Version);
-  }
+    public CommandVersion() {
+        super(CliCommands.Version);
+    }
 
 }
