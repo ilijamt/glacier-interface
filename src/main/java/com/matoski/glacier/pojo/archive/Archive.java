@@ -2,6 +2,7 @@ package com.matoski.glacier.pojo.archive;
 
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.matoski.glacier.enums.ArchiveState;
+import com.matoski.glacier.util.Parse;
 
 import java.io.File;
 import java.util.Date;
@@ -131,7 +132,7 @@ public class Archive implements Cloneable {
      * @param date The string to parse for date
      */
     public void setCreatedDate(String date) {
-        this.createdDate = ISO8601Utils.parse(date);
+        this.createdDate = Parse.ISO8601StringDateParse(date);
     }
 
     /**

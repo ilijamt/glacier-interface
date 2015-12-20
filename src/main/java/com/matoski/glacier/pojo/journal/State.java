@@ -12,6 +12,7 @@ import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
 import com.matoski.glacier.pojo.archive.Archive;
 import com.matoski.glacier.pojo.archive.GlacierInventory;
 import com.matoski.glacier.pojo.archive.GlacierInventory.ArchiveItem;
+import com.matoski.glacier.util.Parse;
 import com.matoski.glacier.util.Parser;
 
 import java.io.*;
@@ -297,7 +298,7 @@ public class State {
      * @return To be able to chain
      */
     public State setDate(String date) {
-        journal.setDate(ISO8601Utils.parse(date));
+        journal.setDate(Parse.ISO8601StringDateParse(date));
         return this;
     }
 

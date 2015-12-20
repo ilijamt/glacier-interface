@@ -1,12 +1,12 @@
 package com.matoski.glacier.metadata;
 
-import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.matoski.glacier.enums.Metadata;
 import com.matoski.glacier.errors.InvalidMetadataException;
 import com.matoski.glacier.interfaces.IGlacierInterfaceMetadata;
 import com.matoski.glacier.pojo.archive.Archive;
+import com.matoski.glacier.util.Parse;
 import org.apache.commons.codec.binary.Base64;
 
 /**
@@ -82,7 +82,7 @@ public class MtAwsGlacierB extends GenericParser implements IGlacierInterfaceMet
             builder.append(lastModifiedDate.substring(11, 13));
             builder.append(":");
             builder.append(lastModifiedDate.substring(13));
-            return ISO8601Utils.parse(builder.toString()).getTime();
+            return Parse.ISO8601StringDateParse(builder.toString()).getTime();
         } else {
             return Long.valueOf(lastModifiedDate);
         }

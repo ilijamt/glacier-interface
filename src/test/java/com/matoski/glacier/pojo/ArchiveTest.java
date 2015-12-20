@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
 
+import com.matoski.glacier.util.Parse;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class ArchiveTest {
   public final void testCreatedConversion() {
     String date = "2014-10-12T07:45:10Z";
     archive.setCreatedDate(date);
-    assertEquals(archive.getCreatedDate(), ISO8601Utils.parse(date));
+    assertEquals(archive.getCreatedDate(), Parse.ISO8601StringDateParse(date));
   }
 
   @Test
