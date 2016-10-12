@@ -19,8 +19,8 @@ Installation
 * Debian based systems
 
 ```bash
-echo "deb http://packages.matoski.com debian-gi main" | sudo tee /etc/apt/sources.list.d/debian-gi.list
-sudo wget -O /etc/apt/trusted.gpg.d/pm.gpg http://packages.matoski.com/keyring.gpg
+echo "deb http://packages.matoski.com/ debian main" | sudo tee /etc/apt/sources.list.d/packages-matoski-com.list
+curl -s http://packages.matoski.com/keyring.gpg | sudo apt-key add -
 sudo apt-get update
 sudo apt-get -y install glacier-interface
 ```
